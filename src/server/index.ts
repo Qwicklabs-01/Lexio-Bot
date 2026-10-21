@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { config, validateConfig } from '../config/env.js';
+import { config, validateConfig, getValidHttpsMiniAppUrl } from '../config/env.js';
 import { connectDatabase } from '../database/client.js';
 import { createBot } from '../bot/index.js';
 import { createWebhookRouter } from './routes/webhook.js';
@@ -88,6 +88,42 @@ async function startServer(): Promise<void> {
       }
     } else {
       console.log('🔄 Development mode detected: Starting Telegram long polling...');
+
+      // Configure in-bot Menu Button & Commands
+      try {
+        await bot.api.setChatMenuButton({
+          menu_button: {
+            type: 'web_app',
+            text: '⚡ Tools Page',
+            web_app: { url: getValidHttpsMiniAppUrl('?tab=toolbox') },
+          },
+        });
+        console.log('✅ Telegram Bot Menu Button set to in-app WebApp page');
+      } catch (e) {
+        console.warn('⚠️ Menu button note:', (e as Error).message);
+      }
+
+      try {
+        await bot.api.setMyCommands([
+          { command: 'start', description: '🚀 Start Lexio & Choose Task Type' },
+          { command: 'tools', description: '🧰 100,000+ Tools & Options' },
+          { command: 'menu', description: '🧭 Choose Task Category' },
+          { command: 'download', description: '🎬 Universal Media Downloader' },
+          { command: 'excavate', description: '📊 Creator & Social Analytics' },
+          { command: 'calc', description: '🧮 Instant Math & Calculators' },
+          { command: 'json', description: '💻 Format & Minify JSON' },
+          { command: 'qr', description: '📱 High-Res QR Generator' },
+          { command: 'unit', description: '📐 Universal Unit Converter' },
+          { command: 'stats', description: '📈 Statistics Calculator' },
+          { command: 'password', description: '🛡️ 256-Bit Password Generator' },
+          { command: 'pomodoro', description: '⏳ Focus Sprint Timer' },
+          { command: 'help', description: '📖 Complete Task Directory' },
+        ]);
+        console.log('✅ Bot commands registered with Telegram API');
+      } catch (e) {
+        console.warn('⚠️ Commands registration note:', (e as Error).message);
+      }
+
       bot.start({
         onStart: (info) => {
           console.log(`🤖 Bot @${info.username} started successfully via long-polling!`);

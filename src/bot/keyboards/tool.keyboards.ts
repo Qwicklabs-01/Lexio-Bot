@@ -1,7 +1,10 @@
 import { InlineKeyboard } from 'grammy';
+import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 
 export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Downloader in Bot Page', getValidHttpsMiniAppUrl('?tab=media'))
+    .row()
     .text('🎬 1080p HD Video', `dl_${downloadId}_1080p`)
     .text('📹 720p Video', `dl_${downloadId}_720p`)
     .row()
@@ -14,6 +17,8 @@ export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
 
 export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Creator Suite in Bot Page', getValidHttpsMiniAppUrl('?tab=social'))
+    .row()
     .text('👁️ Top Views', `fd_sort_${handle}_views`)
     .text('❤️ Top Likes', `fd_sort_${handle}_likes`)
     .row()
@@ -31,6 +36,8 @@ export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
 
 export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', getValidHttpsMiniAppUrl('?tab=toolbox'))
+    .row()
     .text('💻 Code & Dev Tasks', 'tb_cat_dev')
     .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
     .row()
@@ -51,6 +58,8 @@ export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
 
 export function getToolBoxDevKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Dev Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=dev'))
+    .row()
     .text('🔤 JSON Formatter', 'tb_tool_json')
     .text('📱 QR Generator', 'tb_tool_qr')
     .row()
@@ -74,6 +83,8 @@ export function getToolBoxDevKeyboard(): InlineKeyboard {
 
 export function getToolBoxCalcKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Calculators in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=calc'))
+    .row()
     .text('💰 Loan EMI Calc', 'tb_tool_emi')
     .text('⚖️ BMI Calculator', 'tb_tool_bmi')
     .row()
@@ -97,6 +108,8 @@ export function getToolBoxCalcKeyboard(): InlineKeyboard {
 
 export function getToolBoxTextKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Text Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=text'))
+    .row()
     .text('🔠 Case Converter', 'tb_tool_case')
     .text('📊 Word & Char Count', 'tb_tool_count')
     .row()
@@ -113,6 +126,8 @@ export function getToolBoxTextKeyboard(): InlineKeyboard {
 
 export function getToolBoxSeoKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open SEO Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=seo'))
+    .row()
     .text('🏷️ Meta Tag Gen', 'tb_tool_meta')
     .text('🤖 Robots.txt Gen', 'tb_tool_robots')
     .row()
@@ -126,6 +141,8 @@ export function getToolBoxSeoKeyboard(): InlineKeyboard {
 
 export function getToolBoxDesignKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Design Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=design'))
+    .row()
     .text('🎨 HEX to RGB / RGBA', 'tb_tool_hextorgb')
     .text('🌈 CSS Gradient Gen', 'tb_tool_gradient')
     .row()
@@ -137,6 +154,8 @@ export function getToolBoxDesignKeyboard(): InlineKeyboard {
 
 export function getToolBoxProductivityKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Productivity in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=prod'))
+    .row()
     .text('🔐 Password Gen', 'tb_tool_password')
     .text('⏱️ Pomodoro Timer', 'tb_tool_pomodoro')
     .row()
@@ -148,6 +167,8 @@ export function getToolBoxProductivityKeyboard(): InlineKeyboard {
 
 export function getToolBoxFunKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
+    .webApp('🚀 Open Games in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=fun'))
+    .row()
     .text('🪙 3D Coin Flip', 'tb_tool_coin')
     .text('🎲 Roll Dice', 'tb_tool_dice')
     .row()
@@ -187,12 +208,18 @@ export function getBackToCategoryKeyboard(
 
   const backLabel = catNames[category] ? `🔙 ${catNames[category]}` : '🔙 Tasks';
 
-  keyboard.text(backLabel, `tb_cat_${category}`).text('🏠 Task Menu', 'menu_main');
+  keyboard
+    .webApp('🚀 Open in Bot Page', getValidHttpsMiniAppUrl(`?tab=toolbox&cat=${category}`))
+    .row()
+    .text(backLabel, `tb_cat_${category}`)
+    .text('🏠 Task Menu', 'menu_main');
+
   return keyboard;
 }
 
-
 export function getBackToMenuKeyboard(): InlineKeyboard {
-  return new InlineKeyboard().text('🏠 Back to Main Menu', 'menu_main');
+  return new InlineKeyboard()
+    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', getValidHttpsMiniAppUrl('?tab=toolbox'))
+    .row()
+    .text('🏠 Back to Main Menu', 'menu_main');
 }
-

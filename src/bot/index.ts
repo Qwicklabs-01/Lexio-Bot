@@ -12,6 +12,8 @@ import {
   handleNexusMenu,
   handleIncomingMediaUrl,
   handleMediaDownloadAction,
+  handleInfoCommand,
+  handleAudioCommand,
   isMediaUrl,
 } from './handlers/nexus.js';
 import {
@@ -114,7 +116,7 @@ export function createBot(): Bot<BotContext> {
   bot.command('help', handleHelp);
   bot.command('tasks', handleMenu);
 
-  // Universal Media Commands
+  bot.command(['media', 'nexus'], handleNexusMenu);
   bot.command('download', async (ctx) => {
     const text = ctx.match || '';
     if (!text) {
@@ -125,6 +127,8 @@ export function createBot(): Bot<BotContext> {
     }
     await handleIncomingMediaUrl(ctx, text);
   });
+  bot.command('audio', async (ctx) => handleAudioCommand(ctx, ctx.match || ''));
+  bot.command('info', async (ctx) => handleInfoCommand(ctx, ctx.match || ''));
 
   // Creator & Social Analytics Commands
   bot.command(['excavate', 'ig'], async (ctx) => {
@@ -550,6 +554,23 @@ export function createBot(): Bot<BotContext> {
   bot.callbackQuery(/^fd_hook_(.+)$/, async (ctx) => {
     await ctx.answerCallbackQuery();
     await handleHookCommand(ctx, 'creator content');
+  });
+
+  bot.callbackQuery('dl_sample_yt', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://youtube.com/watch?v=sample1080p');
+  });
+  bot.callbackQuery('dl_sample_ig', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://instagram.com/reel/sample_reel');
+  });
+  bot.callbackQuery('dl_sample_tt', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://tiktok.com/@creator/video/sample_hd');
+  });
+  bot.callbackQuery('dl_sample_tw', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://x.com/creator/status/sample_clip');
   });
 
   bot.callbackQuery(/^dl_([^_]+)_(.+)$/, async (ctx) => {

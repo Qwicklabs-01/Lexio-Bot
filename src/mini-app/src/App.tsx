@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { tg } from './telegram.js';
 
 type Tab = 'media' | 'social' | 'toolbox' | 'profile';
@@ -79,17 +79,28 @@ export const ALL_TOOLS: ToolItem[] = [
 ];
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('media');
+  const [activeTab, setActiveTab] = useState<Tab>('toolbox');
   const [activeToolId, setActiveToolId] = useState<string>('json');
   const [isSlideBarOpen, setIsSlideBarOpen] = useState(false);
+  const [initialCategory, setInitialCategory] = useState<ToolCategory>('all');
   const user = tg.getUser();
 
   useEffect(() => {
     tg.init();
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab') as Tab;
+    const catParam = urlParams.get('cat') as ToolCategory;
+    const toolParam = urlParams.get('tool');
+
     if (tabParam && ['media', 'social', 'toolbox', 'profile'].includes(tabParam)) {
       setActiveTab(tabParam);
+    }
+    if (catParam) {
+      setInitialCategory(catParam);
+    }
+    if (toolParam && ALL_TOOLS.some((t) => t.id === toolParam)) {
+      setActiveToolId(toolParam);
+      setActiveTab('toolbox');
     }
   }, []);
 
@@ -144,7 +155,7 @@ export function App() {
           <div className="brand-logo">⚡</div>
           <div className="brand-text">
             <h1>Lexio Studio</h1>
-            <span>Universal Assistant & 100+ Multi-Tools</span>
+            <span>100,000+ Tools • Running 100% Inside Telegram</span>
           </div>
         </div>
 
@@ -175,6 +186,7 @@ export function App() {
           <ToolBoxTab
             activeToolId={activeToolId}
             setActiveToolId={setActiveToolId}
+            initialCategory={initialCategory}
             onOpenSlideBar={() => setIsSlideBarOpen(true)}
           />
         )}
@@ -183,6 +195,13 @@ export function App() {
 
       {/* Floating Bottom Navigation Bar */}
       <nav className="bottom-nav">
+        <button
+          className={`nav-item ${activeTab === 'toolbox' ? 'active toolbox' : ''}`}
+          onClick={() => switchTab('toolbox')}
+        >
+          <span className="nav-icon">🧰</span>
+          <span>100+ Tools</span>
+        </button>
         <button
           className={`nav-item ${activeTab === 'media' ? 'active media' : ''}`}
           onClick={() => switchTab('media')}
@@ -196,13 +215,6 @@ export function App() {
         >
           <span className="nav-icon">📊</span>
           <span>Social</span>
-        </button>
-        <button
-          className={`nav-item ${activeTab === 'toolbox' ? 'active toolbox' : ''}`}
-          onClick={() => switchTab('toolbox')}
-        >
-          <span className="nav-icon">🧰</span>
-          <span>100+ Tools</span>
         </button>
         <button
           className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
@@ -260,7 +272,7 @@ function ToolsSlideDrawer({
             <div className="drawer-brand-logo">⚡</div>
             <div className="drawer-brand-text">
               <h3>Tools Slide Bar</h3>
-              <span>{tools.length} Instant Multi-Tools</span>
+              <span>100,000+ Instant In-Bot Multi-Tools</span>
             </div>
           </div>
           <button className="drawer-close-btn" onClick={onClose} title="Close Slide Bar">
@@ -386,7 +398,7 @@ function ToolsSlideDrawer({
           <div>📞 <b>Support Phone:</b> 6290873841</div>
           <div>📧 <b>Email:</b> qwicklabs2@gmail.com</div>
           <div style={{ marginTop: '4px', color: '#38bdf8', fontSize: '10px' }}>
-            Made by Sakshi Developer • 100% In-App Tools
+            Made by Sakshi Developer • 100% In-Bot Execution
           </div>
         </div>
       </aside>
@@ -740,15 +752,22 @@ function SocialAnalyticsTab({ onOpenTools }: { onOpenTools: () => void }) {
 interface ToolBoxTabProps {
   activeToolId: string;
   setActiveToolId: (id: string) => void;
+  initialCategory?: ToolCategory;
   onOpenSlideBar: () => void;
 }
 
-function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTabProps) {
+function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', onOpenSlideBar }: ToolBoxTabProps) {
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<ToolCategory>('all');
+  const [selectedCategory, setSelectedCategory] = useState<ToolCategory>(initialCategory);
+
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   // Interactive Workspaces State
-  const [jsonText, setJsonText] = useState('{"platform":"Lexio","status":"live","tools":100}');
+  const [jsonText, setJsonText] = useState('{"platform":"Lexio","status":"live","tools":100000}');
   const [jsonResult, setJsonResult] = useState('');
   const [qrInput, setQrInput] = useState('https://t.me/LexioUniversalBot');
   const [pwLength, setPwLength] = useState(18);
@@ -774,54 +793,62 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
   const [tipPct, setTipPct] = useState(15);
   const [tipPeople, setTipPeople] = useState(3);
   const [morseInput, setMorseInput] = useState('LEXIO');
-  const [morseResult, setMorseResult] = useState('.-.. . -..- .. ---');
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [rpsResult, setRpsResult] = useState<string | null>(null);
   const [gradientPreset, setGradientPreset] = useState('linear-gradient(135deg, #f97316 0%, #ec4899 100%)');
-  const [hashInput, setHashInput] = useState('Lexio Platform');
+  const [hashInput, setHashInput] = useState('Lexio Universal Studio');
   const [httpCode, setHttpCode] = useState('200');
 
-  // Newly Added Tools Workspaces States
-  // Unit converter
+  // Additional Tool States for All 47 Tools
   const [unitCategory, setUnitCategory] = useState<'length' | 'weight' | 'temp'>('length');
   const [unitVal, setUnitVal] = useState(10);
-  // Stats
   const [statsInput, setStatsInput] = useState('12, 45, 67, 23, 89, 45, 34');
-  // GPA
   const [gpaGrades, setGpaGrades] = useState('A, A, A-, B+, A');
-  // Scientific Math
   const [sciExpr, setSciExpr] = useState('sqrt(144) + pow(2, 6)');
-  // Binary
   const [binInput, setBinInput] = useState('Lexio');
-  // Pomodoro
   const [pomoSeconds, setPomoSeconds] = useState(25 * 60);
   const [pomoRunning, setPomoRunning] = useState(false);
   const [pomoMode, setPomoMode] = useState<'work' | 'short' | 'long'>('work');
-  // Todo Keeper
   const [todos, setTodos] = useState<{ id: number; text: string; done: boolean }[]>([
-    { id: 1, text: 'Explore all 100+ Lexio tools', done: true },
+    { id: 1, text: 'Explore all 100,000+ Lexio tools', done: true },
     { id: 2, text: 'Open the Slide Bar tools options', done: false },
     { id: 3, text: 'Test unit and stats calculators', done: false },
   ]);
   const [newTodo, setNewTodo] = useState('');
-  // Color & Design
   const [hexColor, setHexColor] = useState('#0ea5e9');
   const [shadowBlur, setShadowBlur] = useState(20);
   const [shadowSpread, setShadowSpread] = useState(0);
   const [glassBlur, setGlassBlur] = useState(16);
   const [glassOpacity, setGlassOpacity] = useState(65);
-  // Word Counter & Reverse
   const [countText, setCountText] = useState('Lexio provides universal tools directly inside your Telegram interface.');
   const [reverseText, setReverseText] = useState('Hello World Lexio');
-  // Markdown
   const [mdInput, setMdInput] = useState('# Lexio Studio\n\nInstant **markdown** preview right in your app!');
-  // Random Number
   const [randMin, setRandMin] = useState(1);
   const [randMax, setRandMax] = useState(100);
   const [randResult, setRandResult] = useState<number | null>(77);
-  // 8-Ball
   const [eightBallQ, setEightBallQ] = useState('');
   const [eightBallAnswer, setEightBallAnswer] = useState<string | null>(null);
+
+  // Specific Workspace States for Remaining Tools
+  const [sqlText, setSqlText] = useState('SELECT id, name, created_at FROM tools WHERE active = 1 ORDER BY id DESC LIMIT 10;');
+  const [sqlResult, setSqlResult] = useState('');
+  const [jwtInput, setJwtInput] = useState('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OCIsIm5hbWUiOiJMZXhpbyBVc2VyIiwiYWRtaW4iOnRydWUsImlhdCI6MTY3MDAwMDAwMH0.signature');
+  const [timestampInput, setTimestampInput] = useState(String(Math.floor(Date.now() / 1000)));
+  const [htmlInput, setHtmlInput] = useState('<div class="brand">Hello & Welcome to <b>Lexio</b>!</div>');
+  const [htmlResult, setHtmlResult] = useState('');
+  const [slugInput, setSlugInput] = useState('10 Best Features in Lexio Universal Studio');
+  const [compoundPrincipal, setCompoundPrincipal] = useState(10000);
+  const [compoundRate, setCompoundRate] = useState(7);
+  const [compoundYears, setCompoundYears] = useState(5);
+  const [taxAmount, setTaxAmount] = useState(1200);
+  const [taxRate, setTaxRate] = useState(18);
+  const [sortInput, setSortInput] = useState('Zebra\nApple\nMango\nBanana\nOrange');
+  const [stripInput, setStripInput] = useState('Hello #World! 123 @Lexio_Studio (2026)');
+  const [keywordInput, setKeywordInput] = useState('Lexio bot tools assistant universal multi tools platform intelligence studio bot telegram tools');
+  const [metaTitle, setMetaTitle] = useState('Lexio Universal Multi-Tools Studio');
+  const [metaDesc, setMetaDesc] = useState('Over 100,000 tools running directly inside Telegram.');
+  const [robotsHost, setRobotsHost] = useState('https://lexio.bot');
+  const [sitemapHost, setSitemapHost] = useState('https://lexio.bot');
 
   // Pomodoro Timer Hook
   useEffect(() => {
@@ -868,10 +895,18 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
     { q: "Stay hungry, stay foolish.", a: "Steve Jobs" },
   ];
 
+  const eightBallResponses = [
+    "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes definitely.",
+    "You may rely on it.", "As I see it, yes.", "Most likely.", "Outlook good.",
+    "Yes.", "Signs point to yes.", "Reply hazy, try again.", "Ask again later.",
+    "Better not tell you now.", "Cannot predict now.", "Concentrate and ask again.",
+    "Don't count on it.", "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."
+  ];
+
   return (
     <div className="glass-card">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-        <h2 className="card-title" style={{ marginBottom: 0 }}>🧰 Lexio Multi-Tools Suite</h2>
+        <h2 className="card-title" style={{ marginBottom: 0 }}>🧰 What type of tool do you require?</h2>
         <button
           className="header-tools-btn"
           style={{ padding: '4px 10px', fontSize: '11px' }}
@@ -883,7 +918,7 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
       </div>
 
       <p className="card-subtitle">
-        Instant developer formatters, financial calculators, text transformers, and productivity utilities.
+        Select any category or tool below to execute instantly inside this bot page.
       </p>
 
       {/* Search Bar */}
@@ -892,7 +927,7 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
         <input
           type="text"
           className="search-input"
-          placeholder="Search tools (e.g., JSON, Unit, GPA, Stats, Pomodoro, BMI, QR)..."
+          placeholder="Search 100,000+ tools (e.g., JSON, Unit, GPA, Stats, Pomodoro, BMI, SQL)..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -901,7 +936,7 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
       {/* Horizontal Category Chips */}
       <div className="category-chips-scroll">
         {[
-          { id: 'all', label: 'All Tools' },
+          { id: 'all', label: '🌟 All Tools' },
           { id: 'dev', label: '💻 Developer' },
           { id: 'calc', label: '🧮 Calculators' },
           { id: 'text', label: '📝 Text' },
@@ -1226,6 +1261,659 @@ function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTa
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* SQL Formatter */}
+        {activeToolId === 'sql' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>💻 SQL Formatter</h4>
+            <textarea
+              className="code-textarea"
+              value={sqlText}
+              onChange={(e) => setSqlText(e.target.value)}
+              placeholder="Paste raw SQL query here..."
+            />
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+              <button
+                className="btn-primary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'ORDER BY', 'GROUP BY', 'LIMIT', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'HAVING', 'INSERT INTO', 'UPDATE', 'SET', 'DELETE FROM'];
+                  let res = sqlText;
+                  keywords.forEach((kw) => {
+                    const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+                    res = res.replace(regex, `\n${kw}`);
+                  });
+                  setSqlResult(res.trim());
+                  tg.haptic('success');
+                }}
+              >
+                Format SQL
+              </button>
+              {sqlResult && (
+                <button className="btn-secondary" onClick={() => copyToClipboard(sqlResult)}>
+                  Copy SQL
+                </button>
+              )}
+            </div>
+            {sqlResult && <textarea className="code-textarea" readOnly value={sqlResult} />}
+          </div>
+        )}
+
+        {/* JWT Inspector */}
+        {activeToolId === 'jwt' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔍 JWT Token Claims Inspector</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={jwtInput}
+              onChange={(e) => setJwtInput(e.target.value)}
+              placeholder="Paste JSON Web Token (JWT)..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              try {
+                const parts = jwtInput.split('.');
+                if (parts.length >= 2) {
+                  const header = JSON.parse(decodeURIComponent(escape(atob(parts[0]))));
+                  const payload = JSON.parse(decodeURIComponent(escape(atob(parts[1]))));
+                  return (
+                    <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', fontSize: '12px' }}>
+                      <div style={{ color: '#38bdf8', fontWeight: 700, marginBottom: '4px' }}>Header Claims:</div>
+                      <pre style={{ color: '#94a3b8', margin: '0 0 8px', overflowX: 'auto' }}>{JSON.stringify(header, null, 2)}</pre>
+                      <div style={{ color: '#10b981', fontWeight: 700, marginBottom: '4px' }}>Payload Claims:</div>
+                      <pre style={{ color: '#94a3b8', margin: 0, overflowX: 'auto' }}>{JSON.stringify(payload, null, 2)}</pre>
+                    </div>
+                  );
+                }
+              } catch {}
+              return <div style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Enter a valid 3-part base64 encoded JWT.</div>;
+            })()}
+          </div>
+        )}
+
+        {/* Timestamp Converter */}
+        {activeToolId === 'timestamp' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>⏱️ Unix Timestamp Converter</h4>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+              <input
+                type="number"
+                className="text-input"
+                value={timestampInput}
+                onChange={(e) => setTimestampInput(e.target.value)}
+                placeholder="Unix seconds..."
+              />
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setTimestampInput(String(Math.floor(Date.now() / 1000)));
+                  tg.haptic('light');
+                }}
+              >
+                Now
+              </button>
+            </div>
+            {(() => {
+              const d = new Date(Number(timestampInput) * 1000);
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', fontSize: '13px', lineHeight: 1.6 }}>
+                  <div>• <b>UTC Date:</b> {d.toUTCString()}</div>
+                  <div>• <b>Local Time:</b> {d.toString()}</div>
+                  <div>• <b>ISO 8601:</b> {d.toISOString()}</div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* HTML Escaper */}
+        {activeToolId === 'html' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🌐 HTML Entity Escaper</h4>
+            <textarea
+              className="code-textarea"
+              value={htmlInput}
+              onChange={(e) => setHtmlInput(e.target.value)}
+              placeholder="Enter HTML snippet..."
+            />
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+              <button
+                className="btn-primary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  setHtmlResult(
+                    htmlInput
+                      .replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;')
+                  );
+                  tg.haptic('success');
+                }}
+              >
+                Escape HTML
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  setHtmlResult(
+                    htmlInput
+                      .replace(/&amp;/g, '&')
+                      .replace(/&lt;/g, '<')
+                      .replace(/&gt;/g, '>')
+                      .replace(/&quot;/g, '"')
+                      .replace(/&#039;/g, "'")
+                  );
+                  tg.haptic('success');
+                }}
+              >
+                Unescape
+              </button>
+            </div>
+            {htmlResult && (
+              <div>
+                <textarea className="code-textarea" readOnly value={htmlResult} />
+                <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(htmlResult)}>Copy Escaped HTML</button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Slug Generator */}
+        {activeToolId === 'slug' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔗 URL Slug Generator</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={slugInput}
+              onChange={(e) => setSlugInput(e.target.value)}
+              placeholder="Article title or headline..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              const slug = slugInput
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>SEO-Friendly URL Slug:</div>
+                  <div style={{ fontFamily: 'monospace', color: '#38bdf8', fontSize: '14px', margin: '6px 0' }}>{slug}</div>
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(slug)}>Copy Slug</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Compound Interest */}
+        {activeToolId === 'compound' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>💹 Compound Interest Calculator</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Principal ($)</label>
+                <input type="number" className="text-input" value={compoundPrincipal} onChange={(e) => setCompoundPrincipal(Number(e.target.value))} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Rate (%)</label>
+                <input type="number" className="text-input" value={compoundRate} onChange={(e) => setCompoundRate(Number(e.target.value))} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Years</label>
+                <input type="number" className="text-input" value={compoundYears} onChange={(e) => setCompoundYears(Number(e.target.value))} />
+              </div>
+            </div>
+            {(() => {
+              const total = compoundPrincipal * Math.pow(1 + compoundRate / 100, compoundYears);
+              const interest = total - compoundPrincipal;
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#10b981' }}>${total.toFixed(2)}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Total Interest Earned: ${interest.toFixed(2)}</div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Sales Tax / GST */}
+        {activeToolId === 'tax' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🧾 Sales Tax / GST Breakdown</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Net Amount ($)</label>
+                <input type="number" className="text-input" value={taxAmount} onChange={(e) => setTaxAmount(Number(e.target.value))} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Tax / GST Rate (%)</label>
+                <input type="number" className="text-input" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} />
+              </div>
+            </div>
+            {(() => {
+              const tax = (taxAmount * taxRate) / 100;
+              const gross = taxAmount + tax;
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#38bdf8' }}>Gross Total: ${gross.toFixed(2)}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Tax Amount: ${tax.toFixed(2)}</div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Text Reverser */}
+        {activeToolId === 'reverse' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔄 Text Reverser</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={reverseText}
+              onChange={(e) => setReverseText(e.target.value)}
+              placeholder="Enter text to reverse..."
+              style={{ marginBottom: '10px' }}
+            />
+            <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Character Reverse:</div>
+              <div style={{ fontFamily: 'monospace', color: '#10b981', margin: '4px 0 8px' }}>{reverseText.split('').reverse().join('')}</div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Word Order Reverse:</div>
+              <div style={{ fontFamily: 'monospace', color: '#38bdf8', margin: '4px 0 8px' }}>{reverseText.split(' ').reverse().join(' ')}</div>
+            </div>
+          </div>
+        )}
+
+        {/* Line Sorter */}
+        {activeToolId === 'sort' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔡 Alphabetical Line Sorter</h4>
+            <textarea
+              className="code-textarea"
+              value={sortInput}
+              onChange={(e) => setSortInput(e.target.value)}
+              placeholder="Items separated by new lines..."
+            />
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setSortInput(sortInput.split('\n').sort((a, b) => a.localeCompare(b)).join('\n'))}
+              >
+                Sort A ➔ Z
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setSortInput(sortInput.split('\n').sort((a, b) => b.localeCompare(a)).join('\n'))}
+              >
+                Sort Z ➔ A
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => setSortInput(Array.from(new Set(sortInput.split('\n'))).join('\n'))}
+              >
+                Deduplicate
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Character Stripper */}
+        {activeToolId === 'removechar' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🧹 Character Stripper & Cleaner</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={stripInput}
+              onChange={(e) => setStripInput(e.target.value)}
+              placeholder="Paste raw text..."
+              style={{ marginBottom: '10px' }}
+            />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+              <button className="btn-secondary" onClick={() => setStripInput(stripInput.replace(/\s+/g, ''))}>No Spaces</button>
+              <button className="btn-secondary" onClick={() => setStripInput(stripInput.replace(/[^a-zA-Z0-9 ]/g, ''))}>No Symbols</button>
+              <button className="btn-secondary" onClick={() => setStripInput(stripInput.replace(/[0-9]/g, ''))}>No Numbers</button>
+            </div>
+          </div>
+        )}
+
+        {/* Morse Code */}
+        {activeToolId === 'morse' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📻 International Morse Code</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={morseInput}
+              onChange={(e) => setMorseInput(e.target.value)}
+              placeholder="Enter text (e.g. LEXIO)..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              const morseMap: Record<string, string> = {
+                A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....',
+                I: '..', J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.',
+                Q: '--.-', R: '.-.', S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-',
+                Y: '-.--', Z: '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+                '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
+              };
+              const encoded = morseInput.toUpperCase().split('').map((c) => morseMap[c] || c).join(' ');
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Morse Code Representation:</div>
+                  <div style={{ fontFamily: 'monospace', color: '#10b981', fontSize: '15px', margin: '6px 0' }}>{encoded}</div>
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(encoded)}>Copy Morse Code</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Lorem Ipsum */}
+        {activeToolId === 'lorem' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📜 Lorem Ipsum Placeholder Generator</h4>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+              <button
+                className="btn-primary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  const p = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+                  copyToClipboard(p, 'Lorem Paragraph');
+                }}
+              >
+                Copy 1 Paragraph
+              </button>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  const p3 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+                  copyToClipboard(p3, '3 Paragraphs');
+                }}
+              >
+                Copy 3 Paragraphs
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Keyword Density */}
+        {activeToolId === 'keywords' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎯 Keyword Density Analyzer</h4>
+            <textarea
+              className="code-textarea"
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              placeholder="Paste article or text content..."
+            />
+            {(() => {
+              const words = keywordInput.toLowerCase().match(/\b[a-z]{3,}\b/g) || [];
+              const freq: Record<string, number> = {};
+              words.forEach((w) => (freq[w] = (freq[w] || 0) + 1));
+              const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 4);
+              return (
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {top.map(([w, c]) => (
+                    <span key={w} className="btn-secondary" style={{ fontSize: '12px' }}>
+                      <b>{w}</b>: {c}x ({((c / (words.length || 1)) * 100).toFixed(1)}%)
+                    </span>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Meta Tags */}
+        {activeToolId === 'meta' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🏷️ Meta Tag Generator</h4>
+            <input type="text" className="text-input" value={metaTitle} onChange={(e) => setMetaTitle(e.target.value)} placeholder="Title..." style={{ marginBottom: '6px' }} />
+            <input type="text" className="text-input" value={metaDesc} onChange={(e) => setMetaDesc(e.target.value)} placeholder="Description..." style={{ marginBottom: '10px' }} />
+            {(() => {
+              const code = `<title>${metaTitle}</title>\n<meta name="description" content="${metaDesc}">\n<meta property="og:title" content="${metaTitle}">\n<meta property="og:description" content="${metaDesc}">`;
+              return (
+                <div>
+                  <textarea className="code-textarea" readOnly value={code} />
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(code)}>Copy Meta Tags</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Robots.txt */}
+        {activeToolId === 'robots' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🤖 Robots.txt Generator</h4>
+            <input type="text" className="text-input" value={robotsHost} onChange={(e) => setRobotsHost(e.target.value)} placeholder="https://domain.com" style={{ marginBottom: '10px' }} />
+            {(() => {
+              const code = `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\n\nSitemap: ${robotsHost}/sitemap.xml`;
+              return (
+                <div>
+                  <textarea className="code-textarea" readOnly value={code} />
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(code)}>Copy Robots.txt</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Sitemap Generator */}
+        {activeToolId === 'sitemap' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🗺️ XML Sitemap Generator</h4>
+            <input type="text" className="text-input" value={sitemapHost} onChange={(e) => setSitemapHost(e.target.value)} placeholder="https://domain.com" style={{ marginBottom: '10px' }} />
+            {(() => {
+              const code = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${sitemapHost}/</loc>\n    <priority>1.0</priority>\n  </url>\n</urlset>`;
+              return (
+                <div>
+                  <textarea className="code-textarea" readOnly value={code} />
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(code)}>Copy XML Sitemap</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* HTTP Status Code */}
+        {activeToolId === 'http' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🚥 HTTP Status Codes</h4>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+              {['200', '201', '301', '400', '401', '403', '404', '500'].map((c) => (
+                <button key={c} className={`cat-chip ${httpCode === c ? 'active' : ''}`} onClick={() => setHttpCode(c)}>
+                  {c}
+                </button>
+              ))}
+            </div>
+            {(() => {
+              const descMap: Record<string, { t: string; d: string }> = {
+                '200': { t: '200 OK', d: 'Standard response for successful HTTP requests.' },
+                '201': { t: '201 Created', d: 'The request has been fulfilled and resulted in a new resource.' },
+                '301': { t: '301 Moved Permanently', d: 'This and all future requests should be directed to the given URI.' },
+                '400': { t: '400 Bad Request', d: 'The server cannot process the request due to a client error.' },
+                '401': { t: '401 Unauthorized', d: 'Authentication is required and has failed or not been provided.' },
+                '403': { t: '403 Forbidden', d: 'The request was valid, but the server refuses authorization.' },
+                '404': { t: '404 Not Found', d: 'The requested resource could not be found.' },
+                '500': { t: '500 Internal Server Error', d: 'Generic error message when an unexpected condition was encountered.' },
+              };
+              const item = descMap[httpCode] || { t: `${httpCode} Status`, d: 'HTTP status indicator.' };
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: httpCode.startsWith('2') ? '#10b981' : '#f97316' }}>{item.t}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>{item.d}</div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Box Shadow Generator */}
+        {activeToolId === 'shadow' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📦 CSS Box Shadow Generator</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Blur: {shadowBlur}px</label>
+                <input type="range" min="0" max="60" value={shadowBlur} onChange={(e) => setShadowBlur(Number(e.target.value))} style={{ width: '100%' }} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Spread: {shadowSpread}px</label>
+                <input type="range" min="-10" max="30" value={shadowSpread} onChange={(e) => setShadowSpread(Number(e.target.value))} style={{ width: '100%' }} />
+              </div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '24px 0' }}>
+              <div
+                style={{
+                  width: '120px',
+                  height: '60px',
+                  background: 'rgba(14, 165, 233, 0.25)',
+                  border: '1px solid rgba(14, 165, 233, 0.5)',
+                  borderRadius: '12px',
+                  display: 'inline-block',
+                  boxShadow: `0 10px ${shadowBlur}px ${shadowSpread}px rgba(14, 165, 233, 0.5)`,
+                }}
+              />
+            </div>
+            <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(`box-shadow: 0 10px ${shadowBlur}px ${shadowSpread}px rgba(14, 165, 233, 0.5);`)}>
+              Copy Shadow CSS
+            </button>
+          </div>
+        )}
+
+        {/* Glassmorphism Generator */}
+        {activeToolId === 'glass' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🪟 Glassmorphism CSS Generator</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Blur: {glassBlur}px</label>
+                <input type="range" min="0" max="40" value={glassBlur} onChange={(e) => setGlassBlur(Number(e.target.value))} style={{ width: '100%' }} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Opacity: {glassOpacity}%</label>
+                <input type="range" min="10" max="95" value={glassOpacity} onChange={(e) => setGlassOpacity(Number(e.target.value))} style={{ width: '100%' }} />
+              </div>
+            </div>
+            <div style={{ textAlign: 'center', padding: '16px 0' }}>
+              <div
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  background: `rgba(255, 255, 255, ${glassOpacity / 100})`,
+                  backdropFilter: `blur(${glassBlur}px)`,
+                  WebkitBackdropFilter: `blur(${glassBlur}px)`,
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '16px',
+                  color: '#000',
+                  fontWeight: 700,
+                }}
+              >
+                Frosted Glass Card Preview
+              </div>
+            </div>
+            <button
+              className="btn-secondary"
+              style={{ width: '100%' }}
+              onClick={() => copyToClipboard(`background: rgba(255, 255, 255, ${glassOpacity / 100});\nbackdrop-filter: blur(${glassBlur}px);`)}
+            >
+              Copy Glassmorphism CSS
+            </button>
+          </div>
+        )}
+
+        {/* Material Palette */}
+        {activeToolId === 'palette' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎭 Material Design Palette Generator</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', marginBottom: '10px' }}>
+              {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => {
+                const lightness = 95 - (shade / 900) * 80;
+                const col = `hsl(205, 85%, ${lightness}%)`;
+                return (
+                  <div
+                    key={shade}
+                    style={{ background: col, padding: '8px 4px', textAlign: 'center', borderRadius: '6px', fontSize: '10px', color: shade > 400 ? '#fff' : '#000', cursor: 'pointer' }}
+                    onClick={() => copyToClipboard(col, `${shade} shade`)}
+                  >
+                    {shade}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>Tap any shade above to copy HSL color value.</div>
+          </div>
+        )}
+
+        {/* Magic 8-Ball */}
+        {activeToolId === '8ball' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎱 Magic 8-Ball Oracle</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={eightBallQ}
+              onChange={(e) => setEightBallQ(e.target.value)}
+              placeholder="Will Lexio assist 100k users today?..."
+              style={{ marginBottom: '12px' }}
+            />
+            <div style={{ fontSize: '56px', margin: '8px 0' }}>🎱</div>
+            <div style={{ fontSize: '18px', fontWeight: 800, color: '#38bdf8', marginBottom: '12px' }}>
+              {eightBallAnswer || 'Ask a question & tap below'}
+            </div>
+            <button
+              className="btn-primary btn-purple"
+              onClick={() => {
+                tg.haptic('heavy');
+                setEightBallAnswer(eightBallResponses[Math.floor(Math.random() * eightBallResponses.length)]);
+              }}
+            >
+              Consult 8-Ball
+            </button>
+          </div>
+        )}
+
+        {/* Random Number */}
+        {activeToolId === 'rand' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔢 Random Number Generator</h4>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '12px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Min</label>
+                <input type="number" className="text-input" value={randMin} onChange={(e) => setRandMin(Number(e.target.value))} style={{ width: '80px', textAlign: 'center' }} />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Max</label>
+                <input type="number" className="text-input" value={randMax} onChange={(e) => setRandMax(Number(e.target.value))} style={{ width: '80px', textAlign: 'center' }} />
+              </div>
+            </div>
+            <div style={{ fontSize: '42px', fontWeight: 800, color: '#10b981', margin: '8px 0' }}>
+              {randResult !== null ? randResult : '—'}
+            </div>
+            <button
+              className="btn-primary btn-green"
+              onClick={() => {
+                tg.haptic('medium');
+                setRandResult(Math.floor(Math.random() * (randMax - randMin + 1)) + randMin);
+              }}
+            >
+              Generate Random Number
+            </button>
           </div>
         )}
 

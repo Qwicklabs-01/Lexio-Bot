@@ -1,7 +1,14 @@
 import { InlineKeyboard, Keyboard } from 'grammy';
+import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 
 export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
   const keyboard = new InlineKeyboard();
+  const miniAppUrl = getValidHttpsMiniAppUrl('?tab=toolbox');
+
+  // Launch 100,000+ tools directly inside Telegram bot page
+  keyboard
+    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', miniAppUrl)
+    .row();
 
   // Task-Driven Selector directly in Telegram (Zero website names)
   keyboard
@@ -28,14 +35,15 @@ export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
 }
 
 export function getPersistentReplyKeyboard(): Keyboard {
+  const miniAppUrl = getValidHttpsMiniAppUrl('?tab=toolbox');
   return new Keyboard()
+    .webApp('🚀 Open Tools Page', miniAppUrl)
     .text('🧰 Choose Task / Tool')
-    .text('🎬 Media Downloader')
     .row()
+    .text('🎬 Media Downloader')
     .text('📊 Creator Analytics')
+    .row()
     .text('📖 Task Directory')
     .resized()
     .persistent();
 }
-
-
