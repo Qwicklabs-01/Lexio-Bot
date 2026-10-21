@@ -94,10 +94,83 @@
 ### 🎨 5. Color & Design Tasks
 | Tool | Command | Description |
 | :--- | :--- | :--- |
+| **Neumorphism Soft UI** | `/neo` | Tactile extruded & inset soft shadow CSS components |
+| **Fluid Mesh Gradient** | `/mesh` | Multi-point organic radial mesh background gradients |
+| **3D Isometric Text** | In-Bot Page | Extruded isometric 3D typography generator |
+| **AI Visual Image Studio** | In-Bot Page | Generate visual concepts & graphics from text prompts |
+| **Brand Identity & Logo** | In-Bot Page | Vector logo marks & brand typography generator |
 | **HEX to RGB / RGBA** | `/hex <#hex>` | Translate hexadecimal color codes to CSS RGB & RGBA |
 | **CSS Gradient Gen** | `/gradient` | Modern linear gradient CSS generator with preset palettes |
 | **Box Shadow Gen** | `/shadow` | CSS box-shadow elevation generator (soft, neon, floating) |
 | **Material Palette** | `/palette [color]` | Material Design 50–900 shades with 1-tap copy |
+| **App Icon Bundle Creator** | In-Bot Page | Export iOS & Android app icon multi-resolution packages |
+| **Multi-size Favicon** | In-Bot Page | Browser favicon 16x16, 32x32, 192x192 generator |
+| **Noise & Grain Textures** | In-Bot Page | Procedural canvas noise textures and overlays |
+| **SVG Pattern Generator** | In-Bot Page | Seamless geometric repeating SVG backgrounds |
+| **Image to Vector SVG** | In-Bot Page | Raster pixel image to scalable vector SVG converter |
+| **Image Upscaler & Clean** | In-Bot Page | Increase image sharpness and remove watermarks |
+
+---
+
+### 📄 6. PDF & Document Master Suite
+| Tool | Command | Description |
+| :--- | :--- | :--- |
+| **Optical OCR Text Extractor** | `/ocr` | Extract text from scanned images and documents locally |
+| **Compress PDF Optimizer** | In-Bot Page | Optimize and reduce PDF document file size |
+| **PDF to Word (.docx)** | In-Bot Page | Convert PDF documents into editable Word files |
+| **Word (.docx) to PDF** | In-Bot Page | Convert Word documents into standardized PDF |
+| **Excel (.xlsx) to PDF** | In-Bot Page | Convert tabular spreadsheets into printable PDF |
+| **PowerPoint to PDF** | In-Bot Page | Convert presentation slides into high-res PDF |
+| **PNG Images to PDF** | In-Bot Page | Combine image albums into a single PDF document |
+| **PDF to Audio Book** | In-Bot Page | Speech synthesis text-to-speech audio reader |
+| **Audio Speech to PDF** | In-Bot Page | Transcribe spoken audio recordings into PDF documents |
+| **PDF Multilingual Translator** | In-Bot Page | Translate PDF documents across 50+ languages |
+| **PDF to ZIP Archive** | In-Bot Page | Extract PDF assets and attachments into ZIP |
+| **PDF to Structured XML** | In-Bot Page | Extract schema elements into structured XML |
+| **PDF Font to TTF** | In-Bot Page | Extract embedded TrueType font files from PDF |
+| **PDF to EPUB / Ebook** | In-Bot Page | Reflow documents into EPUB e-reader format |
+
+---
+
+### ✍️ 7. AI Writing & Content Architecture
+| Tool | Command | Description |
+| :--- | :--- | :--- |
+| **AI Academic Essayist** | `/essay <topic>` | Generate structured academic essays, theses & outlines |
+| **Anti-AI Text Humanizer** | `/humanize <text>` | Restyle AI text to sound authentic, natural & human |
+| **Content Polish & Improver** | In-Bot Page | Refine vocabulary, sentence variety, and clarity |
+| **Paragraph Generator** | In-Bot Page | Generate comprehensive in-depth topic paragraphs |
+| **Sentence Auto-Finisher** | In-Bot Page | Contextually complete unfinished phrases & lines |
+| **README Architect** | In-Bot Page | Generate complete GitHub/GitLab README files |
+| **Live Markdown Previewer** | In-Bot Page | Interactive editor with real-time HTML rendering |
+
+---
+
+### 📐 8. Professional, CAD & 3D Engineering
+| Tool | Command | Description |
+| :--- | :--- | :--- |
+| **AutoCAD DWG to PDF** | In-Bot Page | Convert CAD DWG blueprints into printable PDF drawings |
+| **PDF to AutoCAD DWG** | In-Bot Page | Vectorize PDF technical drawings into CAD DWG files |
+| **PDF to CAD DXF** | In-Bot Page | Extract vector diagrams into CAD DXF interchange format |
+| **PDF to Embroidery DST** | In-Bot Page | Convert vector artwork into Tajima embroidery stitches |
+| **2D to 3D OBJ / GLTF** | In-Bot Page | Extrude 2D artwork into 3D printable meshes |
+| **Convert to Figma Vector** | In-Bot Page | Export UI mockups into Figma components |
+| **Convert to Sketch Vector** | In-Bot Page | Export layout designs into Sketch artboards |
+| **Convert to Adobe XD** | In-Bot Page | Export wireframes into Adobe XD layout assets |
+| **Convert to Layered PSD** | In-Bot Page | Convert graphics into layered Photoshop documents |
+| **Convert to Adobe AI** | In-Bot Page | Convert artwork into Adobe Illustrator vector files |
+| **Digital Camera RAW** | In-Bot Page | Process and develop digital camera RAW negatives |
+
+---
+
+### 🧱 9. Web Builders & CMS Utilities
+| Tool | Command | Description |
+| :--- | :--- | :--- |
+| **Drag-and-Drop Page Prototyper** | In-Bot Page | Visual Elementor-style landing page block builder |
+| **WordPress Theme & Plugin Gen** | In-Bot Page | Generate custom WordPress theme boilerplates & hooks |
+| **Chrome Extension Builder** | In-Bot Page | Scaffold Manifest v3 background, popup & content code |
+| **Multi-Language Code Formatter** | In-Bot Page | Format and beautify JavaScript, Python, HTML & CSS |
+| **SEO Health & Speed Auditor** | In-Bot Page | Audit meta tags, heading hierarchy & crawl speed |
+| **Universal Multi-Unit Converter** | `/unit` | Convert engineering, pressure, energy, speed & data units |
 
 ---
 

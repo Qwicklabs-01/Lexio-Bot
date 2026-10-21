@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Multi-Tools Engine</title>
+    <meta name="description" content="Explore a massive collection of free professional online tools for designers, developers, and writers. SEO optimized, fast, and secure.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo">UNIVERSAL STUDIO</a>
+            <div class="nav-container">
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                
+                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Catalog <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass">
+                        <a href="#featured" class="dropdown-item">
+                            <i class="fas fa-star"></i> Featured Favorites
+                        </a>
+                        <a href="#multimedia" class="dropdown-item">
+                            <i class="fas fa-palette"></i> Multimedia & Creative
+                        </a>
+                        <a href="#ai-writing" class="dropdown-item">
+                            <i class="fas fa-pen-nib"></i> AI Writing & Content
+                        </a>
+                        <a href="#pdf-suite" class="dropdown-item">
+                            <i class="fas fa-file-pdf"></i> PDF & Document
+                        </a>
+                        <a href="#professional" class="dropdown-item">
+                            <i class="fas fa-drafting-compass"></i> Professional & CAD
+                        </a>
+                        <a href="#developer" class="dropdown-item">
+                            <i class="fas fa-code"></i> Developer Utilities
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Trending <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass"> 
+                        <a href="tools/ocr.html" class="dropdown-item">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
+                        </a> 
+                        <a href="tools/ai-image-generator.html" class="dropdown-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
+                        </a> 
+                        <a href="tools/compress-pdf.html" class="dropdown-item">
+                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
+                        </a> 
+                        <a href="tools/essay-writer.html" class="dropdown-item">
+                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                
+                <a href="pages/login.html" class="nav-link btn-login" style="margin-right: 0.5rem; font-weight: 700; color: var(--primary);">Login</a>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>The Ultimate Hub for <br><span style="background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Professional Tools.</span></h1>
+                <p>Process your data securely on your local device. Fast, private, and powerful tools for creators, developers, and document masters.</p>
+                <div class="search-container">
+                    <input type="text" id="toolSearch" placeholder="Search 73+ professional tools (e.g. PDF, AI, DXF)..." autocomplete="off">
+                </div>
+                <div class="hero-stats" id="features">
+                    <span><i class="fas fa-shield-alt"></i> 100% Private</span>
+                    <span><i class="fas fa-bolt"></i> Client-Side Processing</span>
+                    <span><i class="fas fa-check-circle"></i> No Sign-up Required</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <div class="container">
+
+
+            <!-- Featured Tools -->
+            <h3 class="category-title" id="featured"><i class="fas fa-star" style="color: gold;"></i> Featured Favorites</h3>
+            <div class="tool-grid">
+                <a href="tools/ocr.html" class="tool-card glass featured">
+                    <div class="featured-badge">PRO</div>
+                    <i class="fa-solid fa-magnifying-glass-chart tool-icon"></i>
+                    <h3>Optical Character Recognition (OCR)</h3>
+                    <p>Extract text from images locally for maximum privacy.</p>
+                </a>
+                <a href="tools/ai-image-generator.html" class="tool-card glass featured">
+                    <div class="featured-badge">NEW</div>
+                    <i class="fa-solid fa-wand-magic-sparkles tool-icon"></i>
+                    <h3>AI Image Generation Studio</h3>
+                    <p>Generate unique visuals from text prompts instantly.</p>
+                </a>
+                <a href="tools/essay-writer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>AI Academic Essay Analyst</h3>
+                    <p>Generate professional essays on any topic instantly.</p>
+                </a>
+                <a href="tools/elementor.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Drag-and-Drop Page Prototyper</h3>
+                    <p>Visual Elementor-style builder for fast landing page prototyping.</p>
+                </a>
+            </div>
+
+            <!-- Multimedia & Creative -->
+            <h3 class="category-title" id="multimedia"><i class="fas fa-palette"></i> Multimedia & Creative</h3>
+            <div class="tool-grid">
+                <a href="tools/logo-designer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>AI Brand Identity Designer</h3>
+                    <p>Generate expert brand identities for any niche or industry.</p>
+                </a>
+                <a href="tools/social-post-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Social Media Post Architect</h3>
+                    <p>Beat the algorithm with viral captions and post ideas.</p>
+                </a>
+                <a href="tools/style-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>CSS Component Studio</h3>
+                    <p>Design professional UI styles and components with AI.</p>
+                </a>
+                <a href="tools/gradient-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Precision Gradient Laboratory</h3>
+                    <p>Create stunning CSS gradients with real-time preview.</p>
+                </a>
+                <a href="tools/mesh-gradient.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Mesh Gradient</h3>
+                    <p>Design complex, organic color blends for modern backgrounds.</p>
+                </a>
+                <a href="tools/3d-text-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Cinematic 3D Typography</h3>
+                    <p>Create impactful cinematic typography with depth and perspective.</p>
+                </a>
+                <a href="tools/text-design.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Advanced Text Effects Studio</h3>
+                    <p>Create professional typography and stunning text effects.</p>
+                </a>
+                <a href="tools/psd-brushes.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PSD Brushes</h3>
+                    <p>Create custom high-quality Photoshop brush tips.</p>
+                </a>
+                <a href="tools/remove-watermark.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Remove Watermark</h3>
+                    <p>Clean images by removing unwanted artifacts and watermarks.</p>
+                </a>
+                <a href="tools/upscale-image.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Upscale Image</h3>
+                    <p>Enhance resolution and clarity with AI-powered sharpening.</p>
+                </a>
+                <a href="tools/image-to-vector.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Image to Vector</h3>
+                    <p>Transform raster images into infinitely scalable SVG graphics.</p>
+                </a>
+                <a href="tools/color-palette.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Color Palette</h3>
+                    <p>Generate harmonious color schemes for your UI/UX projects.</p>
+                </a>
+                <a href="tools/glassmorphism.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Glassmorphism</h3>
+                    <p>Create modern frosted-glass effects with CSS backdrop filters.</p>
+                </a>
+                <a href="tools/neumorphism.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Neumorphism</h3>
+                    <p>Design soft, tactile UI components with organic shadows.</p>
+                </a>
+                <a href="tools/shadow-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Shadow Gen</h3>
+                    <p>Master depth with professional multi-layered CSS box shadows.</p>
+                </a>
+                <a href="tools/gradient-map.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Gradient Map</h3>
+                    <p>Map colors to luminosity for professional cinematic color grades.</p>
+                </a>
+                <a href="tools/pattern-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Pattern Gen</h3>
+                    <p>Generate seamless geometric backgrounds for web and print.</p>
+                </a>
+                <a href="tools/noise-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Noise Gen</h3>
+                    <p>Create organic film grain and tactile noise for your designs.</p>
+                </a>
+                <a href="tools/color-blindness.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Access Audit</h3>
+                    <p>Simulate color vision deficiency and audit UI accessibility.</p>
+                </a>
+                <a href="tools/thumb-downloader.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Thumb Downloader</h3>
+                    <p>Extract high-definition YouTube video thumbnails instantly.</p>
+                </a>
+                <a href="tools/social-downloader.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Social Downloader</h3>
+                    <p>Download HD videos from major social platforms privately.</p>
+                </a>
+                <a href="tools/favicon-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Favicon Gen</h3>
+                    <p>Create professional multi-size browser icons for your website.</p>
+                </a>
+                <a href="tools/app-icon-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>App Icon Gen</h3>
+                    <p>Generate full asset sets of iOS and Android app icons.</p>
+                </a>
+                <a href="tools/seo-auditor.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>SEO Auditor</h3>
+                    <p>Analyze your web pages for technical SEO and rankings.</p>
+                </a>
+            </div>
+
+            <!-- AI Writing & Content -->
+            <h3 class="category-title" id="ai-writing"><i class="fas fa-pen-nib"></i> AI Writing & Content</h3>
+            <div class="tool-grid">
+                <a href="tools/paragraph-writer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Para Writer</h3>
+                    <p>Construct high-quality paragraphs with AI assistance.</p>
+                </a>
+                <a href="tools/essay-writer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>AI Academic Essay Analyst</h3>
+                    <p>Generate professional essays on any topic instantly.</p>
+                </a>
+                <a href="tools/content-improver.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Content Improver</h3>
+                    <p>Refine your writing, enhance vocabulary, and polish your prose.</p>
+                </a>
+                <a href="tools/paragraph-completer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Para Completer</h3>
+                    <p>Finish your paragraphs and overcome writer's block with AI.</p>
+                </a>
+                <a href="tools/paragraph-humanizer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Para Humanizer</h3>
+                    <p>Transform robotic AI text into natural, human-sounding prose.</p>
+                </a>
+                <a href="tools/readme-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>README Gen</h3>
+                    <p>Build professional GitHub Profile READMEs with dynamic stats.</p>
+                </a>
+            </div>
+
+            <!-- PDF & Document Suite -->
+            <h3 class="category-title" id="pdf-suite"><i class="fas fa-file-pdf"></i> PDF & Document Suite</h3>
+            <div class="tool-grid">
+                <a href="tools/compress-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF Optimization Engine</h3>
+                    <p>Reduce PDF file size without losing visual quality.</p>
+                </a>
+                <a href="tools/pdf-to-word.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Document Conversion Suite</h3>
+                    <p>Restore editability by converting PDFs back into Word documents.</p>
+                </a>
+                <a href="tools/word-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF Publishing Engine</h3>
+                    <p>Transform Microsoft Word documents into universal PDF files.</p>
+                </a>
+                <a href="tools/excel-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Excel to PDF</h3>
+                    <p>Convert your spreadsheets into professional, clean PDF reports.</p>
+                </a>
+                <a href="tools/pdf-to-excel.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to Excel</h3>
+                    <p>Extract structured tabular data from PDF files for analysis.</p>
+                </a>
+                <a href="tools/powerpoint-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PPT to PDF</h3>
+                    <p>Export your PowerPoint slides to high-fidelity PDF handouts.</p>
+                </a>
+                <a href="tools/pdf-to-audio.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to Audio</h3>
+                    <p>Convert your PDF documents into spoken audio instantly.</p>
+                </a>
+                <a href="tools/pdf-to-ebook.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to Ebook</h3>
+                    <p>Convert static PDF files into reflowable high-quality ebooks.</p>
+                </a>
+                <a href="tools/ebook-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Ebook to PDF</h3>
+                    <p>Transform reflowable ebooks into static, printable PDF documents.</p>
+                </a>
+                <a href="tools/pdf-to-rar.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to RAR</h3>
+                    <p>Compress your PDF documents into high-compression RAR archives.</p>
+                </a>
+                <a href="tools/pdf-to-zip.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to ZIP</h3>
+                    <p>Bundle multiple PDF documents into a single universal ZIP package.</p>
+                </a>
+                <a href="tools/pdf-translator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF Translator</h3>
+                    <p>Translate your PDF documents into multiple languages instantly.</p>
+                </a>
+                <a href="tools/pdf-to-png.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to PNG</h3>
+                    <p>Extract your PDF pages as high-quality lossless PNG images.</p>
+                </a>
+                <a href="tools/png-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PNG to PDF</h3>
+                    <p>Merge your PNG image assets into a professional PDF document.</p>
+                </a>
+                <a href="tools/audio-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Audio to PDF</h3>
+                    <p>Generate professional transcripts from your audio recordings instantly.</p>
+                </a>
+                <a href="tools/docs-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Docs to PDF</h3>
+                    <p>The universal converter for all your documents and graphic files.</p>
+                </a>
+                <a href="tools/media-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Media to PDF</h3>
+                    <p>Convert audio and video files into high-quality PDF transcripts.</p>
+                </a>
+                <a href="tools/zip-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>ZIP to PDF</h3>
+                    <p>Extract and merge compressed archives into a single PDF document.</p>
+                </a>
+                <a href="tools/rar-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>RAR to PDF</h3>
+                    <p>Convert and merge RAR archive contents into a professional PDF.</p>
+                </a>
+                <a href="tools/epdf-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>EPDF to PDF</h3>
+                    <p>Normalize and repair Encapsulated PDF files for universal viewing.</p>
+                </a>
+            </div>
+
+            <!-- Professional & CAD -->
+            <h3 class="category-title" id="professional"><i class="fas fa-drafting-compass"></i> Professional & CAD</h3>
+            <div class="tool-grid">
+                <a href="tools/pdf-to-dwg.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to DWG</h3>
+                    <p>Convert blueprints and static PDF plans into editable CAD drawings.</p>
+                </a>
+                <a href="tools/dwg-to-pdf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>DWG to PDF</h3>
+                    <p>View and share CAD drawings as standard PDF documents.</p>
+                </a>
+                <a href="tools/pdf-to-dst.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to DST</h3>
+                    <p>Convert logos to industrial embroidery formats for production.</p>
+                </a>
+                <a href="tools/pdf-to-dxf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to DXF</h3>
+                    <p>Accurately convert PDF drawings into Design Exchange Format files.</p>
+                </a>
+                <a href="tools/pdf-to-xml.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to XML</h3>
+                    <p>Extract structured data from PDF documents for analysis.</p>
+                </a>
+                <a href="tools/pdf-to-ttf.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>PDF to TTF</h3>
+                    <p>Extract and recover embedded fonts from your PDF documents.</p>
+                </a>
+            </div>
+
+            <!-- Developer Utilities -->
+            <h3 class="category-title" id="developer"><i class="fas fa-code"></i> Developer Utilities</h3>
+            <div class="tool-grid">
+                <a href="tools/elementor.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Drag-and-Drop Page Prototyper</h3>
+                    <p>Visual Elementor-style builder for fast landing page prototyping.</p>
+                </a>
+                <a href="tools/wordpress-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>WP Theme Gen</h3>
+                    <p>Build professional WordPress starter themes in seconds.</p>
+                </a>
+                <a href="tools/chrome-extension.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Chrome Ext Gen</h3>
+                    <p>Turn your ideas into functional Chrome extensions instantly.</p>
+                </a>
+                <a href="tools/convert-to-ai.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Convert to AI</h3>
+                    <p>Transform standard graphics into editable vector AI files.</p>
+                </a>
+                <a href="tools/convert-to-psd.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Convert to PSD</h3>
+                    <p>Package your designs into professional Layered Photoshop files.</p>
+                </a>
+                <a href="tools/convert-to-figma.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>To Figma</h3>
+                    <p>Convert your designs into collaborative Figma projects.</p>
+                </a>
+                <a href="tools/convert-to-xd.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>To Adobe XD</h3>
+                    <p>Transform mockups into professional Adobe XD prototypes.</p>
+                </a>
+                <a href="tools/convert-to-sketch.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>To Sketch</h3>
+                    <p>Export layer-perfect designs for professional Sketch projects.</p>
+                </a>
+                <a href="tools/convert-to-3d.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>To 3D Model</h3>
+                    <p>Transform 2D images into editable 3D objects and meshes.</p>
+                </a>
+                <a href="tools/convert-to-raw.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>To RAW</h3>
+                    <p>Recover uncompressed sensor data for professional grading.</p>
+                </a>
+                <a href="tools/universal-converter.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Universal Conv</h3>
+                    <p>The one-stop solution for any file conversion task.</p>
+                </a>
+                <a href="tools/qr-generator.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>QR Generator</h3>
+                    <p>Generate high-resolution QR codes for websites and data.</p>
+                </a>
+                <a href="tools/markdown-previewer.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>MD Previewer</h3>
+                    <p>Real-time Markdown editor with professional rendering.</p>
+                </a>
+                <a href="tools/code-formatter.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Advanced Code Prettifier</h3>
+                    <p>Prettify and clean your HTML, CSS, and JS code instantly.</p>
+                </a>
+                <a href="tools/unit-converter.html" class="tool-card glass">
+                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
+                    <h3>Scientific Unit Converter</h3>
+                    <p>Convert distance, weight, and temperature between any units.</p>
+                </a>
+            </div>
+        </section>
+        <!-- About Section -->
+        <section class="tools-section" id="about">
+            <div class="container">
+                <h3 class="category-title"><i class="fas fa-info-circle"></i> About Universal Studio</h3>
+                <div class="glass" style="padding: 3rem; border-radius: var(--radius-lg);">
+                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                        Founded and developed by <strong>Sakshi Joshi</strong>, Universal Studio is a high-performance, privacy-first platform dedicated to providing the world's most comprehensive suite of client-side utilities. Unlike other online tools, we process all your data directly in your browser – meaning your files never leave your computer.
+                    </p>
+                    <p style="font-size: 1.1rem; color: var(--text-muted);">
+                        Whether you're a developer, a content creator, or a document specialist, Universal Studio offers over 75+ professional-grade tools for multimedia, PDF manipulation, AI-assisted writing, and technical utilities, all for free.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Universal Studio</h4>
+                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Legals</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" id="contact">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social-grid">
+                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
+                            <i class="fas fa-briefcase"></i>
+                        </a>
+                        <a href="#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="backToTop" class="glass" aria-label="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

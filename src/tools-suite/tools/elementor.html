@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementor Style Builder - Universal Studio</title>
+    <meta name="description" content="Assemble beautiful sections and layout prototypes instantly with our visual builder.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tool-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
+            <div class="nav-container">
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                <a href="../index.html" class="nav-link">Home</a>
+                
+                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Catalog <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass">
+                        <a href="#featured" class="dropdown-item">
+                            <i class="fas fa-star"></i> Featured Favorites
+                        </a>
+                        <a href="#multimedia" class="dropdown-item">
+                            <i class="fas fa-palette"></i> Multimedia & Creative
+                        </a>
+                        <a href="#ai-writing" class="dropdown-item">
+                            <i class="fas fa-pen-nib"></i> AI Writing & Content
+                        </a>
+                        <a href="#pdf-suite" class="dropdown-item">
+                            <i class="fas fa-file-pdf"></i> PDF & Document
+                        </a>
+                        <a href="#professional" class="dropdown-item">
+                            <i class="fas fa-drafting-compass"></i> Professional & CAD
+                        </a>
+                        <a href="#developer" class="dropdown-item">
+                            <i class="fas fa-code"></i> Developer Utilities
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Trending <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass"> 
+                        <a href="ocr.html" class="dropdown-item">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
+                        </a> 
+                        <a href="ai-image-generator.html" class="dropdown-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
+                        </a> 
+                        <a href="compress-pdf.html" class="dropdown-item">
+                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
+                        </a> 
+                        <a href="essay-writer.html" class="dropdown-item">
+                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Elementor Style Builder</h1>
+            <p>Assemble beautiful sections and layout prototypes instantly with our visual builder.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="builder-container glass">
+            <aside class="builder-sidebar">
+                <h4>Widgets</h4>
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1.5rem;">Click to add to canvas</p>
+                <div class="widget-item" data-type="hero">ðŸ  Hero Section</div>
+                <div class="widget-item" data-type="text">ðŸ“ Text Block</div>
+                <div class="widget-item" data-type="features">âš¡ Feature Grid</div>
+                <div class="widget-item" data-type="cta">ðŸ”˜ Call to Action</div>
+                <div class="widget-item" data-type="image">ðŸ–¼ï¸ Image Placeholder</div>
+                
+                <button class="btn-primary" id="exportHtml" style="width: 100%; margin-top: 2rem; padding: 0.75rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Export HTML</button>
+            </aside>
+            <div class="builder-canvas" id="canvas">
+                <div class="placeholder-text">Your canvas is empty. Add widgets from the sidebar to begin building.</div>
+            </div>
+        </div>
+
+        <article class="tool-content">
+            <section>
+                <h2>Visual Web Development Patterns</h2>
+                <p>The transition from code to visual building has revolutionized how quickly we can prototype and deploy websites. Our **Elementor Style Builder** mimics the logic of professional page builders by allowing you to stack pre-designed sections and widgets. This is ideal for marketers, designers, and developers who need to quickly visualize a layout before committing to final production code.</p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Universal Studio</h4>
+                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Legals</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#about">About Us</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social-grid">
+                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
+                            <i class="fas fa-briefcase"></i>
+                        </a>
+                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const widgets = {
+            hero: '<div class="canvas-section"><h1>Supercharge Your Workflow</h1><p>The ultimate solution for digital enthusiasts.</p><button style="background:var(--primary); color:white; padding: 0.5rem 1rem; border:none; margin-top:1rem;">Get Started</button></div>',
+            text: '<div class="canvas-section"><h3>Informative Heading</h3><p>Leverage agile frameworks to provide a robust synopsis for high level overviews. Organically grow the holistic world view of disruptive innovation.</p></div>',
+            features: '<div class="canvas-section"><h3>Our Features</h3><div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1rem;"><div style="background:#f9f9f9; padding: 1rem;">Fast</div><div style="background:#f9f9f9; padding:1rem;">Secure</div></div></div>',
+            cta: '<div class="canvas-section" style="text-align:center; background: var(--primary); color:white;"><h2>Ready to grow?</h2><button style="background:white; color:var(--primary); border:none; padding: 0.5rem 1.5rem; margin-top: 1rem;">Join Now</button></div>',
+            image: '<div class="canvas-section" style="background:#ddd; height: 150px; display:flex; align-items:center; justify-content:center; color:#666;">IMAGE PLACEHOLDER</div>'
+        };
+
+        document.querySelectorAll('.widget-item').forEach(item => {
+            item.onclick = () => {
+                if(canvas.querySelector('.placeholder-text')) canvas.innerHTML = '';
+                const type = item.dataset.type;
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.innerHTML = widgets[type] + '<span class="remove-widget">âœ– Remove</span>';
+                
+                wrapper.querySelector('.remove-widget').onclick = () => {
+                    wrapper.remove();
+                    if(canvas.children.length === 0) canvas.innerHTML = '<div class="placeholder-text">Your canvas is empty. Add widgets from the sidebar to begin building.</div>';
+                };
+                
+                canvas.appendChild(wrapper);
+            };
+        });
+
+        document.getElementById('exportHtml').onclick = () => {
+            const html = canvas.innerHTML;
+            const blob = new Blob([html], {type: 'text/html'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "my-landing-page.html";
+            link.click();
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

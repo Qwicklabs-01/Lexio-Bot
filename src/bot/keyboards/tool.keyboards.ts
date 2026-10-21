@@ -41,18 +41,22 @@ export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
     .text('💻 Code & Dev Tasks', 'tb_cat_dev')
     .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
     .row()
-    .text('📝 Text & Writing Tasks', 'tb_cat_text')
-    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
+    .text('📄 PDF & Document Master', 'tb_cat_pdf')
+    .text('✍️ AI Writing & Content', 'tb_cat_writer')
     .row()
+    .text('📐 CAD & 3D Engineering', 'tb_cat_cad')
     .text('🎨 Color & Design Tasks', 'tb_cat_design')
+    .row()
+    .text('📝 Text & Writing Tasks', 'tb_cat_text')
     .text('⚡ Productivity Tasks', 'tb_cat_prod')
     .row()
+    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
     .text('🎲 Fun & Games', 'tb_cat_fun')
+    .row()
     .text('🎬 Media Downloader', 'menu_nexus')
-    .row()
     .text('📊 Creator Analytics', 'menu_feedigger')
-    .text('📖 Task Directory', 'menu_help')
     .row()
+    .text('📖 Task Directory', 'menu_help')
     .text('🏠 Back to Task Menu', 'menu_main');
 }
 
@@ -77,6 +81,68 @@ export function getToolBoxDevKeyboard(): InlineKeyboard {
     .row()
     .text('🗜️ HTML Minifier', 'tb_tool_minhtml')
     .text('🔍 JWT Inspector', 'tb_tool_jwt')
+    .row()
+    .text('🧱 Elementor Prototyper', 'tb_tool_elementor')
+    .text('🔌 WordPress Generator', 'tb_tool_wpgen')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
+}
+
+export function getToolBoxPdfKeyboard(): InlineKeyboard {
+  return new InlineKeyboard()
+    .webApp('🚀 Open PDF Suite in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=pdf'))
+    .row()
+    .text('🔍 Optical OCR', 'tb_tool_ocr')
+    .text('🗜️ Compress PDF', 'tb_tool_compresspdf')
+    .row()
+    .text('📄 PDF to Word', 'tb_tool_pdftoword')
+    .text('📝 Word to PDF', 'tb_tool_wordtopdf')
+    .row()
+    .text('📊 Excel to PDF', 'tb_tool_excel2pdf')
+    .text('📽️ PPT to PDF', 'tb_tool_ppt2pdf')
+    .row()
+    .text('🖼️ PNG to PDF', 'tb_tool_png2pdf')
+    .text('🎧 PDF to Audio', 'tb_tool_pdf2audio')
+    .row()
+    .text('🌐 Translate PDF', 'tb_tool_pdftranslate')
+    .text('📦 PDF to ZIP', 'tb_tool_pdf2zip')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
+}
+
+export function getToolBoxWriterKeyboard(): InlineKeyboard {
+  return new InlineKeyboard()
+    .webApp('🚀 Open AI Writer in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=writer'))
+    .row()
+    .text('✍️ Academic Essayist', 'tb_tool_essay')
+    .text('🧠 Anti-AI Humanizer', 'tb_tool_humanizer')
+    .row()
+    .text('✨ Content Polish', 'tb_tool_contentimprover')
+    .text('📋 Paragraph Writer', 'tb_tool_parawriter')
+    .row()
+    .text('⚡ Sentence Finisher', 'tb_tool_paracompleter')
+    .text('📖 README Architect', 'tb_tool_readmearch')
+    .row()
+    .text('📝 Live Markdown Preview', 'tb_tool_mdpreview')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
+}
+
+export function getToolBoxCadKeyboard(): InlineKeyboard {
+  return new InlineKeyboard()
+    .webApp('🚀 Open CAD & 3D in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=cad'))
+    .row()
+    .text('📐 DWG to PDF', 'tb_tool_dwg2pdf')
+    .text('📏 PDF to DWG', 'tb_tool_pdf2dwg')
+    .row()
+    .text('📐 PDF to CAD DXF', 'tb_tool_pdf2dxf')
+    .text('🧵 PDF to Embroidery DST', 'tb_tool_pdf2dst')
+    .row()
+    .text('🧊 2D to 3D Mesh', 'tb_tool_to3d')
+    .text('🎨 Export to Figma', 'tb_tool_tofigma')
+    .row()
+    .text('💎 Export to Sketch', 'tb_tool_tosketch')
+    .text('🖼️ Export to Layered PSD', 'tb_tool_topsd')
     .row()
     .text('🔙 Back to Task Menu', 'menu_main');
 }
@@ -143,6 +209,12 @@ export function getToolBoxDesignKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
     .webApp('🚀 Open Design Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=design'))
     .row()
+    .text('🔘 Neumorphism Soft UI', 'tb_tool_neumorphism')
+    .text('🌀 Fluid Mesh Gradient', 'tb_tool_meshgrad')
+    .row()
+    .text('🔠 3D Isometric Text', 'tb_tool_text3d')
+    .text('👑 Brand Logo Studio', 'tb_tool_brandlogo')
+    .row()
     .text('🎨 HEX to RGB / RGBA', 'tb_tool_hextorgb')
     .text('🌈 CSS Gradient Gen', 'tb_tool_gradient')
     .row()
@@ -199,6 +271,9 @@ export function getBackToCategoryKeyboard(
   const catNames: Record<string, string> = {
     dev: '💻 Dev Tasks',
     calc: '🧮 Math Tasks',
+    pdf: '📄 PDF Suite',
+    writer: '✍️ AI Writing',
+    cad: '📐 CAD & 3D',
     text: '📝 Text Tasks',
     seo: '🔍 SEO Tasks',
     design: '🎨 Design Tasks',

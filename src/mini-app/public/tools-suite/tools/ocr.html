@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optical Character Recognition (OCR) - Universal Studio</title>
+    <meta name="description" content="Convert images to editable text effortlessly using advanced AI technology.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tool-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
+            <div class="nav-container">
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                <a href="../index.html" class="nav-link">Home</a>
+                
+                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Catalog <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass">
+                        <a href="#featured" class="dropdown-item">
+                            <i class="fas fa-star"></i> Featured Favorites
+                        </a>
+                        <a href="#multimedia" class="dropdown-item">
+                            <i class="fas fa-palette"></i> Multimedia & Creative
+                        </a>
+                        <a href="#ai-writing" class="dropdown-item">
+                            <i class="fas fa-pen-nib"></i> AI Writing & Content
+                        </a>
+                        <a href="#pdf-suite" class="dropdown-item">
+                            <i class="fas fa-file-pdf"></i> PDF & Document
+                        </a>
+                        <a href="#professional" class="dropdown-item">
+                            <i class="fas fa-drafting-compass"></i> Professional & CAD
+                        </a>
+                        <a href="#developer" class="dropdown-item">
+                            <i class="fas fa-code"></i> Developer Utilities
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Trending <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass"> 
+                        <a href="ocr.html" class="dropdown-item">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
+                        </a> 
+                        <a href="ai-image-generator.html" class="dropdown-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
+                        </a> 
+                        <a href="compress-pdf.html" class="dropdown-item">
+                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
+                        </a> 
+                        <a href="essay-writer.html" class="dropdown-item">
+                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Optical Character Recognition (OCR)</h1>
+            <p>Convert images to editable text effortlessly using advanced AI technology.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="tool-container">
+            <div class="tool-app glass">
+                <div id="ocrDropzone"><i class="fas fa-cloud-upload-alt"></i><div class="dropzone-text">Upload Image to Scan</div><div class="dropzone-subtext">JPG, PNG, or PDF up to 20MB</div></div>
+
+                <div id="ocrProgress" style="display: none; margin-top: 1rem;">
+                    <div style="background: var(--border); height: 8px; border-radius: 4px;">
+                        <div id="ocrProgressBar" style="background: var(--primary); width: 0%; height: 100%; border-radius: 4px; transition: width 0.3s;"></div>
+                    </div>
+                    <p id="ocrStatus" style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">Initializing AI engine...</p>
+                </div>
+
+                <textarea id="ocrOutput" placeholder="The extracted text will appear here..."></textarea>
+                
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button class="btn-primary" id="copyBtn" style="padding: 0.75rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">Copy Text</button>
+                    <button id="resetBtn" style="padding: 0.75rem 1.5rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 0.5rem; cursor: pointer;">Reset</button>
+                </div>
+            </div>
+
+            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+        </div>
+
+        <article class="tool-content">
+            <section>
+                <h2>What is an Optical Character Recognition (OCR)?</h2>
+                <p>Optical Character Recognition (OCR) is a technology that recognizes text within a digital image. It is commonly used to recognize text in scanned documents and images. Our OCR tool uses the powerful Tesseract.js engine to perform high-accuracy text extraction directly in your browser. This means your images are never uploaded to a server, ensuring 100% privacy and security.</p>
+            </section>
+
+            <section>
+                <h2>How to Use the OCR Tool</h2>
+                <ol style="padding-left: 1.5rem; margin-top: 1rem;">
+                    <li><strong>Upload your image:</strong> Drag and drop your file or click the upload area to select a document from your device.</li>
+                    <li><strong>Wait for processing:</strong> Our AI engine will analyze the image. The progress bar shows you the real-time status of the recognition.</li>
+                    <li><strong>Edit and Copy:</strong> Once finished, the text will appear in the box below. You can edit it manually or click "Copy Text" to use it elsewhere.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h2>Why Choose Universal Studio OCR?</h2>
+                <p>Unlike many other online OCR services, Universal Studio works **on the client side**. This means your sensitive documents never leave your computer. It is perfect for scanning receipts, contracts, or handwritten notes while maintaining total control over your data. Plus, it's completely free and optimized for mobile devices.</p>
+            </section>
+
+            <section>
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <h3>Is this tool free to use?</h3>
+                    <p>Yes! All tools on Universal Studio are 100% free with no hidden charges or limits.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What image formats are supported?</h3>
+                    <p>We support JPG, PNG, and WEBP formats. For best results, use high-contrast images.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is my data safe?</h3>
+                    <p>Absolutely. The OCR processing happens directly in your browser. No data is sent to our servers.</p>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Universal Studio</h4>
+                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Legals</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#about">About Us</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social-grid">
+                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
+                            <i class="fas fa-briefcase"></i>
+                        </a>
+                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/tesseract.js@v4.0.1/dist/tesseract.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        // OCR Specific Logic
+        const dropzone = document.getElementById('ocrDropzone');
+        const inputFile = document.getElementById('ocrInputFile');
+        const output = document.getElementById('ocrOutput');
+        const progress = document.getElementById('ocrProgress');
+        const progressBar = document.getElementById('ocrProgressBar');
+        const status = document.getElementById('ocrStatus');
+
+        dropzone.onclick = () => inputFile.click();
+
+        inputFile.onchange = e => handleFile(e.target.files[0]);
+
+        dropzone.ondragover = e => { e.preventDefault(); dropzone.style.borderColor = 'var(--primary)'; };
+        dropzone.ondrop = e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); };
+
+        async function handleFile(file) {
+            if (!file) return;
+            
+            output.value = '';
+            progress.style.display = 'block';
+            status.textContent = 'Preparing...';
+
+            try {
+                const worker = await Tesseract.createWorker({
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            progressBar.style.width = (m.progress * 100) + '%';
+                            status.textContent = `Recognizing: ${Math.round(m.progress * 100)}%`;
+                        } else {
+                            status.textContent = m.status;
+                        }
+                    }
+                });
+
+                await worker.loadLanguage('eng');
+                await worker.initialize('eng');
+                const { data: { text } } = await worker.recognize(file);
+                output.value = text;
+                await worker.terminate();
+                
+                status.textContent = 'Complete!';
+                progressBar.style.width = '100%';
+            } catch (err) {
+                status.textContent = 'Error: ' + err.message;
+            }
+        }
+
+        document.getElementById('copyBtn').onclick = () => {
+            output.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        };
+
+        document.getElementById('resetBtn').onclick = () => {
+            output.value = '';
+            progress.style.display = 'none';
+            progressBar.style.width = '0%';
+            inputFile.value = '';
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

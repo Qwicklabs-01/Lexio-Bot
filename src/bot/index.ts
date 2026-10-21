@@ -81,6 +81,11 @@ import {
   handlePomodoroCommand,
   handleTodoCommand,
   handleRemoveCharCommand,
+  handleOcrCommand,
+  handleNeumorphismCommand,
+  handleMeshGradientCommand,
+  handleEssayWriterCommand,
+  handleHumanizerCommand,
 } from './handlers/toolbox.js';
 import { getMainMenuKeyboard } from './keyboards/main.menu.js';
 import {
@@ -232,6 +237,13 @@ export function createBot(): Bot<BotContext> {
   bot.command('rps', async (ctx) => handleRpsCommand(ctx, ctx.match || 'rock'));
 
   // Admin Commands
+  // Specialized PDF, Writing & Design Tools
+  bot.command('ocr', handleOcrCommand);
+  bot.command(['neo', 'neumorphism'], handleNeumorphismCommand);
+  bot.command(['mesh', 'meshgradient'], handleMeshGradientCommand);
+  bot.command('essay', async (ctx) => handleEssayWriterCommand(ctx, ctx.match || ''));
+  bot.command('humanize', async (ctx) => handleHumanizerCommand(ctx, ctx.match || ''));
+
   bot.command('admin', handleAdminPanel);
   bot.command('broadcast', async (ctx) => handleBroadcastCommand(ctx, ctx.match || ''));
 
@@ -392,6 +404,44 @@ export function createBot(): Bot<BotContext> {
   bot.callbackQuery('tb_tool_filters', async (ctx) => {
     await ctx.answerCallbackQuery();
     await handleGradientCommand(ctx);
+  });
+
+  // New Specialized Tool Callbacks
+  bot.callbackQuery('tb_tool_ocr', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleOcrCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_neumorphism', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleNeumorphismCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_meshgrad', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleMeshGradientCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_essay', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleEssayWriterCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_humanizer', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleHumanizerCommand(ctx);
+  });
+
+  // Dynamic fallback for any other tb_tool_*
+  bot.callbackQuery(/^tb_tool_(.+)$/, async (ctx) => {
+    await ctx.answerCallbackQuery();
+    const toolId = ctx.match[1];
+    const { getValidHttpsMiniAppUrl } = await import('../config/env.js');
+    const { InlineKeyboard } = await import('grammy');
+    const url = getValidHttpsMiniAppUrl(`?tab=toolbox&tool=${toolId}`);
+    await ctx.reply(
+      '⚡ *Tool Ready:* `' + toolId.toUpperCase() + '`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nExecute this tool directly inside your in-bot Telegram page:',
+      {
+        parse_mode: 'Markdown',
+        reply_markup: new InlineKeyboard().webApp('🚀 Open Tool in Bot Page', url)
+      }
+    );
   });
 
   bot.callbackQuery('tb_tool_coin', async (ctx) => {

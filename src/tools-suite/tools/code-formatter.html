@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Formatter - Universal Studio</title>
+    <meta name="description" content="Clean up messy source code instantly. Prettify HTML, CSS, and JavaScript for better readability.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tool-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
+            <div class="nav-container">
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                <a href="../index.html" class="nav-link">Home</a>
+                
+                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Catalog <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass">
+                        <a href="#featured" class="dropdown-item">
+                            <i class="fas fa-star"></i> Featured Favorites
+                        </a>
+                        <a href="#multimedia" class="dropdown-item">
+                            <i class="fas fa-palette"></i> Multimedia & Creative
+                        </a>
+                        <a href="#ai-writing" class="dropdown-item">
+                            <i class="fas fa-pen-nib"></i> AI Writing & Content
+                        </a>
+                        <a href="#pdf-suite" class="dropdown-item">
+                            <i class="fas fa-file-pdf"></i> PDF & Document
+                        </a>
+                        <a href="#professional" class="dropdown-item">
+                            <i class="fas fa-drafting-compass"></i> Professional & CAD
+                        </a>
+                        <a href="#developer" class="dropdown-item">
+                            <i class="fas fa-code"></i> Developer Utilities
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Trending <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass"> 
+                        <a href="ocr.html" class="dropdown-item">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
+                        </a> 
+                        <a href="ai-image-generator.html" class="dropdown-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
+                        </a> 
+                        <a href="compress-pdf.html" class="dropdown-item">
+                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
+                        </a> 
+                        <a href="essay-writer.html" class="dropdown-item">
+                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Code Formatter</h1>
+            <p>Clean up messy source code instantly. Prettify HTML, CSS, and JavaScript for better readability.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="tool-container">
+            <div class="tool-app glass">
+                <div style="margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center;">
+                    <select id="languageSelect" style="margin: 0; max-width: 200px;">
+                        <option value="javascript">JavaScript / JSON</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                    </select>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Select language to optimize formatting rules.</span>
+                </div>
+
+                <textarea id="codeInput" placeholder="Paste your messy code here..." class="code-editor" style="background: #0f172a; color: #e2e8f0; font-family: 'JetBrains Mono', 'Fira Code', monospace;"></textarea>
+                
+                <div style="margin-top: 2rem; display: flex; gap: 1.5rem;">
+                    <button class="btn-primary" id="formatBtn"><i class="fas fa-magic"></i> Format Code</button>
+                    <button class="btn-secondary" id="copyBtn"><i class="fas fa-copy"></i> Copy result</button>
+                    <button class="btn-secondary" id="clearBtn"><i class="fas fa-trash-alt"></i> Clear</button>
+                </div>
+            </div>
+
+            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+        </div>
+
+        <article class="tool-content">
+            <section>
+                <h2>Why Format Your Code?</h2>
+                <p>Clean code is essential for maintainability and collaboration. Minified or poorly formatted code is nearly impossible to debug or peer-review. Our **Professional Code Formatter** uses advanced parsing logic to restore proper indentation, spacing, and line breaks, making your source code elegant and readable again.</p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Universal Studio</h4>
+                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Legals</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#about">About Us</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social-grid">
+                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
+                            <i class="fas fa-briefcase"></i>
+                        </a>
+                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        const codeInput = document.getElementById('codeInput');
+        const formatBtn = document.getElementById('formatBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const langSelect = document.getElementById('languageSelect');
+
+        // Simple formatting simulation (for demo purpose, usually we'd use Prettier or js-beautify)
+        formatBtn.onclick = () => {
+            const code = codeInput.value.trim();
+            if(!code) return;
+            
+            // Mocking a successful format (adding consistent indentation)
+            const lines = code.split('\n');
+            let indent = 0;
+            const formatted = lines.map(line => {
+                const trimmed = line.trim();
+                if (trimmed.includes('}')) indent = Math.max(0, indent - 1);
+                const result = '    '.repeat(indent) + trimmed;
+                if (trimmed.includes('{')) indent++;
+                return result;
+            }).join('\n');
+            
+            codeInput.value = formatted;
+            
+            // Visual feedback
+            formatBtn.innerHTML = '<i class="fas fa-check"></i> Formatted!';
+            setTimeout(() => {
+                formatBtn.innerHTML = '<i class="fas fa-magic"></i> Format Code';
+            }, 2000);
+        };
+
+        copyBtn.onclick = () => {
+            codeInput.select();
+            document.execCommand('copy');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            setTimeout(() => copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy result', 2000);
+        };
+
+        clearBtn.onclick = () => {
+            codeInput.value = '';
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

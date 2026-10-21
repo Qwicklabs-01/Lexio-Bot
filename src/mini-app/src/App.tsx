@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { tg } from './telegram.js';
 
 type Tab = 'media' | 'social' | 'toolbox' | 'profile';
-type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'prod' | 'seo' | 'design' | 'fun';
+type ToolCategory = 'all' | 'dev' | 'calc' | 'pdf' | 'writer' | 'cad' | 'design' | 'text' | 'prod' | 'seo' | 'fun';
 
 interface ToolItem {
   id: string;
@@ -10,6 +10,7 @@ interface ToolItem {
   category: ToolCategory;
   icon: string;
   desc: string;
+  htmlFile?: string;
 }
 
 export const ALL_TOOLS: ToolItem[] = [
@@ -26,6 +27,53 @@ export const ALL_TOOLS: ToolItem[] = [
   { id: 'html', name: 'HTML Escaper', category: 'dev', icon: '🌐', desc: 'Escape & unescape special HTML entities' },
   { id: 'slug', name: 'Slug Generator', category: 'dev', icon: '🔗', desc: 'Generate clean URL-friendly slugs' },
   { id: 'md2html', name: 'Markdown to HTML', category: 'dev', icon: '📄', desc: 'Instant markdown preview & HTML generator' },
+  { id: 'elementor', name: 'Drag-and-Drop Page Prototyper', category: 'dev', icon: '🧱', desc: 'Visual landing page block layout builder', htmlFile: 'elementor.html' },
+  { id: 'wpgen', name: 'WordPress Theme & Plugin Gen', category: 'dev', icon: '🔌', desc: 'Generate custom WordPress theme boilerplates & hooks', htmlFile: 'wordpress-generator.html' },
+  { id: 'chromeext', name: 'Chrome Extension Builder', category: 'dev', icon: '🧩', desc: 'Generate Manifest v3 extension scaffolding & popups', htmlFile: 'chrome-extension.html' },
+  { id: 'codeformat', name: 'Multi-Language Code Formatter', category: 'dev', icon: '💻', desc: 'Format and beautify JS, Python, HTML & CSS', htmlFile: 'code-formatter.html' },
+  { id: 'seoaudit', name: 'SEO Health & Speed Auditor', category: 'dev', icon: '🔍', desc: 'Inspect meta tags, heading hierarchy & crawl speed', htmlFile: 'seo-auditor.html' },
+
+  // PDF & Document Suite (18 tools)
+  { id: 'ocr', name: 'OCR Text Extractor', category: 'pdf', icon: '🔍', desc: 'Extract text from scanned images and documents locally', htmlFile: 'ocr.html' },
+  { id: 'compresspdf', name: 'Compress PDF Optimizer', category: 'pdf', icon: '🗜️', desc: 'Reduce and compress PDF document size', htmlFile: 'compress-pdf.html' },
+  { id: 'pdftoword', name: 'PDF to Word (.docx)', category: 'pdf', icon: '📄', desc: 'Convert PDF files into editable Word documents', htmlFile: 'pdf-to-word.html' },
+  { id: 'wordtopdf', name: 'Word to PDF (.pdf)', category: 'pdf', icon: '📝', desc: 'Convert Word docx files into standard PDF', htmlFile: 'word-to-pdf.html' },
+  { id: 'excel2pdf', name: 'Excel to PDF', category: 'pdf', icon: '📊', desc: 'Convert Excel spreadsheets into printable PDF tables', htmlFile: 'excel-to-pdf.html' },
+  { id: 'ppt2pdf', name: 'PowerPoint to PDF', category: 'pdf', icon: '📽️', desc: 'Convert PPT slides into high-fidelity PDF pages', htmlFile: 'powerpoint-to-pdf.html' },
+  { id: 'pdf2excel', name: 'PDF to Excel', category: 'pdf', icon: '📈', desc: 'Extract tabular data from PDF into spreadsheets', htmlFile: 'pdf-to-excel.html' },
+  { id: 'png2pdf', name: 'PNG Images to PDF', category: 'pdf', icon: '🖼️', desc: 'Combine multiple PNG images into a single PDF', htmlFile: 'png-to-pdf.html' },
+  { id: 'pdf2png', name: 'PDF to PNG Images', category: 'pdf', icon: '📸', desc: 'Render and extract high-resolution PNG pages', htmlFile: 'pdf-to-png.html' },
+  { id: 'pdf2audio', name: 'PDF to Audio Book', category: 'pdf', icon: '🎧', desc: 'Synthesize spoken audio speech from PDF pages', htmlFile: 'pdf-to-audio.html' },
+  { id: 'audio2pdf', name: 'Audio Speech to PDF', category: 'pdf', icon: '🎙️', desc: 'Transcribe spoken audio into PDF transcripts', htmlFile: 'audio-to-pdf.html' },
+  { id: 'pdftranslate', name: 'PDF Multilingual Translate', category: 'pdf', icon: '🌐', desc: 'Translate PDF documents across 50+ languages', htmlFile: 'pdf-translator.html' },
+  { id: 'pdf2zip', name: 'PDF to ZIP Archive', category: 'pdf', icon: '📦', desc: 'Compress PDF attachments into ZIP archives', htmlFile: 'pdf-to-zip.html' },
+  { id: 'zip2pdf', name: 'ZIP Archive to PDF', category: 'pdf', icon: '🗄️', desc: 'Unpack and compile document archives into PDF', htmlFile: 'zip-to-pdf.html' },
+  { id: 'pdf2xml', name: 'PDF to Structured XML', category: 'pdf', icon: '⚙️', desc: 'Parse document elements into structured XML', htmlFile: 'pdf-to-xml.html' },
+  { id: 'pdf2ttf', name: 'PDF Font to TTF', category: 'pdf', icon: '🔤', desc: 'Extract embedded TrueType fonts from PDF', htmlFile: 'pdf-to-ttf.html' },
+  { id: 'pdf2ebook', name: 'PDF to EPUB / Ebook', category: 'pdf', icon: '📚', desc: 'Reflow and format PDF documents for e-readers', htmlFile: 'pdf-to-ebook.html' },
+  { id: 'ebook2pdf', name: 'Ebook / EPUB to PDF', category: 'pdf', icon: '📖', desc: 'Convert e-books into printable PDF format', htmlFile: 'ebook-to-pdf.html' },
+
+  // AI Writing & Content Suite (7 tools)
+  { id: 'essaywriter', name: 'AI Academic Essayist', category: 'writer', icon: '✍️', desc: 'Generate academic essays, arguments & outlines', htmlFile: 'essay-writer.html' },
+  { id: 'humanizer', name: 'Anti-AI Text Humanizer', category: 'writer', icon: '🧠', desc: 'Make AI writing sound natural, authentic and human', htmlFile: 'paragraph-humanizer.html' },
+  { id: 'contentimprover', name: 'Content Polish & Improver', category: 'writer', icon: '✨', desc: 'Refine sentence flow, vocabulary, and clarity', htmlFile: 'content-improver.html' },
+  { id: 'parawriter', name: 'Paragraph Generator', category: 'writer', icon: '📋', desc: 'Write detailed topic paragraphs instantly', htmlFile: 'paragraph-writer.html' },
+  { id: 'paracompleter', name: 'Sentence Auto-Finisher', category: 'writer', icon: '⚡', desc: 'Contextually complete unfinished sentences', htmlFile: 'paragraph-completer.html' },
+  { id: 'readmearch', name: 'README Documentation Architect', category: 'writer', icon: '📖', desc: 'Generate professional project README documents', htmlFile: 'readme-generator.html' },
+  { id: 'mdpreview', name: 'Live Markdown Previewer', category: 'writer', icon: '📝', desc: 'Interactive markdown editor with live HTML preview', htmlFile: 'markdown-previewer.html' },
+
+  // Professional, CAD & 3D (11 tools)
+  { id: 'dwg2pdf', name: 'AutoCAD DWG to PDF', category: 'cad', icon: '📐', desc: 'Convert CAD DWG blueprints into PDF drawings', htmlFile: 'dwg-to-pdf.html' },
+  { id: 'pdf2dwg', name: 'PDF to AutoCAD DWG', category: 'cad', icon: '📏', desc: 'Vectorize PDF architectural drawings into CAD DWG', htmlFile: 'pdf-to-dwg.html' },
+  { id: 'pdf2dxf', name: 'PDF to CAD DXF', category: 'cad', icon: '📐', desc: 'Convert vector diagrams into CAD DXF interchange', htmlFile: 'pdf-to-dxf.html' },
+  { id: 'pdf2dst', name: 'PDF to Embroidery DST', category: 'cad', icon: '🧵', desc: 'Convert vector artwork to Tajima embroidery stitches', htmlFile: 'pdf-to-dst.html' },
+  { id: 'to3d', name: '2D to 3D OBJ / GLTF', category: 'cad', icon: '🧊', desc: 'Extrude 2D artwork into 3D printable meshes', htmlFile: 'convert-to-3d.html' },
+  { id: 'tofigma', name: 'Convert to Figma Vector', category: 'cad', icon: '🎨', desc: 'Export UI layouts to Figma component frames', htmlFile: 'convert-to-figma.html' },
+  { id: 'tosketch', name: 'Convert to Sketch Vector', category: 'cad', icon: '💎', desc: 'Export graphic assets to Sketch vector artboards', htmlFile: 'convert-to-sketch.html' },
+  { id: 'toxd', name: 'Convert to Adobe XD', category: 'cad', icon: '📱', desc: 'Export responsive wireframes to Adobe XD', htmlFile: 'convert-to-xd.html' },
+  { id: 'topsd', name: 'Convert to Layered PSD', category: 'cad', icon: '🖼️', desc: 'Generate layered Photoshop documents from graphics', htmlFile: 'convert-to-psd.html' },
+  { id: 'toai', name: 'Convert to Adobe AI', category: 'cad', icon: '✏️', desc: 'Convert graphics to Adobe Illustrator AI format', htmlFile: 'convert-to-ai.html' },
+  { id: 'toraw', name: 'Digital Camera RAW Studio', category: 'cad', icon: '📷', desc: 'Process and develop digital camera RAW negatives', htmlFile: 'convert-to-raw.html' },
 
   // Calculators & Financial (12 tools)
   { id: 'unit', name: 'Universal Unit Converter', category: 'calc', icon: '📐', desc: 'Convert Length, Weight, and Temperature' },
@@ -40,6 +88,32 @@ export const ALL_TOOLS: ToolItem[] = [
   { id: 'tip', name: 'Tip & Bill Splitter', category: 'calc', icon: '🪙', desc: 'Split restaurant checks & group tips' },
   { id: 'compound', name: 'Compound Interest', category: 'calc', icon: '💹', desc: 'Calculate investment growth over years' },
   { id: 'tax', name: 'Sales Tax / GST', category: 'calc', icon: '🧾', desc: 'Net to gross breakdown & tax calculations' },
+  { id: 'universalconv', name: 'Universal Multi-Unit Converter', category: 'calc', icon: '🌐', desc: 'Convert energy, pressure, speed & data units', htmlFile: 'universal-converter.html' },
+
+  // Creative & Visual Studio (18 tools)
+  { id: 'neumorphism', name: 'Neumorphism Soft UI', category: 'design', icon: '🔘', desc: 'Generate soft tactile extruded & inset UI elements', htmlFile: 'neumorphism.html' },
+  { id: 'meshgrad', name: 'Fluid Mesh Gradient', category: 'design', icon: '🌀', desc: 'Design multi-point fluid organic background gradients', htmlFile: 'mesh-gradient.html' },
+  { id: 'gradgen', name: 'Advanced Gradient Studio', category: 'design', icon: '🌈', desc: 'Complex radial, linear & conic gradient generator', htmlFile: 'gradient-generator.html' },
+  { id: 'gradmap', name: 'Dual-Tone Gradient Map', category: 'design', icon: '🎭', desc: 'Map gradient duotone palettes onto imagery', htmlFile: 'gradient-map.html' },
+  { id: 'text3d', name: '3D Isometric Text Studio', category: 'design', icon: '🔠', desc: 'Create extruded isometric 3D typography', htmlFile: '3d-text-generator.html' },
+  { id: 'aiimage', name: 'AI Visual Image Studio', category: 'design', icon: '🎨', desc: 'Generate visual artwork from creative text prompts', htmlFile: 'ai-image-generator.html' },
+  { id: 'brandlogo', name: 'Brand Identity & Logo Studio', category: 'design', icon: '👑', desc: 'Design clean vector logo marks and typography', htmlFile: 'logo-designer.html' },
+  { id: 'appicon', name: 'App Icon Bundle Creator', category: 'design', icon: '📱', desc: 'Export iOS & Android app icon resolution sets', htmlFile: 'app-icon-generator.html' },
+  { id: 'favicon', name: 'Multi-size Favicon Generator', category: 'design', icon: '⭐', desc: 'Generate 16x16, 32x32, 192x192 browser favicons', htmlFile: 'favicon-generator.html' },
+  { id: 'noisegen', name: 'Procedural Noise Generator', category: 'design', icon: '🧂', desc: 'Generate grain & canvas noise overlay textures', htmlFile: 'noise-generator.html' },
+  { id: 'pattern', name: 'Seamless SVG Pattern Generator', category: 'design', icon: '🏁', desc: 'Generate seamless repeating geometric backgrounds', htmlFile: 'pattern-generator.html' },
+  { id: 'socialpost', name: 'Social Media Post Architect', category: 'design', icon: '📢', desc: 'Design viral post layouts and captions', htmlFile: 'social-post-generator.html' },
+  { id: 'imgvector', name: 'Image to Vector SVG', category: 'design', icon: '⚡', desc: 'Trace raster pixel images into scalable vector SVG', htmlFile: 'image-to-vector.html' },
+  { id: 'upscale', name: 'Image Enhancer & Upscaler', category: 'design', icon: '🚀', desc: 'Increase image sharpness and upscale pixel count', htmlFile: 'upscale-image.html' },
+  { id: 'watermark', name: 'Watermark Remover & Clean-up', category: 'design', icon: '🧽', desc: 'Remove artifacts, watermarks & date stamps', htmlFile: 'remove-watermark.html' },
+  { id: 'textdesign', name: 'Typography & Poster Studio', category: 'design', icon: '📜', desc: 'Create bold graphic poster typography styles', htmlFile: 'text-design.html' },
+  { id: 'psdbrush', name: 'Photoshop Brush Converter', category: 'design', icon: '🖌️', desc: 'Convert image masks into .ABR Photoshop brushes', htmlFile: 'psd-brushes.html' },
+  { id: 'colorblind', name: 'Color Blindness Simulator', category: 'design', icon: '👁️', desc: 'Simulate Protanopia, Deuteranopia & Tritanopia', htmlFile: 'color-blindness.html' },
+  { id: 'hextorgb', name: 'HEX / RGB / HSL', category: 'design', icon: '🎨', desc: 'Live color translator with visual preview' },
+  { id: 'gradient', name: 'CSS Gradient Gen', category: 'design', icon: '🌈', desc: 'Generate modern CSS multi-color gradients' },
+  { id: 'shadow', name: 'Box Shadow Gen', category: 'design', icon: '📦', desc: 'Generate elevation & glow CSS shadows' },
+  { id: 'glass', name: 'Glassmorphism Gen', category: 'design', icon: '🪟', desc: 'Frosted glass CSS with blur & opacity sliders' },
+  { id: 'palette', name: 'Material Palette Gen', category: 'design', icon: '🎭', desc: 'Generate full 50-900 shade palette for any color' },
 
   // Text & Content (7 tools)
   { id: 'case', name: 'Case Converter', category: 'text', icon: '🔠', desc: 'UPPER, lower, Title, camel, snake, kebab' },
@@ -61,13 +135,6 @@ export const ALL_TOOLS: ToolItem[] = [
   { id: 'robots', name: 'Robots.txt Generator', category: 'seo', icon: '🤖', desc: 'Directives for Google, Bing & AI crawlers' },
   { id: 'sitemap', name: 'XML Sitemap Gen', category: 'seo', icon: '🗺️', desc: 'Generate standard compliant XML sitemaps' },
   { id: 'http', name: 'HTTP Status Codes', category: 'seo', icon: '🚥', desc: 'Instant code explanations & resolutions' },
-
-  // Design & Colors (5 tools)
-  { id: 'hextorgb', name: 'HEX / RGB / HSL', category: 'design', icon: '🎨', desc: 'Live color translator with visual preview' },
-  { id: 'gradient', name: 'CSS Gradient Gen', category: 'design', icon: '🌈', desc: 'Generate modern CSS multi-color gradients' },
-  { id: 'shadow', name: 'Box Shadow Gen', category: 'design', icon: '📦', desc: 'Generate elevation & glow CSS shadows' },
-  { id: 'glass', name: 'Glassmorphism Gen', category: 'design', icon: '🪟', desc: 'Frosted glass CSS with blur & opacity sliders' },
-  { id: 'palette', name: 'Material Palette Gen', category: 'design', icon: '🎭', desc: 'Generate full 50-900 shade palette for any color' },
 
   // Fun & Games (6 tools)
   { id: 'coin', name: '3D Coin Toss', category: 'fun', icon: '🪙', desc: 'Heads or tails random decision maker' },
@@ -341,11 +408,14 @@ function ToolsSlideDrawer({
           {[
             { id: 'all', label: '🌟 All' },
             { id: 'dev', label: '💻 Dev' },
+            { id: 'pdf', label: '📄 PDF Suite' },
+            { id: 'writer', label: '✍️ AI Writer' },
+            { id: 'cad', label: '📐 CAD & 3D' },
+            { id: 'design', label: '🎨 Design' },
             { id: 'calc', label: '🧮 Math' },
             { id: 'text', label: '📝 Text' },
-            { id: 'prod', label: '⚡ Productivity' },
+            { id: 'prod', label: '⚡ Productive' },
             { id: 'seo', label: '🔍 SEO' },
-            { id: 'design', label: '🎨 Design' },
             { id: 'fun', label: '🎲 Fun' },
           ].map((cat) => (
             <button
@@ -938,11 +1008,14 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
         {[
           { id: 'all', label: '🌟 All Tools' },
           { id: 'dev', label: '💻 Developer' },
+          { id: 'pdf', label: '📄 PDF Suite' },
+          { id: 'writer', label: '✍️ AI Writing' },
+          { id: 'cad', label: '📐 CAD & 3D' },
+          { id: 'design', label: '🎨 Design & UI' },
           { id: 'calc', label: '🧮 Calculators' },
           { id: 'text', label: '📝 Text' },
           { id: 'prod', label: '⚡ Productivity' },
           { id: 'seo', label: '🔍 SEO & Web' },
-          { id: 'design', label: '🎨 Design' },
           { id: 'fun', label: '🎲 Fun & Games' },
         ].map((c) => (
           <button
@@ -960,6 +1033,49 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
 
       {/* Active Interactive Tool Workspace */}
       <div style={{ background: 'rgba(10, 15, 28, 0.75)', border: '1px solid var(--border-glass)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
+        {/* Dynamic HTML Suite Tool Loader if tool has htmlFile */}
+        {(() => {
+          const currentTool = ALL_TOOLS.find((t) => t.id === activeToolId);
+          if (currentTool?.htmlFile) {
+            return (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '22px' }}>{currentTool.icon}</span>
+                    <div>
+                      <h4 style={{ fontSize: '15px', fontWeight: 800, margin: 0, color: '#fff' }}>{currentTool.name}</h4>
+                      <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>{currentTool.desc}</p>
+                    </div>
+                  </div>
+                  <button
+                    className="btn-secondary"
+                    style={{ padding: '4px 8px', fontSize: '11px' }}
+                    onClick={() => {
+                      const iframe = document.getElementById('tool-suite-iframe') as HTMLIFrameElement;
+                      if (iframe) iframe.src = iframe.src;
+                      tg.haptic('light');
+                    }}
+                  >
+                    🔄 Reload
+                  </button>
+                </div>
+                <iframe
+                  id="tool-suite-iframe"
+                  src={`./tools-suite/tools/${currentTool.htmlFile}`}
+                  style={{
+                    width: '100%',
+                    height: '620px',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: '16px',
+                    background: '#0d1322',
+                  }}
+                  title={currentTool.name}
+                />
+              </div>
+            );
+          }
+          return null;
+        })()}
         {/* Unit Converter */}
         {activeToolId === 'unit' && (
           <div>

@@ -1,0 +1,267 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Logo Designer - Universal Studio</title>
+    <meta name="description" content="Define your brand identity in seconds. Professional, vector-ready logos tailored to your vision.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/tool-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
+            <div class="nav-container">
+                <button class="mobile-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="main-nav">
+                <a href="../index.html" class="nav-link">Home</a>
+                
+                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Catalog <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass">
+                        <a href="#featured" class="dropdown-item">
+                            <i class="fas fa-star"></i> Featured Favorites
+                        </a>
+                        <a href="#multimedia" class="dropdown-item">
+                            <i class="fas fa-palette"></i> Multimedia & Creative
+                        </a>
+                        <a href="#ai-writing" class="dropdown-item">
+                            <i class="fas fa-pen-nib"></i> AI Writing & Content
+                        </a>
+                        <a href="#pdf-suite" class="dropdown-item">
+                            <i class="fas fa-file-pdf"></i> PDF & Document
+                        </a>
+                        <a href="#professional" class="dropdown-item">
+                            <i class="fas fa-drafting-compass"></i> Professional & CAD
+                        </a>
+                        <a href="#developer" class="dropdown-item">
+                            <i class="fas fa-code"></i> Developer Utilities
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#about" class="nav-link">About</a>
+                
+                                <div class="dropdown">
+                    <button class="dropdown-trigger">
+                        Trending <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu glass"> 
+                        <a href="ocr.html" class="dropdown-item">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
+                        </a> 
+                        <a href="ai-image-generator.html" class="dropdown-item">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
+                        </a> 
+                        <a href="compress-pdf.html" class="dropdown-item">
+                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
+                        </a> 
+                        <a href="essay-writer.html" class="dropdown-item">
+                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-actions">
+                
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Expert Logo Designer</h1>
+            <p>Define your brand identity in seconds. Professional, vector-ready logos tailored to your vision.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="tool-container">
+            <div class="tool-app glass">
+                <div class="logo-preview-box" id="logoPreview">
+                    <div id="logoIcon"><i class="fas fa-rocket"></i></div>
+                    <div id="logoText">BRANDNAME</div>
+                </div>
+
+                <div class="logo-controls">
+                    <div class="input-field">
+                        <label style="display: block; font-weight: 700; margin-bottom: 0.75rem; font-size: 0.9rem; text-transform: uppercase;">Company Name</label>
+                        <input type="text" id="brandInput" placeholder="Enter your business name..." style="margin: 0;">
+                    </div>
+                    
+                    <div class="controls-inner">
+                        <div class="select-field">
+                            <label style="display: block; font-weight: 700; margin-bottom: 0.75rem; font-size: 0.9rem; text-transform: uppercase;">Industry</label>
+                            <select id="industry" style="margin: 0;">
+                                <option value="tech">Technology & AI</option>
+                                <option value="store">Modern Retail</option>
+                                <option value="food">Gourmet & Dining</option>
+                                <option value="art">Creative Media</option>
+                            </select>
+                        </div>
+                        <div class="button-field" style="display: flex; align-items: flex-end;">
+                            <button class="btn-primary" id="genBtn" style="width: 100%;">
+                                <i class="fas fa-magic"></i> Generate Brand
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
+                    <button class="btn-secondary" id="downloadBtn"><i class="fas fa-download"></i> Download PNG</button>
+                    <button class="btn-secondary"><i class="fas fa-file-export"></i> Export SVG</button>
+                </div>
+            </div>
+
+            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+        </div>
+
+        <article class="tool-content">
+            <section>
+                <h2>A Visual Representative</h2>
+                <p>Your logo is the first thing customers see. It represents your mission, your quality, and your unique approach to your industry. Our **Expert Logo Designer** combines high-fidelity iconography with bold typography to give you a head start on your branding journey.</p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Universal Studio</h4>
+                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Legals</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html#about">About Us</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="footer-social-grid">
+                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
+                            <i class="fas fa-briefcase"></i>
+                        </a>
+                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
+                            <i class="fas fa-tools"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        const icons = {
+            tech: ['fa-microchip', 'fa-code', 'fa-server', 'fa-robot', 'fa-network-wired'],
+            store: ['fa-shopping-bag', 'fa-tag', 'fa-cart-shopping', 'fa-store', 'fa-credit-card'],
+            food: ['fa-utensils', 'fa-mug-hot', 'fa-pizza-slice', 'fa-burger', 'fa-drumstick-bite'],
+            art: ['fa-palette', 'fa-paint-brush', 'fa-pen-nib', 'fa-camera-retro', 'fa-bezier-curve']
+        };
+
+        const btn = document.getElementById('genBtn');
+        const iconDiv = document.getElementById('logoIcon');
+        const textDiv = document.getElementById('logoText');
+        const brandIn = document.getElementById('brandInput');
+        const indIn = document.getElementById('industry');
+        const preview = document.getElementById('logoPreview');
+
+        btn.onclick = () => {
+            const list = icons[indIn.value];
+            const icon = list[Math.floor(Math.random() * list.length)];
+            
+            // Minimal animation transition
+            preview.style.transform = 'scale(0.95)';
+            preview.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                iconDiv.innerHTML = `<i class="fas ${icon}"></i>`;
+                textDiv.textContent = brandIn.value || "BRANDNAME";
+                
+                const colors = ['#230046', '#003a2f', '#4a0000', '#00264d', '#3d2b1f', '#0f172a'];
+                const accentColors = ['#6366f1', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#ec4899'];
+                
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const randomAccent = accentColors[Math.floor(Math.random() * accentColors.length)];
+                
+                textDiv.style.color = randomColor;
+                iconDiv.style.color = randomAccent;
+                
+                preview.style.transform = 'scale(1)';
+                preview.style.opacity = '1';
+            }, 300);
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

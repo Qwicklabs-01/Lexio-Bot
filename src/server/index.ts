@@ -42,6 +42,11 @@ async function startServer(): Promise<void> {
   // Serve Mini App Static Files
   const miniAppDistPath = path.resolve(__dirname, '../../src/mini-app/dist');
   app.use('/app', express.static(miniAppDistPath));
+
+  // Serve Universal Tool Suite from tool repo
+  const toolsSuitePath = path.resolve(__dirname, '../../src/tools-suite');
+  app.use('/tools-suite', express.static(toolsSuitePath));
+  app.use('/app/tools-suite', express.static(toolsSuitePath));
   app.get('/app/*', (_req, res) => {
     res.sendFile(path.join(miniAppDistPath, 'index.html'), (err) => {
       if (err) {

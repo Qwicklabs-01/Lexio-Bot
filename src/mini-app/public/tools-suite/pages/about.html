@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Universal Studio - Pro Multi-Tool Suite</title>
+    <meta name="description" content="Learn more about Universal Studio, our mission to provide free, privacy-first online tools, and the team behind the platform.">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .about-hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-wrapper">
+            <a href="../index.html" class="logo">Universal Studio</a>
+            <div class="nav-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="about-hero">
+            <h1>Our Mission <br><span style="color: var(--primary)">Empowering Creativity.</span></h1>
+            <p style="max-width: 800px; margin: 2rem auto;">Universal Studio was built with a single goal: to provide high-quality, professional-grade tools for everyone, without the need for expensive subscriptions or account signups.</p>
+        </section>
+
+        <section class="about-grid">
+            <div>
+                <h2>Privacy First</h2>
+                <p>Most online tools require you to upload your sensitive data to their servers. At Universal Studio, we do things differently. By leveraging modern Web APIs, we process your files **directly in your browser**. Your data never leaves your computer, ensuring total privacy and security.</p>
+            </div>
+            <div class="glass" style="height: 300px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">🛡️</div>
+        </section>
+
+        <section class="about-grid" style="direction: rtl;">
+            <div style="direction: ltr;">
+                <h2>Unparalleled Performance</h2>
+                <p>We optimize every tool to be lightning-fast. Whether you are generating a GitHub README or converting a PDF to audio, our platform uses your machine's local power to deliver results in seconds. No server queues, no waiting.</p>
+            </div>
+            <div class="glass" style="height: 300px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">⚡</div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Universal Studio. Built for the modern web.</p>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>

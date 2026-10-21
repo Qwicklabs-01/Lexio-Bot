@@ -8,6 +8,9 @@ import {
   getToolBoxDesignKeyboard,
   getToolBoxProductivityKeyboard,
   getToolBoxFunKeyboard,
+  getToolBoxPdfKeyboard,
+  getToolBoxWriterKeyboard,
+  getToolBoxCadKeyboard,
   getBackToCategoryKeyboard,
   getBackToMenuKeyboard,
 } from '../keyboards/tool.keyboards.js';
@@ -113,6 +116,30 @@ export async function handleToolCategory(ctx: BotContext, category: string): Pro
       {
         parse_mode: 'Markdown',
         reply_markup: getToolBoxProductivityKeyboard(),
+      }
+    );
+  } else if (category === 'pdf') {
+    await ctx.editMessageText(
+      `📄 *PDF & Document Master Suite*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nProcess and convert documents directly inside Telegram:\n\n• 🔍 *Optical OCR:* Extract text from images and documents\n• 🗜️ *Compress PDF:* Reduce document file size\n• 📄 *PDF ⇄ Word, Excel & PPT:* Bi-directional document converter\n• 🎧 *PDF to Audio Book:* Speech synthesis text-to-speech\n• 🌐 *Translate PDF:* Multilingual document translation\n\nSelect a tool or tap below to open the full in-bot page:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxPdfKeyboard(),
+      }
+    );
+  } else if (category === 'writer') {
+    await ctx.editMessageText(
+      `✍️ *AI Writing & Content Architecture*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nState-of-the-art text generation and humanizing engines:\n\n• ✍️ *Academic Essayist:* Essay arguments & theses\n• 🧠 *Anti-AI Humanizer:* Natural tone restyler\n• ✨ *Content Polish:* Vocabulary & flow refinement\n• 📋 *Paragraph Generator:* In-depth topic paragraphs\n• 📖 *README Architect:* Professional project documentation\n\nSelect a tool or tap below to open the full in-bot page:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxWriterKeyboard(),
+      }
+    );
+  } else if (category === 'cad') {
+    await ctx.editMessageText(
+      `📐 *Professional, CAD & 3D Engineering*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nVector blueprints, CAD interchange & 3D mesh engines:\n\n• 📐 *AutoCAD DWG to PDF* & *PDF to DWG*\n• 📏 *CAD DXF Interchange* & *Tajima Embroidery DST*\n• 🧊 *2D to 3D OBJ / GLTF Mesh Extrusion*\n• 🎨 *Vector Export:* Figma, Sketch, Adobe XD, Layered PSD\n\nSelect a tool or tap below to open the full in-bot page:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxCadKeyboard(),
       }
     );
   } else if (category === 'fun') {
@@ -1360,4 +1387,83 @@ async function logToolUsage(userId: string | undefined, toolName: string, meta?:
       data: { toolsUsedCount: { increment: 1 } },
     });
   } catch {}
+}
+
+// ==========================================
+// 8. PDF, Design & Specialized Tool Handlers
+// ==========================================
+export async function handleOcrCommand(ctx: BotContext): Promise<void> {
+  const msg =
+    '🔍 *Optical Character Recognition (OCR) Engine*\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'Extract printed or handwritten text from images & scanned documents directly on-device with 100% privacy.\n\n' +
+    '• 📸 *Supported Inputs:* JPG, PNG, WEBP, PDF\n' +
+    '• ⚡ *Processing:* Client-side local extraction\n' +
+    '• 🌐 *Languages:* 50+ languages supported\n\n' +
+    'Tap below to launch OCR in the Telegram Bot Page:';
+  const keyboard = getBackToCategoryKeyboard('pdf', [
+    [{ text: '🔍 Launch OCR In-Bot Page', data: 'tb_run_ocr_page' }]
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleNeumorphismCommand(ctx: BotContext): Promise<void> {
+  const dist = 12;
+  const blur = 24;
+  const css = 'background: #e0e0e0;\nborder-radius: 20px;\nbox-shadow: ' + dist + 'px ' + dist + 'px ' + blur + 'px #bebebe, -' + dist + 'px -' + dist + 'px ' + blur + 'px #ffffff;';
+  const msg =
+    '🔘 *Soft UI Neumorphism Generator*\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'Generate tactile, extruded and inset soft shadow elements:\n\n' +
+    '```css\n' + css + '\n```\n\n' +
+    '👉 Adjust distance, blur & light elevation in the Bot Page!';
+  const keyboard = getBackToCategoryKeyboard('design');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleMeshGradientCommand(ctx: BotContext): Promise<void> {
+  const css = 'background-color: #ff9a9e;\nbackground-image: radial-gradient(at 80% 0%, hsla(189,100%,56%,1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,1) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340,100%,76%,1) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(22,100%,77%,1) 0px, transparent 50%);';
+  const msg =
+    '🌀 *Fluid Mesh Gradient Generator*\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    'Multi-point organic mesh gradients for modern hero banners:\n\n' +
+    '```css\n' + css + '\n```\n\n' +
+    '👉 Tap below to customize color nodes & export CSS!';
+  const keyboard = getBackToCategoryKeyboard('design');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleEssayWriterCommand(ctx: BotContext, topic = 'Artificial Intelligence'): Promise<void> {
+  const t = topic.trim() || 'Artificial Intelligence';
+  const msg =
+    '✍️ *AI Academic Essay Analyst & Outline*\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '*Topic:* `' + t + '`\n\n' +
+    '• *Thesis Statement:* `' + t + ' acts as a transformative catalyst, restructuring modern knowledge synthesis and operational workflows.`\n\n' +
+    '• *Key Arguments:*\n' +
+    '  1. Foundational principles and contextual reasoning.\n' +
+    '  2. Real-world applications and systemic efficiency.\n' +
+    '  3. Societal and future ethical trajectories.\n\n' +
+    '👉 *Usage:* `/essay <topic>` or use in the in-bot page!';
+  const keyboard = getBackToCategoryKeyboard('writer');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleHumanizerCommand(ctx: BotContext, text = ''): Promise<void> {
+  const input = text.trim() || 'It is crucial to utilize artificial intelligence to optimize multifaceted operational paradigms.';
+  const humanized = input
+    .replace(/crucial/gi, 'vital')
+    .replace(/utilize/gi, 'use')
+    .replace(/multifaceted/gi, 'diverse')
+    .replace(/paradigms/gi, 'processes');
+  const msg =
+    '🧠 *Anti-AI Content Humanizer*\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '*Original Text:*\n' +
+    '```\n' + input + '\n```\n\n' +
+    '*Humanized Natural Output:*\n' +
+    '```\n' + humanized + '\n```\n\n' +
+    '👉 *Usage:* `/humanize <text>`';
+  const keyboard = getBackToCategoryKeyboard('writer');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
 }
