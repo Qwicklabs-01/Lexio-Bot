@@ -1,25 +1,41 @@
-import { InlineKeyboard } from 'grammy';
+import { InlineKeyboard, Keyboard } from 'grammy';
 
 export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
   const keyboard = new InlineKeyboard();
 
-  // Native Lexio Tool Suites directly in Telegram (No external website links)
+  // Task-Driven Selector directly in Telegram (Zero website names)
   keyboard
-    .text('🧰 100+ Multi-Tools', 'menu_toolbox')
+    .text('💻 Code & Dev Tasks', 'tb_cat_dev')
+    .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
     .row()
+    .text('📝 Text & Writing Tasks', 'tb_cat_text')
+    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
+    .row()
+    .text('🎨 Color & Design Tasks', 'tb_cat_design')
+    .text('⚡ Productivity Tasks', 'tb_cat_prod')
+    .row()
+    .text('🎲 Fun & Games', 'tb_cat_fun')
     .text('🎬 Media Downloader', 'menu_nexus')
     .row()
-    .text('📊 Social & Creator Analytics', 'menu_feedigger')
-    .row();
-
-  // User Stats & Help
-  keyboard
-    .text('📈 My Activity & Stats', 'user_stats')
-    .text('❓ Help & Commands', 'menu_help');
+    .text('📊 Creator Analytics', 'menu_feedigger')
+    .text('📖 Task Directory', 'menu_help');
 
   if (isAdmin) {
-    keyboard.row().text('👑 Admin Control Center', 'admin_panel');
+    keyboard.row().text('👑 Admin Dashboard', 'admin_panel');
   }
 
   return keyboard;
 }
+
+export function getPersistentReplyKeyboard(): Keyboard {
+  return new Keyboard()
+    .text('🧰 Choose Task / Tool')
+    .text('🎬 Media Downloader')
+    .row()
+    .text('📊 Creator Analytics')
+    .text('📖 Task Directory')
+    .resized()
+    .persistent();
+}
+
+

@@ -4,8 +4,10 @@ import { getMainMenuKeyboard } from '../keyboards/main.menu.js';
 export async function handleMenu(ctx: BotContext): Promise<void> {
   const isAdmin = ctx.state?.isAdmin || false;
   const menuText =
-    `🧭 *Main Navigation Menu*\n\n` +
-    `Select a tool suite below to run directly in Telegram:`;
+    `🧭 *CHOOSE YOUR TASK / TOOL TYPE*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `What type of task do you need to complete?\n\n` +
+    `Select a suite below to use any tool instantly inside this chat:`;
 
   if (ctx.callbackQuery) {
     try {
@@ -14,16 +16,12 @@ export async function handleMenu(ctx: BotContext): Promise<void> {
         reply_markup: getMainMenuKeyboard(isAdmin),
       });
       await ctx.answerCallbackQuery();
-    } catch {
-      await ctx.reply(menuText, {
-        parse_mode: 'Markdown',
-        reply_markup: getMainMenuKeyboard(isAdmin),
-      });
-    }
-  } else {
-    await ctx.reply(menuText, {
-      parse_mode: 'Markdown',
-      reply_markup: getMainMenuKeyboard(isAdmin),
-    });
+      return;
+    } catch {}
   }
+  await ctx.reply(menuText, {
+    parse_mode: 'Markdown',
+    reply_markup: getMainMenuKeyboard(isAdmin),
+  });
 }
+

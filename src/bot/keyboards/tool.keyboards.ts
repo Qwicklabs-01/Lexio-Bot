@@ -8,7 +8,8 @@ export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
     .text('🎵 High-Quality MP3', `dl_${downloadId}_mp3`)
     .text('ℹ️ Inspect Info', `dl_${downloadId}_info`)
     .row()
-    .text('🔙 Back to Menu', 'menu_main');
+    .text('🔙 Back to Downloader', 'menu_nexus')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
@@ -24,29 +25,33 @@ export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
     .row()
     .text('📥 Export Full CSV', `fd_export_${handle}`)
     .row()
-    .text('🔙 Back to Menu', 'menu_main');
+    .text('🔙 Back to Analytics', 'menu_feedigger')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .text('💻 Dev & Code Tools', 'tb_cat_dev')
-    .text('🧮 Calculators & Finance', 'tb_cat_calc')
+    .text('💻 Code & Dev Tasks', 'tb_cat_dev')
+    .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
     .row()
-    .text('📝 Text & Content Tools', 'tb_cat_text')
-    .text('🔍 SEO & Web Utilities', 'tb_cat_seo')
+    .text('📝 Text & Writing Tasks', 'tb_cat_text')
+    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
     .row()
-    .text('🎨 Color & Design Tools', 'tb_cat_design')
-    .text('🎲 Random & Fun Games', 'tb_cat_fun')
+    .text('🎨 Color & Design Tasks', 'tb_cat_design')
+    .text('⚡ Productivity Tasks', 'tb_cat_prod')
     .row()
+    .text('🎲 Fun & Games', 'tb_cat_fun')
     .text('🎬 Media Downloader', 'menu_nexus')
-    .text('📊 Creator Analytics', 'menu_feedigger')
     .row()
-    .text('🏠 Back to Main Menu', 'menu_main');
+    .text('📊 Creator Analytics', 'menu_feedigger')
+    .text('📖 Task Directory', 'menu_help')
+    .row()
+    .text('🏠 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxDevKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .text('🔤 JSON Beautifier', 'tb_tool_json')
+    .text('🔤 JSON Formatter', 'tb_tool_json')
     .text('📱 QR Generator', 'tb_tool_qr')
     .row()
     .text('🆔 UUID Generator', 'tb_tool_uuid')
@@ -55,19 +60,24 @@ export function getToolBoxDevKeyboard(): InlineKeyboard {
     .text('🔐 Base64 Tool', 'tb_tool_base64')
     .text('🌐 URL Encoder', 'tb_tool_url')
     .row()
-    .text('🔗 Slug Generator', 'tb_tool_slug')
+    .text('🔗 Slug Maker', 'tb_tool_slug')
     .text('💻 SQL Formatter', 'tb_tool_sql')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('0️⃣1️⃣ Text to Binary', 'tb_tool_binary')
+    .text('🏷️ Markdown to HTML', 'tb_tool_md2html')
+    .row()
+    .text('🗜️ HTML Minifier', 'tb_tool_minhtml')
+    .text('🔍 JWT Inspector', 'tb_tool_jwt')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxCalcKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .text('⚖️ BMI Calculator', 'tb_tool_bmi')
-    .text('🎂 Age Calculator', 'tb_tool_age')
-    .row()
     .text('💰 Loan EMI Calc', 'tb_tool_emi')
+    .text('⚖️ BMI Calculator', 'tb_tool_bmi')
+    .row()
+    .text('🎂 Age Calculator', 'tb_tool_age')
     .text('📊 Percentage Calc', 'tb_tool_percent')
     .row()
     .text('🏷️ Discount Calc', 'tb_tool_discount')
@@ -76,8 +86,13 @@ export function getToolBoxCalcKeyboard(): InlineKeyboard {
     .text('📈 Compound Interest', 'tb_tool_compound')
     .text('🧾 GST / Sales Tax', 'tb_tool_tax')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('🔄 Unit Converter', 'tb_tool_unit')
+    .text('📊 Statistics Calc', 'tb_tool_stats')
+    .row()
+    .text('🎓 GPA Calculator', 'tb_tool_gpa')
+    .text('🔬 Scientific Calc', 'tb_tool_sci')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxTextKeyboard(): InlineKeyboard {
@@ -91,8 +106,9 @@ export function getToolBoxTextKeyboard(): InlineKeyboard {
     .text('📻 Morse Code', 'tb_tool_morse')
     .text('📜 Lorem Ipsum Gen', 'tb_tool_lorem')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('✂️ Character Remover', 'tb_tool_removechar')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxSeoKeyboard(): InlineKeyboard {
@@ -103,19 +119,31 @@ export function getToolBoxSeoKeyboard(): InlineKeyboard {
     .text('🗺️ Sitemap Gen', 'tb_tool_sitemap')
     .text('🚥 HTTP Status Codes', 'tb_tool_http')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('📊 Keyword Density', 'tb_tool_keywords')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxDesignKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .text('🎨 HEX to RGB / HSL', 'tb_tool_hextorgb')
-    .text('🌈 Gradient Gen', 'tb_tool_gradient')
+    .text('🎨 HEX to RGB / RGBA', 'tb_tool_hextorgb')
+    .text('🌈 CSS Gradient Gen', 'tb_tool_gradient')
     .row()
     .text('📦 Box Shadow Gen', 'tb_tool_shadow')
+    .text('🎨 Material Palette', 'tb_tool_palette')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('🔙 Back to Task Menu', 'menu_main');
+}
+
+export function getToolBoxProductivityKeyboard(): InlineKeyboard {
+  return new InlineKeyboard()
+    .text('🔐 Password Gen', 'tb_tool_password')
+    .text('⏱️ Pomodoro Timer', 'tb_tool_pomodoro')
+    .row()
+    .text('📝 Quick Task Keeper', 'tb_tool_todo')
+    .text('📜 Lorem Ipsum', 'tb_tool_lorem')
+    .row()
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getToolBoxFunKeyboard(): InlineKeyboard {
@@ -124,15 +152,12 @@ export function getToolBoxFunKeyboard(): InlineKeyboard {
     .text('🎲 Roll Dice', 'tb_tool_dice')
     .row()
     .text('🎱 Magic 8-Ball', 'tb_tool_8ball')
-    .text('💬 Random Quote', 'tb_tool_quote')
+    .text('💬 Daily Quote', 'tb_tool_quote')
     .row()
     .text('🎯 Choice Picker', 'tb_tool_pick')
-    .text('🔐 Password Gen', 'tb_tool_password')
-    .row()
     .text('🎮 Rock Paper Scissors', 'tb_tool_rps')
     .row()
-    .text('🔙 All Categories', 'menu_toolbox')
-    .text('🏠 Main Menu', 'menu_main');
+    .text('🔙 Back to Task Menu', 'menu_main');
 }
 
 export function getBackToCategoryKeyboard(
@@ -151,20 +176,23 @@ export function getBackToCategoryKeyboard(
   }
 
   const catNames: Record<string, string> = {
-    dev: '💻 Dev Tools',
-    calc: '🧮 Calculators',
-    text: '📝 Text Tools',
-    seo: '🔍 SEO Tools',
-    design: '🎨 Design Tools',
-    fun: '🎲 Fun Tools',
+    dev: '💻 Dev Tasks',
+    calc: '🧮 Math Tasks',
+    text: '📝 Text Tasks',
+    seo: '🔍 SEO Tasks',
+    design: '🎨 Design Tasks',
+    prod: '⚡ Productivity',
+    fun: '🎲 Fun & Games',
   };
 
-  const backLabel = catNames[category] ? `🔙 ${catNames[category]}` : '🔙 Category Menu';
+  const backLabel = catNames[category] ? `🔙 ${catNames[category]}` : '🔙 Tasks';
 
-  keyboard.text(backLabel, `tb_cat_${category}`).text('🏠 Main Menu', 'menu_main');
+  keyboard.text(backLabel, `tb_cat_${category}`).text('🏠 Task Menu', 'menu_main');
   return keyboard;
 }
 
+
 export function getBackToMenuKeyboard(): InlineKeyboard {
-  return new InlineKeyboard().text('🔙 Back to Main Menu', 'menu_main');
+  return new InlineKeyboard().text('🏠 Back to Main Menu', 'menu_main');
 }
+

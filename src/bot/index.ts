@@ -67,7 +67,20 @@ import {
   handleQuoteCommand,
   handlePickCommand,
   handleRpsCommand,
+  handleUnitCommand,
+  handleStatsCommand,
+  handleGpaCommand,
+  handleScientificCommand,
+  handleBinaryCommand,
+  handleMarkdownToHtmlCommand,
+  handleMinifyHtmlCommand,
+  handleKeywordDensityCommand,
+  handleMaterialPaletteCommand,
+  handlePomodoroCommand,
+  handleTodoCommand,
+  handleRemoveCharCommand,
 } from './handlers/toolbox.js';
+import { getMainMenuKeyboard } from './keyboards/main.menu.js';
 import {
   handleAdminPanel,
   handleBroadcastPrompt,
@@ -99,6 +112,7 @@ export function createBot(): Bot<BotContext> {
   bot.command('start', handleStart);
   bot.command('menu', handleMenu);
   bot.command('help', handleHelp);
+  bot.command('tasks', handleMenu);
 
   // Universal Media Commands
   bot.command('download', async (ctx) => {
@@ -120,7 +134,7 @@ export function createBot(): Bot<BotContext> {
   bot.command('hashtags', async (ctx) => handleHashtagsCommand(ctx, ctx.match || 'tech'));
   bot.command('hook', async (ctx) => handleHookCommand(ctx, ctx.match || 'viral video'));
 
-  // Multi-Tools Commands (Comprehensive 100+ Suite)
+  // Multi-Tools Commands (100+ Complete Suite)
   bot.command('tools', handleToolBoxMenu);
   bot.command('json', async (ctx) => handleJsonCommand(ctx, ctx.match || ''));
   bot.command('qr', async (ctx) => handleQrCommand(ctx, ctx.match || ''));
@@ -128,10 +142,13 @@ export function createBot(): Bot<BotContext> {
   bot.command('hash', async (ctx) => handleHashCommand(ctx, ctx.match || ''));
   bot.command('b64', async (ctx) => handleBase64Command(ctx, ctx.match || ''));
   bot.command('b64d', async (ctx) => handleBase64DecodeCommand(ctx, ctx.match || ''));
+  bot.command('binary', async (ctx) => handleBinaryCommand(ctx, ctx.match || ''));
   bot.command('urlencode', async (ctx) => handleUrlEncodeCommand(ctx, ctx.match || ''));
   bot.command('urldecode', async (ctx) => handleUrlDecodeCommand(ctx, ctx.match || ''));
   bot.command('slug', async (ctx) => handleSlugCommand(ctx, ctx.match || ''));
   bot.command('sql', async (ctx) => handleSqlFormatCommand(ctx, ctx.match || ''));
+  bot.command('md2html', async (ctx) => handleMarkdownToHtmlCommand(ctx, ctx.match || ''));
+  bot.command('minhtml', async (ctx) => handleMinifyHtmlCommand(ctx, ctx.match || ''));
   bot.command('html', async (ctx) => handleHtmlCommand(ctx, ctx.match || ''));
   bot.command('jwt', async (ctx) => handleJwtCommand(ctx, ctx.match || ''));
   bot.command('timestamp', async (ctx) => handleTimestampCommand(ctx, ctx.match || ''));
@@ -167,6 +184,13 @@ export function createBot(): Bot<BotContext> {
     const parts = (ctx.match || '').split(' ').filter(Boolean);
     await handleTaxCommand(ctx, parts[0], parts[1]);
   });
+  bot.command('unit', async (ctx) => {
+    const parts = (ctx.match || '').split(' ').filter(Boolean);
+    await handleUnitCommand(ctx, parts[0], parts[1], parts[2]);
+  });
+  bot.command('stats', async (ctx) => handleStatsCommand(ctx, ctx.match || ''));
+  bot.command('gpa', async (ctx) => handleGpaCommand(ctx, ctx.match || ''));
+  bot.command('sci', async (ctx) => handleScientificCommand(ctx, ctx.match || ''));
 
   // Text Utilities
   bot.command('case', async (ctx) => handleCaseCommand(ctx, ctx.match || ''));
@@ -175,20 +199,27 @@ export function createBot(): Bot<BotContext> {
   bot.command('sort', async (ctx) => handleSortCommand(ctx, ctx.match || ''));
   bot.command('morse', async (ctx) => handleMorseCommand(ctx, ctx.match || ''));
   bot.command('lorem', async (ctx) => handleLoremCommand(ctx, ctx.match || '1'));
+  bot.command('removechar', async (ctx) => handleRemoveCharCommand(ctx, ctx.match || ''));
 
   // SEO & Web
   bot.command('meta', async (ctx) => handleMetaCommand(ctx, ctx.match || ''));
   bot.command('robots', async (ctx) => handleRobotsCommand(ctx, ctx.match || ''));
   bot.command('sitemap', async (ctx) => handleSitemapCommand(ctx, ctx.match || ''));
+  bot.command('keywords', async (ctx) => handleKeywordDensityCommand(ctx, ctx.match || ''));
   bot.command('http', async (ctx) => handleHttpStatusCommand(ctx, ctx.match || '200'));
 
   // Color & Design
   bot.command('hex', async (ctx) => handleHexToRgbCommand(ctx, ctx.match || '#38bdf8'));
   bot.command('gradient', handleGradientCommand);
   bot.command('shadow', handleShadowCommand);
+  bot.command('palette', async (ctx) => handleMaterialPaletteCommand(ctx, ctx.match || 'blue'));
+
+  // Productivity & Tasks
+  bot.command('password', async (ctx) => handlePasswordCommand(ctx, ctx.match || ''));
+  bot.command('pomodoro', handlePomodoroCommand);
+  bot.command('todo', async (ctx) => handleTodoCommand(ctx, ctx.match || ''));
 
   // Random & Games
-  bot.command('password', async (ctx) => handlePasswordCommand(ctx, ctx.match || ''));
   bot.command('coin', handleCoinCommand);
   bot.command('dice', async (ctx) => handleDiceCommand(ctx, ctx.match || '6'));
   bot.command('8ball', async (ctx) => handle8BallCommand(ctx, ctx.match || ''));
@@ -209,6 +240,7 @@ export function createBot(): Bot<BotContext> {
   bot.callbackQuery('admin_panel', handleAdminPanel);
   bot.callbackQuery('admin_broadcast_prompt', handleBroadcastPrompt);
   bot.callbackQuery('admin_broadcast_confirm', handleBroadcastConfirm);
+
 
   // Dynamic Tool Categories
   bot.callbackQuery(/^tb_cat_(.+)$/, async (ctx) => {
@@ -387,6 +419,74 @@ export function createBot(): Bot<BotContext> {
     await handleRpsCommand(ctx, 'rock');
   });
 
+  // Additional Task Callbacks
+  bot.callbackQuery('tb_tool_binary', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleBinaryCommand(ctx, 'Lexio');
+  });
+  bot.callbackQuery('tb_tool_md2html', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleMarkdownToHtmlCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_minhtml', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleMinifyHtmlCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_unit', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleUnitCommand(ctx, '5', 'mi', 'km');
+  });
+  bot.callbackQuery('tb_tool_stats', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleStatsCommand(ctx, '12, 15, 23, 45, 12, 30, 18');
+  });
+  bot.callbackQuery('tb_tool_gpa', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleGpaCommand(ctx, 'A, A-, B+, A, B');
+  });
+  bot.callbackQuery('tb_tool_sci', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleScientificCommand(ctx, 'sqrt(144) + pow(2, 6)');
+  });
+  bot.callbackQuery('tb_tool_keywords', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleKeywordDensityCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_palette', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleMaterialPaletteCommand(ctx, 'blue');
+  });
+  bot.callbackQuery('tb_tool_pomodoro', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handlePomodoroCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_todo', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleTodoCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_removechar', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleRemoveCharCommand(ctx);
+  });
+
+  // Media & Social Demo Callbacks
+  bot.callbackQuery('dl_sample_yt', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  });
+  bot.callbackQuery('dl_sample_ig', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleIncomingMediaUrl(ctx, 'https://www.instagram.com/reel/C7x90ABc1/');
+  });
+  bot.callbackQuery('fd_demo_mrbeast', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleExcavateCommand(ctx, 'mrbeast');
+  });
+  bot.callbackQuery('fd_demo_instagram', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleExcavateCommand(ctx, 'instagram');
+  });
+
   // Dynamic Rerun & Preset Tool Actions (Instant in-chat execution)
   bot.callbackQuery(/^tb_run_(.+)$/, async (ctx) => {
     const action = ctx.match[1];
@@ -415,6 +515,27 @@ export function createBot(): Bot<BotContext> {
     if (action === 'comp_20_10_15') return handleCompoundCommand(ctx, '20000', '10', '15');
     if (action === 'tax_500_10') return handleTaxCommand(ctx, '500', '10');
     if (action === 'tax_2000_18') return handleTaxCommand(ctx, '2000', '18');
+    if (action === 'u_5mi_km') return handleUnitCommand(ctx, '5', 'mi', 'km');
+    if (action === 'u_100cm_in') return handleUnitCommand(ctx, '100', 'cm', 'in');
+    if (action === 'u_70kg_lbs') return handleUnitCommand(ctx, '70', 'kg', 'lbs');
+    if (action === 'u_37c_f') return handleUnitCommand(ctx, '37', 'c', 'f');
+    if (action === 'stats_a') return handleStatsCommand(ctx, '10, 25, 40, 15, 30, 25');
+    if (action === 'stats_b') return handleStatsCommand(ctx, '5, 8, 12, 19, 24, 30, 45');
+    if (action === 'gpa_top') return handleGpaCommand(ctx, 'A, A, A, A-');
+    if (action === 'gpa_mid') return handleGpaCommand(ctx, 'B+, B, B-, A-');
+    if (action === 'sci_sqrt') return handleScientificCommand(ctx, 'sqrt(144)');
+    if (action === 'sci_pow') return handleScientificCommand(ctx, 'pow(2, 10)');
+    if (action === 'sci_sin') return handleScientificCommand(ctx, 'sin(90)');
+    if (action === 'bin_hello') return handleBinaryCommand(ctx, 'Hello');
+    if (action === 'bin_code') return handleBinaryCommand(ctx, 'Code');
+    if (action === 'pal_blue') return handleMaterialPaletteCommand(ctx, 'blue');
+    if (action === 'pal_green') return handleMaterialPaletteCommand(ctx, 'green');
+    if (action === 'pal_purple') return handleMaterialPaletteCommand(ctx, 'purple');
+    if (action === 'pal_amber') return handleMaterialPaletteCommand(ctx, 'amber');
+    if (action === 'pomo_25') return handlePomodoroCommand(ctx);
+    if (action === 'pomo_5') return handlePomodoroCommand(ctx);
+    if (action === 'pomo_15') return handlePomodoroCommand(ctx);
+    if (action === 'todo_demo') return handleTodoCommand(ctx, 'Review project tools');
     if (action.startsWith('lorem_')) return handleLoremCommand(ctx, action.replace('lorem_', ''));
     if (action.startsWith('http_')) return handleHttpStatusCommand(ctx, action.replace('http_', ''));
     if (action.startsWith('hex_')) return handleHexToRgbCommand(ctx, '#' + action.replace('hex_', ''));
@@ -448,22 +569,46 @@ export function createBot(): Bot<BotContext> {
     await handleFeediggerCsvExport(ctx, handle);
   });
 
-  // 6. Generic Text Listener (Auto-detect tools, math, media links, and menus)
+  // 6. Generic Text Listener (Smart Task Intent Detector)
   bot.on('message:text', async (ctx) => {
     const text = ctx.message.text.trim();
+    const lower = text.toLowerCase();
 
     // Fast-path for menu shortcuts
-    if (text === '🧰 100+ Multi-Tools' || text.toLowerCase() === 'tools') {
-      return handleToolBoxMenu(ctx);
+    if (
+      text === '🧰 Choose Task / Tool' ||
+      text === '🧰 All Tools' ||
+      text === '🧰 All Tool Categories' ||
+      text === '🧰 100+ Multi-Tools' ||
+      lower === 'tools' ||
+      lower === 'tasks' ||
+      lower === 'menu'
+    ) {
+      return handleMenu(ctx);
     }
-    if (text === '🎬 Media Downloader' || text.toLowerCase() === 'download') {
+    if (text === '🎬 Media Downloader' || lower === 'download') {
       return handleNexusMenu(ctx);
     }
-    if (text === '📊 Creator Analytics' || text === '📊 Social Analytics' || text.toLowerCase() === 'social') {
+    if (text === '📊 Creator Analytics' || text === '📊 Social Analytics' || lower === 'social' || lower === 'analytics') {
       return handleFeediggerMenu(ctx);
     }
-    if (text === '❓ Help & Commands' || text === '❓ Help & Guide' || text.toLowerCase() === 'help') {
+    if (text === '📖 Task Directory' || text === '❓ Help & Commands' || lower === 'help') {
       return handleHelp(ctx);
+    }
+
+    // Natural conversation greetings
+    if (['hi', 'hello', 'hey', 'start', 'yo', 'hola'].includes(lower)) {
+      const firstName = ctx.from?.first_name || 'Friend';
+      return ctx.reply(
+        `⚡ *LEXIO MULTI-TOOL ASSISTANT*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `👋 Hello, *${firstName}*! What task do you need to complete today?\n\n` +
+        `Select your task category below to run any tool inside this chat:`,
+        {
+          parse_mode: 'Markdown',
+          reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
+        }
+      );
     }
 
     // Auto-detect math expressions (e.g. 150 * 20 or 25 + 40 / 2)
@@ -471,19 +616,87 @@ export function createBot(): Bot<BotContext> {
       return handleCalcCommand(ctx, text);
     }
 
+    // Smart Task Intent Matching
+    if (lower.includes('emi') || lower.includes('loan')) {
+      return handleEmiCommand(ctx);
+    }
+    if (lower.includes('bmi') || lower.includes('body mass')) {
+      return handleBmiCommand(ctx);
+    }
+    if (lower.includes('age') || lower.includes('birthday')) {
+      return handleAgeCommand(ctx);
+    }
+    if (lower.includes('unit') || lower.includes('convert miles') || lower.includes('convert km')) {
+      return handleUnitCommand(ctx);
+    }
+    if (lower.includes('stats') || lower.includes('mean') || lower.includes('median')) {
+      return handleStatsCommand(ctx);
+    }
+    if (lower.includes('gpa') || lower.includes('grade')) {
+      return handleGpaCommand(ctx);
+    }
+    if (lower.includes('qr') || lower.includes('barcode')) {
+      return handleQrCommand(ctx, text);
+    }
+    if (lower.includes('password') || lower.includes('pass')) {
+      return handlePasswordCommand(ctx, '16');
+    }
+    if (lower.includes('json')) {
+      return handleJsonCommand(ctx, text);
+    }
+    if (lower.includes('binary')) {
+      return handleBinaryCommand(ctx, text);
+    }
+    if (lower.includes('hex') || lower.includes('rgb') || lower.startsWith('#')) {
+      return handleHexToRgbCommand(ctx, text.includes('#') ? text : '#38bdf8');
+    }
+    if (lower.includes('gradient')) {
+      return handleGradientCommand(ctx);
+    }
+    if (lower.includes('shadow')) {
+      return handleShadowCommand(ctx);
+    }
+    if (lower.includes('coin') || lower.includes('flip')) {
+      return handleCoinCommand(ctx);
+    }
+    if (lower.includes('dice') || lower.includes('roll')) {
+      return handleDiceCommand(ctx, '6');
+    }
+    if (lower.includes('quote')) {
+      return handleQuoteCommand(ctx);
+    }
+    if (lower.includes('pomodoro') || lower.includes('focus')) {
+      return handlePomodoroCommand(ctx);
+    }
+    if (lower.includes('todo') || lower.includes('task')) {
+      return handleTodoCommand(ctx, text);
+    }
+    if (lower.includes('hashtag')) {
+      return handleHashtagsCommand(ctx, 'creator');
+    }
+    if (lower.includes('hook')) {
+      return handleHookCommand(ctx, 'viral video');
+    }
+
     if (isMediaUrl(text)) {
       await handleIncomingMediaUrl(ctx, text);
     } else {
       await ctx.reply(
-        `💬 *Message received!*\n\n` +
-        `• Tap \`/tools\` to open the category selector and use 100+ utilities in chat.\n` +
-        `• Send a video link (YouTube, IG, TikTok) to download media.\n` +
-        `• Type \`/excavate @username\` to analyze an Instagram profile.\n` +
-        `• Type \`/menu\` to open the navigation.`,
-        { parse_mode: 'Markdown' }
+        `💡 *WHAT TASK DO YOU WANT TO COMPLETE?*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `• 💻 *Code & Dev:* Format JSON/SQL, QR generator, UUID, Hashes\n` +
+        `• 🧮 *Math & Finance:* Calculate Loan EMI, BMI, Age, Units, Stats\n` +
+        `• 🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
+        `• 📊 *Creator Analytics:* Type \`/excavate @username\`\n\n` +
+        `👇 Select a task suite below to proceed:`,
+        {
+          parse_mode: 'Markdown',
+          reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
+        }
       );
     }
   });
+
 
   // 7. Resilient Global Error Handler
   bot.catch((err) => {

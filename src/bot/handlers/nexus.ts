@@ -33,35 +33,38 @@ export function detectPlatform(url: string): string {
 
 export async function handleNexusMenu(ctx: BotContext): Promise<void> {
   const text =
-    `🎬 *Lexio Universal Media Downloader*\n\n` +
-    `Download video & audio from 1000+ platforms at high speeds directly in Telegram:\n\n` +
-    `Supported platforms:\n` +
-    `• YouTube (4K, 1080p, 720p, 320kbps MP3)\n` +
-    `• Instagram (Reels, Carousels, Stories)\n` +
-    `• TikTok (HD Watermark-Free)\n` +
-    `• Twitter / X & Facebook\n\n` +
-    `👉 *Simply paste or send any video link here in the chat to begin!*`;
+    `🎬 *UNIVERSAL MEDIA DOWNLOADER*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `Download high-definition video and audio directly in Telegram.\n\n` +
+    `• 🔴 *YouTube:* 1080p HD, 720p, 320kbps MP3 audio\n` +
+    `• 📸 *Instagram:* Reels, Carousels, Stories\n` +
+    `• 🎵 *TikTok:* HD Watermark-Free video\n` +
+    `• 🐦 *Twitter / X & Facebook:* Direct MP4 video\n\n` +
+    `👉 *To download:* Simply paste or send any video URL into this chat!\n\n` +
+    `Or tap a test link below to see the download resolution picker:`;
+
+  const keyboard = new InlineKeyboard()
+    .text('🔴 Test YouTube Video', 'dl_sample_yt')
+    .text('📸 Test Instagram Reel', 'dl_sample_ig')
+    .row()
+    .text('🏠 Back to Task Menu', 'menu_main');
 
   if (ctx.callbackQuery) {
     try {
       await ctx.editMessageText(text, {
         parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
+        reply_markup: keyboard,
       });
       await ctx.answerCallbackQuery();
-    } catch {
-      await ctx.reply(text, {
-        parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
-      });
-    }
-  } else {
-    await ctx.reply(text, {
-      parse_mode: 'Markdown',
-      reply_markup: getBackToMenuKeyboard(),
-    });
+      return;
+    } catch {}
   }
+  await ctx.reply(text, {
+    parse_mode: 'Markdown',
+    reply_markup: keyboard,
+  });
 }
+
 
 export async function handleIncomingMediaUrl(ctx: BotContext, url: string): Promise<void> {
   const platform = detectPlatform(url);

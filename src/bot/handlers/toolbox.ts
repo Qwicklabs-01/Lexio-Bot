@@ -6,6 +6,7 @@ import {
   getToolBoxTextKeyboard,
   getToolBoxSeoKeyboard,
   getToolBoxDesignKeyboard,
+  getToolBoxProductivityKeyboard,
   getToolBoxFunKeyboard,
   getBackToCategoryKeyboard,
   getBackToMenuKeyboard,
@@ -33,14 +34,19 @@ async function sendInteractiveToolMessage(ctx: BotContext, text: string, reply_m
 
 export async function handleToolBoxMenu(ctx: BotContext): Promise<void> {
   const text =
-    `🧰 *Lexio Multi-Tools Suite (100+ Utilities)*\n\n` +
-    `Choose a category below to access all utilities directly in this chat:\n\n` +
-    `• 💻 *Dev & Web:* JSON, QR, Base64, UUID, Hashes, Slugs, SQL, HTML, JWT, Timestamps\n` +
-    `• 🧮 *Calculators:* BMI, Age, Loan EMI, Percent, Discount, Tips, Tax, Compound\n` +
-    `• 📝 *Text & Content:* Case, Word Count, Reverser, Sorter, Morse, Lorem\n` +
-    `• 🔍 *SEO & Marketing:* Meta Tags, Robots.txt, Sitemaps, HTTP Status Codes\n` +
-    `• 🎨 *Color & Design:* HEX/RGB, Gradients, Shadows, Buttons\n` +
-    `• 🎲 *Random & Fun:* Coin Flip, Dice, 8-Ball, Quotes, Passwords, RPS`;
+    `🧰 *CHOOSE YOUR TASK / TOOL TYPE*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `What type of task do you need to complete?\n\n` +
+    `• 💻 *Code & Dev:* Format JSON/SQL, QR code, UUID, Hashes, Base64, Binary\n` +
+    `• 🧮 *Math & Finance:* Loan EMI, BMI, Age, Percent, Discount, Unit Converter, Stats\n` +
+    `• 📝 *Text & Copy:* Word count, Case converter, Reverser, Sorter, Morse, Lorem\n` +
+    `• 🔍 *SEO & Web:* Meta tags, Robots.txt, Sitemap, HTTP codes, Keyword density\n` +
+    `• 🎨 *Color & Design:* HEX to RGB, CSS Gradients, Box Shadows, Material Palette\n` +
+    `• ⚡ *Productivity:* 256-Bit Passwords, Pomodoro focus timer, Quick Task Keeper\n` +
+    `• 🎲 *Fun & Games:* 3D Coin flip, Dice, Magic 8-Ball, Daily Quotes, RPS Game\n` +
+    `• 🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
+    `• 📊 *Creator Analytics:* Analyze Instagram profiles, ER% & CSV export\n\n` +
+    `👇 *Select a task suite below to run any tool:*`;
 
   if (ctx.callbackQuery) {
     try {
@@ -49,57 +55,79 @@ export async function handleToolBoxMenu(ctx: BotContext): Promise<void> {
         reply_markup: getToolBoxCategoriesKeyboard(),
       });
       await ctx.answerCallbackQuery();
-    } catch {
-      await ctx.reply(text, {
-        parse_mode: 'Markdown',
-        reply_markup: getToolBoxCategoriesKeyboard(),
-      });
-    }
-  } else {
-    await ctx.reply(text, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxCategoriesKeyboard(),
-    });
+      return;
+    } catch {}
   }
+  await ctx.reply(text, {
+    parse_mode: 'Markdown',
+    reply_markup: getToolBoxCategoriesKeyboard(),
+  });
 }
 
 export async function handleToolCategory(ctx: BotContext, category: string): Promise<void> {
   await ctx.answerCallbackQuery();
 
   if (category === 'dev') {
-    await ctx.editMessageText(`💻 *Developer & Web Tools*\nSelect a tool below to run it immediately in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxDevKeyboard(),
-    });
+    await ctx.editMessageText(
+      `💻 *Code & Developer Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxDevKeyboard(),
+      }
+    );
   } else if (category === 'calc') {
-    await ctx.editMessageText(`🧮 *Calculators & Financial Utilities*\nSelect a tool below to calculate immediately in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxCalcKeyboard(),
-    });
+    await ctx.editMessageText(
+      `🧮 *Math & Finance Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxCalcKeyboard(),
+      }
+    );
   } else if (category === 'text') {
-    await ctx.editMessageText(`📝 *Text & Content Utilities*\nSelect a tool below to transform text in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxTextKeyboard(),
-    });
+    await ctx.editMessageText(
+      `📝 *Text & Writing Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxTextKeyboard(),
+      }
+    );
   } else if (category === 'seo') {
-    await ctx.editMessageText(`🔍 *SEO & Web Optimization Tools*\nSelect a tool below to generate SEO code in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxSeoKeyboard(),
-    });
+    await ctx.editMessageText(
+      `🔍 *SEO & Marketing Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxSeoKeyboard(),
+      }
+    );
   } else if (category === 'design') {
-    await ctx.editMessageText(`🎨 *Color & Design Utilities*\nSelect a tool below to generate CSS in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxDesignKeyboard(),
-    });
+    await ctx.editMessageText(
+      `🎨 *Color & Design Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxDesignKeyboard(),
+      }
+    );
+  } else if (category === 'prod') {
+    await ctx.editMessageText(
+      `⚡ *Productivity & Quick Tasks*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect the task you need to complete:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxProductivityKeyboard(),
+      }
+    );
   } else if (category === 'fun') {
-    await ctx.editMessageText(`🎲 *Randomizers & Interactive Games*\nSelect a tool below to play or randomize in this chat:`, {
-      parse_mode: 'Markdown',
-      reply_markup: getToolBoxFunKeyboard(),
-    });
+    await ctx.editMessageText(
+      `🎲 *Randomizers & Interactive Games*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSelect a fun task or game:`,
+      {
+        parse_mode: 'Markdown',
+        reply_markup: getToolBoxFunKeyboard(),
+      }
+    );
   } else {
     await handleToolBoxMenu(ctx);
   }
 }
+
 
 // ==========================================
 // 1. Developer & Web Tools
@@ -972,6 +1000,348 @@ export async function handleRpsCommand(ctx: BotContext, choice = 'rock'): Promis
       { text: '✂️ Scissors', data: 'tb_run_rps_scissors' },
     ],
   ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+// ==========================================
+// 7. Expanded Math, Dev & Productivity Tools
+// ==========================================
+export async function handleUnitCommand(ctx: BotContext, amountStr = '5', from = 'mi', to = 'km'): Promise<void> {
+  const val = parseFloat(amountStr) || 5;
+  const f = from.toLowerCase();
+  const t = to.toLowerCase();
+
+  let result = 0;
+  let label = '';
+
+  if (f === 'mi' && t === 'km') { result = val * 1.60934; label = 'Miles to Kilometers'; }
+  else if (f === 'km' && t === 'mi') { result = val / 1.60934; label = 'Kilometers to Miles'; }
+  else if (f === 'cm' && t === 'in') { result = val / 2.54; label = 'Centimeters to Inches'; }
+  else if (f === 'in' && t === 'cm') { result = val * 2.54; label = 'Inches to Centimeters'; }
+  else if (f === 'm' && t === 'ft') { result = val * 3.28084; label = 'Meters to Feet'; }
+  else if (f === 'ft' && t === 'm') { result = val / 3.28084; label = 'Feet to Meters'; }
+  else if (f === 'kg' && t === 'lbs') { result = val * 2.20462; label = 'Kilograms to Pounds'; }
+  else if (f === 'lbs' && t === 'kg') { result = val / 2.20462; label = 'Pounds to Kilograms'; }
+  else if (f === 'g' && t === 'oz') { result = val / 28.3495; label = 'Grams to Ounces'; }
+  else if (f === 'c' && t === 'f') { result = (val * 9/5) + 32; label = 'Celsius to Fahrenheit'; }
+  else if (f === 'f' && t === 'c') { result = (val - 32) * 5/9; label = 'Fahrenheit to Celsius'; }
+  else {
+    result = val * 1.60934;
+    label = 'Miles to Kilometers';
+  }
+
+  const msg =
+    `🔄 *Unit Conversion Result:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Category:* ${label}\n` +
+    `• *Input:* \`${val} ${f.toUpperCase()}\`\n` +
+    `• *Converted Output:* *${result.toFixed(3)} ${t.toUpperCase()}*\n\n` +
+    `👉 *Usage:* \`/unit <amount> <from> <to>\` (e.g. \`/unit 100 cm in\`)`;
+
+  const keyboard = getBackToCategoryKeyboard('calc', [
+    [
+      { text: '📏 5 mi ➔ km', data: 'tb_run_u_5mi_km' },
+      { text: '📏 100 cm ➔ in', data: 'tb_run_u_100cm_in' },
+    ],
+    [
+      { text: '⚖️ 70 kg ➔ lbs', data: 'tb_run_u_70kg_lbs' },
+      { text: '🌡️ 37°C ➔ °F', data: 'tb_run_u_37c_f' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+  logToolUsage(ctx.from?.id.toString(), 'unit_converter');
+}
+
+export async function handleStatsCommand(ctx: BotContext, numbersStr = '12, 15, 23, 45, 12, 30, 18'): Promise<void> {
+  const nums = numbersStr.split(/[,\s]+/).map(Number).filter((n) => !isNaN(n));
+  if (nums.length === 0) nums.push(12, 15, 23, 45, 12, 30, 18);
+
+  nums.sort((a, b) => a - b);
+  const count = nums.length;
+  const sum = nums.reduce((a, b) => a + b, 0);
+  const mean = sum / count;
+  const min = nums[0];
+  const max = nums[count - 1];
+  const range = max - min;
+
+  const mid = Math.floor(count / 2);
+  const median = count % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+
+  const freq: Record<number, number> = {};
+  let maxFreq = 0;
+  let mode: number | string = nums[0];
+  for (const n of nums) {
+    freq[n] = (freq[n] || 0) + 1;
+    if (freq[n] > maxFreq) {
+      maxFreq = freq[n];
+      mode = n;
+    }
+  }
+  if (maxFreq === 1) mode = 'None (Unique)';
+
+  const msg =
+    `📊 *Descriptive Statistics Summary:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Dataset (${count} items):* \`${nums.join(', ')}\`\n\n` +
+    `• *Sum:* *${sum.toLocaleString()}*\n` +
+    `• *Mean (Average):* *${mean.toFixed(2)}*\n` +
+    `• *Median:* *${median}*\n` +
+    `• *Mode:* *${mode}*\n` +
+    `• *Range:* *${range}* (Min: ${min}, Max: ${max})\n\n` +
+    `👉 *Usage:* \`/stats 10, 25, 40, 15, 30\``;
+
+  const keyboard = getBackToCategoryKeyboard('calc', [
+    [
+      { text: '📊 Dataset A (10, 25, 40...)', data: 'tb_run_stats_a' },
+      { text: '📊 Dataset B (5, 8, 12...)', data: 'tb_run_stats_b' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+  logToolUsage(ctx.from?.id.toString(), 'stats_calculator');
+}
+
+export async function handleGpaCommand(ctx: BotContext, gradesStr = 'A, A-, B+, A, B'): Promise<void> {
+  const scale: Record<string, number> = {
+    'A+': 4.0, A: 4.0, 'A-': 3.7,
+    'B+': 3.3, B: 3.0, 'B-': 2.7,
+    'C+': 2.3, C: 2.0, 'C-': 1.7,
+    'D+': 1.3, D: 1.0, F: 0.0,
+  };
+
+  const grades = gradesStr.toUpperCase().split(/[,\s]+/).map((s) => s.trim()).filter((g) => scale[g] !== undefined);
+  if (grades.length === 0) grades.push('A', 'A-', 'B+', 'A', 'B');
+
+  const totalPoints = grades.reduce((acc, g) => acc + (scale[g] || 0), 0);
+  const gpa = totalPoints / grades.length;
+
+  let badge = '🎓 Outstanding (First Class)';
+  if (gpa >= 3.5) badge = '🌟 High Honors / Dean\'s List';
+  else if (gpa >= 3.0) badge = '🟢 Good Academic Standing';
+  else badge = '🟡 Satisfactory';
+
+  const msg =
+    `🎓 *GPA (Grade Point Average) Calculation:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Courses Entered (${grades.length}):* \`${grades.join(', ')}\`\n` +
+    `• *Cumulative GPA:* *${gpa.toFixed(2)} / 4.0*\n` +
+    `• *Standing:* ${badge}\n\n` +
+    `👉 *Usage:* \`/gpa A, B+, A-, A, C+\``;
+
+  const keyboard = getBackToCategoryKeyboard('calc', [
+    [
+      { text: '🎓 Top Honors (A, A, A-)', data: 'tb_run_gpa_top' },
+      { text: '🎓 Balanced (B+, B, A-)', data: 'tb_run_gpa_mid' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleScientificCommand(ctx: BotContext, expr = 'sqrt(144) + pow(2, 6)'): Promise<void> {
+  const clean = expr.trim() || 'sqrt(144) + pow(2, 6)';
+  try {
+    const mathScope = {
+      sqrt: Math.sqrt,
+      sin: (deg: number) => Math.sin((deg * Math.PI) / 180),
+      cos: (deg: number) => Math.cos((deg * Math.PI) / 180),
+      tan: (deg: number) => Math.tan((deg * Math.PI) / 180),
+      pow: Math.pow,
+      log: Math.log10,
+      ln: Math.log,
+      abs: Math.abs,
+      pi: Math.PI,
+      e: Math.E,
+    };
+    const func = new Function(...Object.keys(mathScope), `'use strict'; return (${clean})`);
+    const res = func(...Object.values(mathScope));
+
+    const msg =
+      `🔬 *Scientific Calculator:*\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `• *Expression:* \`${clean}\`\n` +
+      `• *Computed Result:* *${Number(res).toLocaleString('en-US', { maximumFractionDigits: 6 })}*\n\n` +
+      `👉 *Usage:* \`/sci sqrt(256) * sin(90)\``;
+
+    const keyboard = getBackToCategoryKeyboard('calc', [
+      [
+        { text: '🔬 sqrt(144)', data: 'tb_run_sci_sqrt' },
+        { text: '🔬 2^10 (pow)', data: 'tb_run_sci_pow' },
+      ],
+    ]);
+    await sendInteractiveToolMessage(ctx, msg, keyboard);
+  } catch {
+    await sendInteractiveToolMessage(ctx, '❌ Invalid scientific math expression.', getBackToCategoryKeyboard('calc'));
+  }
+}
+
+export async function handleBinaryCommand(ctx: BotContext, text = 'Lexio'): Promise<void> {
+  const input = text.trim() || 'Lexio';
+  const isBinary = /^[01\s]+$/.test(input) && input.length >= 7;
+
+  let binaryStr = '';
+  let textStr = '';
+
+  if (isBinary) {
+    const bytes = input.split(/\s+/);
+    textStr = bytes.map((b) => String.fromCharCode(parseInt(b, 2))).join('');
+    binaryStr = input;
+  } else {
+    textStr = input;
+    binaryStr = Array.from(input).map((c) => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+  }
+
+  const msg =
+    `0️⃣1️⃣ *Text ⇄ Binary Code Translation:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Plain Text:* \`${textStr}\`\n\n` +
+    `• *Binary Output:*\n\`\`\`text\n${binaryStr}\n\`\`\`\n\n` +
+    `👉 *Usage:* \`/binary Hello World\` or \`/binary 01001000 01101001\``;
+
+  const keyboard = getBackToCategoryKeyboard('dev', [
+    [
+      { text: '0️⃣1️⃣ "Hello" in Binary', data: 'tb_run_bin_hello' },
+      { text: '0️⃣1️⃣ "Code" in Binary', data: 'tb_run_bin_code' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleMarkdownToHtmlCommand(ctx: BotContext, text?: string): Promise<void> {
+  const input = text?.trim() || '# Welcome to Lexio\n\n**Fast** in-chat tools.\n\n- Feature 1\n- Feature 2';
+  
+  const html = input
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+    .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>')
+    .replace(/^\- (.*$)/gim, '<li>$1</li>');
+
+  const msg =
+    `🏷️ *Markdown to Valid HTML:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `\`\`\`html\n${html}\n\`\`\`\n\n` +
+    `👉 *Usage:* \`/md2html # Title \\n **bold** text\``;
+
+  const keyboard = getBackToCategoryKeyboard('dev');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleMinifyHtmlCommand(ctx: BotContext, text?: string): Promise<void> {
+  const input = text?.trim() || '<div class="container">\n  <h1>Title</h1>\n  <p>Lexio Bot</p>\n</div>';
+  const minified = input.replace(/\s+/g, ' ').replace(/> </g, '><').trim();
+
+  const msg =
+    `🗜️ *HTML & Code Minifier:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `\`\`\`html\n${minified}\n\`\`\`\n\n` +
+    `• Saved: ~${Math.max(0, input.length - minified.length)} chars\n` +
+    `👉 *Usage:* \`/minhtml <div> ... </div>\``;
+
+  const keyboard = getBackToCategoryKeyboard('dev');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleKeywordDensityCommand(ctx: BotContext, text?: string): Promise<void> {
+  const input = text?.trim() || 'Lexio is a powerful universal multi-tool platform. With Lexio, creators and developers run fast tools directly in Telegram.';
+  const words = input.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/).filter((w) => w.length > 2);
+  const total = words.length || 1;
+
+  const counts: Record<string, number> = {};
+  for (const w of words) counts[w] = (counts[w] || 0) + 1;
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const densityRows = sorted.map(([w, c]) => `• \`${w}\`: *${c}x* (${((c / total) * 100).toFixed(1)}%)`).join('\n');
+
+  const msg =
+    `📊 *Keyword Density Analysis:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Total Analyzed Words:* ${total}\n\n` +
+    `*Top Keywords Frequency:*\n${densityRows}\n\n` +
+    `👉 *Usage:* \`/keywords <paste your text>\``;
+
+  const keyboard = getBackToCategoryKeyboard('seo');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleMaterialPaletteCommand(ctx: BotContext, colorName = 'blue'): Promise<void> {
+  const palettes: Record<string, Record<string, string>> = {
+    blue: { '50': '#E3F2FD', '200': '#90CAF9', '500': '#2196F3', '700': '#1976D2', '900': '#0D47A1' },
+    green: { '50': '#E8F5E9', '200': '#A5D6A7', '500': '#4CAF50', '700': '#388E3C', '900': '#1B5E20' },
+    purple: { '50': '#F3E5F5', '200': '#CE93D8', '500': '#9C27B0', '700': '#7B1FA2', '900': '#4A148C' },
+    amber: { '50': '#FFF8E1', '200': '#FFE082', '500': '#FFC107', '700': '#FFA000', '900': '#FF6F00' },
+  };
+
+  const c = colorName.toLowerCase();
+  const selected = palettes[c] || palettes.blue;
+  const shadeRows = Object.entries(selected).map(([k, hex]) => `• *Shade ${k}:* \`${hex}\``).join('\n');
+
+  const msg =
+    `🎨 *Material Design Color Palette (${c.toUpperCase()}):*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `${shadeRows}\n\n` +
+    `Tap code to copy hex values.`;
+
+  const keyboard = getBackToCategoryKeyboard('design', [
+    [
+      { text: '🔵 Blue Palette', data: 'tb_run_pal_blue' },
+      { text: '🟢 Green Palette', data: 'tb_run_pal_green' },
+    ],
+    [
+      { text: '🟣 Purple Palette', data: 'tb_run_pal_purple' },
+      { text: '🟡 Amber Palette', data: 'tb_run_pal_amber' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handlePomodoroCommand(ctx: BotContext): Promise<void> {
+  const msg =
+    `⏱️ *Pomodoro Productivity Focus Timer:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `The Pomodoro Technique maximizes mental endurance:\n\n` +
+    `• 🎯 *Work Sprint:* 25 minutes uninterrupted focus\n` +
+    `• ☕ *Short Break:* 5 minutes rest\n` +
+    `• 🌴 *Long Break:* 15-30 minutes after 4 sprints\n\n` +
+    `Tap a session preset below:`;
+
+  const keyboard = getBackToCategoryKeyboard('prod', [
+    [
+      { text: '🎯 25m Focus Sprint', data: 'tb_run_pomo_25' },
+      { text: '☕ 5m Short Break', data: 'tb_run_pomo_5' },
+    ],
+    [{ text: '🌴 15m Long Break', data: 'tb_run_pomo_15' }],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleTodoCommand(ctx: BotContext, taskStr?: string): Promise<void> {
+  const input = taskStr?.trim() || '';
+  const msg = input
+    ? `📝 *Task Added to In-Chat Session:*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ \`${input}\`\n\n👉 Send \`/todo <task>\` to log more quick tasks!`
+    : `📝 *In-Chat Task & Note Keeper:*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nKeep track of your quick goals directly in chat.\n\n*Sample Active Goals:*\n• ◻️ Format and test API JSON payload\n• ◻️ Calculate monthly loan EMI for budget\n• ◻️ Generate 24-character security key\n\n👉 *Usage:* \`/todo Finish client report\``;
+
+  const keyboard = getBackToCategoryKeyboard('prod', [
+    [{ text: '➕ Quick Demo Task', data: 'tb_run_todo_demo' }],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleRemoveCharCommand(ctx: BotContext, text = 'Hello, World! 123 #Tools'): Promise<void> {
+  const input = text.trim() || 'Hello, World! 123 #Tools';
+  const noPunctuation = input.replace(/[^\w\s]|_/g, '');
+  const noNumbers = input.replace(/[0-9]/g, '');
+  const onlyAlphabet = input.replace(/[^a-zA-Z\s]/g, '');
+
+  const msg =
+    `✂️ *Character & Symbol Remover:*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `• *Original:* \`${input}\`\n\n` +
+    `• *No Symbols/Punctuation:*\n\`${noPunctuation}\`\n\n` +
+    `• *No Numbers:*\n\`${noNumbers}\`\n\n` +
+    `• *Alphabet Only:*\n\`${onlyAlphabet}\`\n\n` +
+    `👉 *Usage:* \`/removechar <your_text>\``;
+
+  const keyboard = getBackToCategoryKeyboard('text');
   await sendInteractiveToolMessage(ctx, msg, keyboard);
 }
 

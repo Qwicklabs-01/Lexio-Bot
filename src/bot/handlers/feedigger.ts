@@ -71,36 +71,42 @@ function getMockProfileData(handle: string): {
 
 export async function handleFeediggerMenu(ctx: BotContext): Promise<void> {
   const text =
-    `📊 *Lexio Social & Creator Intelligence*\n\n` +
-    `Uncover the highest-performing content on any Instagram profile in seconds:\n\n` +
-    `• 👁️ *Sort Reels by Real Views* — Find breakthrough viral hooks\n` +
-    `• ❤️ *Rank by Likes & Saves* — Identify strong audience affinity\n` +
-    `• 💬 *Find Hot Discussions* — Spot community debates & objections\n` +
-    `• 🏷️ *Viral Hashtags* — Discover high-growth hashtag sets\n` +
-    `• 🎣 *Viral Hooks* — 3-second hook formulas\n` +
-    `• 📥 *1-Click CSV Export* — Spreadsheet download for Excel & Sheets\n\n` +
-    `👉 *Usage:* Type \`/excavate @username\` (e.g. \`/excavate @mrbeast\`) or use commands: \`/hashtags\`, \`/hook\`!`;
+    `📊 *CREATOR & SOCIAL ANALYTICS*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `Analyze Instagram creators, discover viral hooks, and calculate true Engagement Rates (ER%).\n\n` +
+    `• 👁️ *Viral Reels Ranking:* Discover breakout topics\n` +
+    `• 🔥 *True ER% Benchmark:* Views vs likes vs comments\n` +
+    `• 🏷️ *Viral Hashtags:* High-growth hashtag sets\n` +
+    `• 🎣 *Hook Formulas:* 3-second viewer retention\n` +
+    `• 📥 *CSV Export:* Download full spreadsheet in chat\n\n` +
+    `👉 *To analyze:* Type \`/excavate @username\`\n\n` +
+    `Or tap a demo action below to run immediately:`;
+
+  const keyboard = new InlineKeyboard()
+    .text('🔍 Demo @mrbeast', 'fd_demo_mrbeast')
+    .text('🔍 Demo @instagram', 'fd_demo_instagram')
+    .row()
+    .text('🏷️ Viral Hashtags', 'fd_tags_creator')
+    .text('🎣 Viral Hooks', 'fd_hook_creator')
+    .row()
+    .text('🏠 Back to Task Menu', 'menu_main');
 
   if (ctx.callbackQuery) {
     try {
       await ctx.editMessageText(text, {
         parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
+        reply_markup: keyboard,
       });
       await ctx.answerCallbackQuery();
-    } catch {
-      await ctx.reply(text, {
-        parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
-      });
-    }
-  } else {
-    await ctx.reply(text, {
-      parse_mode: 'Markdown',
-      reply_markup: getBackToMenuKeyboard(),
-    });
+      return;
+    } catch {}
   }
+  await ctx.reply(text, {
+    parse_mode: 'Markdown',
+    reply_markup: keyboard,
+  });
 }
+
 
 export async function handleExcavateCommand(ctx: BotContext, handle: string): Promise<void> {
   const cleanHandle = handle.trim().replace(/^@/, '');
