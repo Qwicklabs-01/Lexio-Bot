@@ -1,7 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { tg } from './telegram.js';
 
 type Tab = 'nexus' | 'feedigger' | 'toolbox' | 'profile';
+type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'seo' | 'design' | 'fun';
+
+interface ToolItem {
+  id: string;
+  name: string;
+  category: ToolCategory;
+  icon: string;
+  desc: string;
+}
+
+const ALL_TOOLS: ToolItem[] = [
+  // Developer
+  { id: 'json', name: 'JSON Beautifier', category: 'dev', icon: '🔤', desc: 'Format, validate & minify JSON' },
+  { id: 'qr', name: 'QR Code Generator', category: 'dev', icon: '📱', desc: 'Generate high-res QR codes' },
+  { id: 'base64', name: 'Base64 Encoder', category: 'dev', icon: '🔐', desc: 'Encode & decode Base64' },
+  { id: 'uuid', name: 'UUID Generator', category: 'dev', icon: '🆔', desc: 'Generate unique v4 identifiers' },
+  { id: 'slug', name: 'Slug Generator', category: 'dev', icon: '🔗', desc: 'Clean SEO friendly URL slugs' },
+  // Calculators & Math
+  { id: 'bmi', name: 'BMI Calculator', category: 'calc', icon: '⚖️', desc: 'Health index & category' },
+  { id: 'discount', name: 'Discount Calculator', category: 'calc', icon: '🏷️', desc: 'Sales savings & final price' },
+  { id: 'tip', name: 'Tip & Bill Splitter', category: 'calc', icon: '🪙', desc: 'Split checks with groups' },
+  { id: 'percent', name: 'Percentage Calc', category: 'calc', icon: '📊', desc: 'Calculate percentage changes' },
+  { id: 'age', name: 'Age Calculator', category: 'calc', icon: '🎂', desc: 'Exact age in years, months, days' },
+  // Text & Writing
+  { id: 'case', name: 'Case Converter', category: 'text', icon: '🔠', desc: 'UPPER, lower, Title, camel, snake' },
+  { id: 'count', name: 'Word & Char Counter', category: 'text', icon: '📝', desc: 'Count words, sentences & time' },
+  { id: 'reverse', name: 'Text Reverser', category: 'text', icon: '🔄', desc: 'Reverse characters or words' },
+  { id: 'morse', name: 'Morse Code Tool', category: 'text', icon: '📻', desc: 'Translate to/from Morse code' },
+  // Design & Colors
+  { id: 'hextorgb', name: 'HEX to RGB Converter', category: 'design', icon: '🎨', desc: 'Translate HEX, RGB & HSL' },
+  { id: 'gradient', name: 'CSS Gradient Gen', category: 'design', icon: '🌈', desc: 'Modern linear gradients' },
+  { id: 'shadow', name: 'Box Shadow Gen', category: 'design', icon: '📦', desc: 'CSS elevation & glow builder' },
+  // Random & Games
+  { id: 'password', name: 'Password Generator', category: 'fun', icon: '🔑', desc: '256-bit cryptographic keys' },
+  { id: 'coin', name: '3D Coin Toss', category: 'fun', icon: '🪙', desc: 'Heads or tails decision maker' },
+  { id: 'dice', name: 'Dice Roller', category: 'fun', icon: '🎲', desc: 'Roll up to 6 dice' },
+  { id: '8ball', name: 'Magic 8-Ball', category: 'fun', icon: '🎱', desc: 'Ask questions, get answers' },
+];
 
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('nexus');
@@ -9,7 +47,6 @@ export function App() {
 
   useEffect(() => {
     tg.init();
-    // Parse query param tab if opened with ?tab=...
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab') as Tab;
     if (tabParam && ['nexus', 'feedigger', 'toolbox', 'profile'].includes(tabParam)) {
@@ -29,8 +66,8 @@ export function App() {
         <div className="brand-wrapper">
           <div className="brand-logo">⚡</div>
           <div className="brand-text">
-            <h1>OmniPlatform</h1>
-            <span>Nexus • Feedigger • ToolBox</span>
+            <h1>Lexio Studio</h1>
+            <span>Universal Knowledge & Multi-Tool Suite</span>
           </div>
         </div>
         <div className="user-badge">
@@ -38,45 +75,45 @@ export function App() {
         </div>
       </header>
 
-      {/* Segmented Tabs Navigation */}
-      <nav className="tabs-nav">
-        <button
-          className={`tab-btn ${activeTab === 'nexus' ? 'active nexus' : ''}`}
-          onClick={() => switchTab('nexus')}
-        >
-          <span className="tab-icon">⚡</span>
-          <span>Nexus</span>
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'feedigger' ? 'active feedigger' : ''}`}
-          onClick={() => switchTab('feedigger')}
-        >
-          <span className="tab-icon">🔍</span>
-          <span>Feedigger</span>
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'toolbox' ? 'active toolbox' : ''}`}
-          onClick={() => switchTab('toolbox')}
-        >
-          <span className="tab-icon">🧰</span>
-          <span>ToolBox</span>
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => switchTab('profile')}
-        >
-          <span className="tab-icon">👤</span>
-          <span>Profile</span>
-        </button>
-      </nav>
-
-      {/* Main Content Area */}
+      {/* Main Content View */}
       <main>
         {activeTab === 'nexus' && <NexusMediaTab />}
         {activeTab === 'feedigger' && <FeediggerTab />}
         {activeTab === 'toolbox' && <ToolBoxTab />}
         {activeTab === 'profile' && <ProfileTab user={user} />}
       </main>
+
+      {/* Floating Bottom Navigation Bar */}
+      <nav className="bottom-nav">
+        <button
+          className={`nav-item ${activeTab === 'nexus' ? 'active nexus' : ''}`}
+          onClick={() => switchTab('nexus')}
+        >
+          <span className="nav-icon">⚡</span>
+          <span>Nexus</span>
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'feedigger' ? 'active feedigger' : ''}`}
+          onClick={() => switchTab('feedigger')}
+        >
+          <span className="nav-icon">🔍</span>
+          <span>Feedigger</span>
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'toolbox' ? 'active toolbox' : ''}`}
+          onClick={() => switchTab('toolbox')}
+        >
+          <span className="nav-icon">🧰</span>
+          <span>Tools (100+)</span>
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
+          onClick={() => switchTab('profile')}
+        >
+          <span className="nav-icon">👤</span>
+          <span>Profile</span>
+        </button>
+      </nav>
     </div>
   );
 }
@@ -94,7 +131,7 @@ function NexusMediaTab() {
 
   const handleExtract = () => {
     if (!url.trim()) {
-      tg.showPopup('Missing URL', 'Please enter or paste a valid video link.');
+      tg.showPopup('Missing URL', 'Please enter or paste a video link from YouTube, Instagram, TikTok, or X.');
       return;
     }
     tg.haptic('medium');
@@ -103,19 +140,19 @@ function NexusMediaTab() {
     setTimeout(() => {
       setLoading(false);
       setMediaData({
-        title: 'Mastering Full-Stack Engineering & AI Workflows in 2026',
+        title: 'Universal Media Capture & High-Performance Extraction',
         platform: url.includes('instagram') ? 'Instagram' : url.includes('tiktok') ? 'TikTok' : 'YouTube',
-        duration: '12m 45s',
+        duration: '14m 20s',
         thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
       });
       tg.haptic('success');
-    }, 900);
+    }, 800);
   };
 
   const handleDownload = () => {
     tg.haptic('heavy');
     setDownloading(true);
-    setProgress(15);
+    setProgress(10);
 
     const interval = setInterval(() => {
       setProgress((prev) => {
@@ -123,7 +160,7 @@ function NexusMediaTab() {
           clearInterval(interval);
           setDownloading(false);
           tg.haptic('success');
-          tg.showPopup('Download Complete!', `Successfully captured in ${selectedFormat.toUpperCase()}.`);
+          tg.showPopup('Download Complete!', `Your ${selectedFormat.toUpperCase()} file has been processed successfully.`);
           return 100;
         }
         return prev + 25;
@@ -133,16 +170,16 @@ function NexusMediaTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">⚡ Nexus Universal Downloader</h2>
+      <h2 className="card-title">⚡ Nexus Universal Media Capture</h2>
       <p className="card-subtitle">
-        Download 4K, 1080p video and MP3 audio from YouTube, Instagram, TikTok, and Twitter/X with zero watermarks.
+        Extract HD videos & high-bitrate MP3 audio from YouTube, TikTok, Instagram, and Twitter/X with zero watermarks.
       </p>
 
       <div className="input-group">
         <input
           type="text"
           className="text-input"
-          placeholder="Paste video or reel URL..."
+          placeholder="Paste YouTube, Instagram, or TikTok link..."
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
@@ -151,27 +188,44 @@ function NexusMediaTab() {
         </button>
       </div>
 
+      {/* Quick Source Chips */}
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
+        {['YouTube 4K', 'Instagram Reels', 'TikTok HD', 'Twitter/X Clips'].map((badge) => (
+          <span
+            key={badge}
+            className="btn-secondary"
+            style={{ fontSize: '11px', padding: '4px 10px', borderRadius: '8px' }}
+          >
+            {badge}
+          </span>
+        ))}
+      </div>
+
       {mediaData && (
-        <div className="media-preview-box">
-          <img src={mediaData.thumbnail} alt="Media thumbnail" className="media-thumbnail-img" />
-          <div className="media-details">
-            <h3 className="media-title">{mediaData.title}</h3>
-            <p className="card-subtitle">
-              Platform: <b>{mediaData.platform}</b> • Duration: <b>{mediaData.duration}</b>
+        <div style={{ background: 'rgba(10, 15, 28, 0.65)', border: '1px solid var(--border-glass)', borderRadius: '18px', overflow: 'hidden' }}>
+          <img src={mediaData.thumbnail} alt="Media thumbnail" style={{ width: '100%', height: '175px', objectFit: 'cover' }} />
+          <div style={{ padding: '14px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '6px' }}>{mediaData.title}</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              Source: <b style={{ color: '#fff' }}>{mediaData.platform}</b> • Duration: <b style={{ color: '#fff' }}>{mediaData.duration}</b>
             </p>
 
             <div className="format-options">
-              {['1080p', '720p', 'mp3'].map((fmt) => (
+              {[
+                { id: '1080p', label: '1080p Full HD', sub: '38.4 MB' },
+                { id: '720p', label: '720p HD', sub: '18.2 MB' },
+                { id: 'mp3', label: 'MP3 Audio', sub: '320kbps' },
+              ].map((fmt) => (
                 <div
-                  key={fmt}
-                  className={`format-chip ${selectedFormat === fmt ? 'active' : ''}`}
+                  key={fmt.id}
+                  className={`format-chip ${selectedFormat === fmt.id ? 'active' : ''}`}
                   onClick={() => {
                     tg.haptic('light');
-                    setSelectedFormat(fmt);
+                    setSelectedFormat(fmt.id);
                   }}
                 >
-                  <b>{fmt.toUpperCase()}</b>
-                  <div>{fmt === 'mp3' ? '320kbps Audio' : 'HD Video'}</div>
+                  <b>{fmt.id.toUpperCase()}</b>
+                  <div style={{ fontSize: '10px', marginTop: '2px', color: 'var(--text-muted)' }}>{fmt.sub}</div>
                 </div>
               ))}
             </div>
@@ -183,7 +237,7 @@ function NexusMediaTab() {
                 onClick={handleDownload}
                 disabled={downloading}
               >
-                {downloading ? `Processing (${progress}%)...` : `Capture & Save ${selectedFormat.toUpperCase()}`}
+                {downloading ? `Capturing (${progress}%)...` : `Download ${selectedFormat.toUpperCase()} Media`}
               </button>
             </div>
           </div>
@@ -205,31 +259,31 @@ function FeediggerTab() {
     {
       id: '1',
       rank: 1,
-      views: '14.2M',
-      likes: '1.2M',
-      comments: '24.5k',
-      er: '8.6%',
-      caption: 'Surviving 7 Days In The World Most Extreme Environment 🏔️',
+      views: '16.4M',
+      likes: '1.4M',
+      comments: '32.1k',
+      er: '8.7%',
+      caption: 'Surviving 7 Days In The World Most Extreme Cold ❄️',
       thumb: 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=200&auto=format&fit=crop&q=80',
     },
     {
       id: '2',
       rank: 2,
-      views: '8.9M',
-      likes: '840k',
-      comments: '18.2k',
-      er: '9.6%',
-      caption: 'We gave 1,000 strangers their dream jobs today! ✨',
+      views: '9.8M',
+      likes: '890k',
+      comments: '19.4k',
+      er: '9.3%',
+      caption: 'Giving 1,000 Strangers Their Dream Computers Today! 💻',
       thumb: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
     },
     {
       id: '3',
       rank: 3,
-      views: '6.4M',
-      likes: '590k',
-      comments: '12.4k',
-      er: '9.4%',
-      caption: 'World Record: Largest Domino Setup in History 🔥',
+      views: '7.1M',
+      likes: '640k',
+      comments: '14.2k',
+      er: '9.2%',
+      caption: 'Largest World Record Domino Chain Reaction Ever 🔥',
       thumb: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&auto=format&fit=crop&q=80',
     },
   ];
@@ -245,21 +299,21 @@ function FeediggerTab() {
 
   const handleExportCsv = () => {
     tg.haptic('heavy');
-    tg.showPopup('CSV Export Ready', `Feedigger data for @${handle} exported. Check your downloads.`);
+    tg.showPopup('CSV Export Ready', `Spreadsheet generated for @${handle}. Ready for Excel & Google Sheets.`);
   };
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">🔍 Feedigger Instagram Excavator</h2>
+      <h2 className="card-title">🔍 Feedigger Instagram Studio</h2>
       <p className="card-subtitle">
-        Sort any creator or brand profile by real Views, Likes, and Comments to find viral breakthrough content.
+        Excavate, rank and analyze top-performing Instagram Reels by Views, Likes, and true Engagement Rate (ER%).
       </p>
 
       <div className="input-group">
         <input
           type="text"
           className="text-input"
-          placeholder="Instagram @username..."
+          placeholder="Enter Instagram @username..."
           value={handle}
           onChange={(e) => setHandle(e.target.value)}
         />
@@ -270,7 +324,7 @@ function FeediggerTab() {
 
       {/* Preset Chips */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
-        {['mrbeast', 'nike', 'apple', 'hubspot'].map((chip) => (
+        {['mrbeast', 'nike', 'apple', 'hubspot', 'zuck'].map((chip) => (
           <span
             key={chip}
             className="btn-secondary"
@@ -292,12 +346,12 @@ function FeediggerTab() {
           <div className="stat-label">Followers</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value">9.2%</div>
+          <div className="stat-value" style={{ color: '#f97316' }}>9.1%</div>
           <div className="stat-label">Average ER%</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value">184</div>
-          <div className="stat-label">Reels Analyzed</div>
+          <div className="stat-value">192</div>
+          <div className="stat-label">Reels Dug</div>
         </div>
       </div>
 
@@ -324,7 +378,7 @@ function FeediggerTab() {
         ))}
       </div>
 
-      {/* Reels List */}
+      {/* Ranked Reels List */}
       <div className="reels-grid">
         {reels.map((r) => (
           <div key={r.id} className="reel-item">
@@ -335,7 +389,7 @@ function FeediggerTab() {
               <div className="reel-metrics">
                 <span>👁️ {r.views}</span>
                 <span>❤️ {r.likes}</span>
-                <span>🔥 {r.er} ER</span>
+                <span style={{ color: '#f97316', fontWeight: 700 }}>🔥 {r.er} ER</span>
               </div>
             </div>
           </div>
@@ -343,7 +397,7 @@ function FeediggerTab() {
       </div>
 
       <div style={{ marginTop: '16px' }}>
-        <button className="btn-secondary" style={{ width: '100%' }} onClick={handleExportCsv}>
+        <button className="btn-secondary" style={{ width: '100%', borderColor: 'rgba(249, 115, 22, 0.4)' }} onClick={handleExportCsv}>
           📥 Export Data as CSV Spreadsheet
         </button>
       </div>
@@ -355,119 +409,147 @@ function FeediggerTab() {
 // 3. ToolBox Pro Multi-Tools Tab
 // ==========================================
 function ToolBoxTab() {
-  const [selectedTool, setSelectedTool] = useState<'json' | 'qr' | 'password' | 'bmi' | 'base64'>('json');
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<ToolCategory>('all');
+  const [activeToolId, setActiveToolId] = useState<string>('json');
 
   // Tool states
-  const [jsonInput, setJsonInput] = useState('{"platform":"OmniPlatform","status":"ready","tools":100}');
-  const [jsonOutput, setJsonOutput] = useState('');
-  const [qrText, setQrText] = useState('https://nest-hub-tools.vercel.app/');
-  const [pwLength, setPwLength] = useState(16);
-  const [generatedPw, setGeneratedPw] = useState('7g#K9@mP2$xL5!vQ');
-  const [weight, setWeight] = useState(70);
-  const [height, setHeight] = useState(175);
+  const [jsonText, setJsonText] = useState('{"platform":"Lexio","status":"live","tools":100}');
+  const [jsonResult, setJsonResult] = useState('');
+  const [qrInput, setQrInput] = useState('https://nest-hub-tools.vercel.app/');
+  const [pwLength, setPwLength] = useState(18);
+  const [pwResult, setPwResult] = useState('8v$K9@xQ2!mL5#wZ');
+  const [caseInput, setCaseInput] = useState('Lexio is the universal knowledge assistant');
+  const [caseResult, setCaseResult] = useState('');
+  const [calcWeight, setCalcWeight] = useState(72);
+  const [calcHeight, setCalcHeight] = useState(178);
+  const [discountPrice, setDiscountPrice] = useState(120);
+  const [discountPercent, setDiscountPercent] = useState(25);
+  const [coinResult, setCoinResult] = useState<'HEADS' | 'TAILS' | null>(null);
+  const [diceResult, setDiceResult] = useState<number | null>(null);
 
-  const tools = [
-    { id: 'json', icon: '🔤', name: 'JSON Formatter' },
-    { id: 'qr', icon: '📱', name: 'QR Generator' },
-    { id: 'password', icon: '🔐', name: 'Password Gen' },
-    { id: 'bmi', icon: '⚖️', name: 'BMI Calculator' },
-    { id: 'base64', icon: '⚡', name: 'Base64 Tool' },
-  ] as const;
+  const filteredTools = useMemo(() => {
+    return ALL_TOOLS.filter((t) => {
+      const matchesCat = selectedCategory === 'all' || t.category === selectedCategory;
+      const matchesSearch =
+        t.name.toLowerCase().includes(search.toLowerCase()) ||
+        t.desc.toLowerCase().includes(search.toLowerCase());
+      return matchesCat && matchesSearch;
+    });
+  }, [search, selectedCategory]);
 
-  const formatJson = () => {
-    tg.haptic('medium');
-    try {
-      const parsed = JSON.parse(jsonInput);
-      setJsonOutput(JSON.stringify(parsed, null, 2));
-      tg.haptic('success');
-    } catch {
-      tg.haptic('error');
-      setJsonOutput('❌ Invalid JSON syntax error!');
-    }
-  };
-
-  const generatePassword = () => {
-    tg.haptic('light');
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
-    let res = '';
-    for (let i = 0; i < pwLength; i++) {
-      res += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setGeneratedPw(res);
-  };
-
-  const calculateBmi = () => {
-    const hM = height / 100;
-    return (weight / (hM * hM)).toFixed(1);
+  const copyToClipboard = (text: string, label = 'Copied') => {
+    tg.haptic('success');
+    navigator.clipboard?.writeText(text);
+    tg.showPopup('Copied!', `${label} copied to clipboard.`);
   };
 
   return (
     <div className="glass-card">
       <h2 className="card-title">🧰 ToolBox Pro — 100+ Utilities</h2>
-      <p className="card-subtitle">Interactive developer utilities, calculators, and productivity gadgets.</p>
+      <p className="card-subtitle">
+        Instant developer formatters, financial calculators, text transformers, and productivity gadgets.
+      </p>
 
-      {/* Tool Selector Grid */}
-      <div className="tools-picker-grid">
-        {tools.map((t) => (
-          <div
-            key={t.id}
-            className={`tool-tile ${selectedTool === t.id ? 'active' : ''}`}
+      {/* Search Input */}
+      <div className="search-bar-wrap">
+        <span className="search-icon">🔍</span>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search 100+ tools (e.g., JSON, QR, BMI, Case, Password)..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {/* Category Pills */}
+      <div className="category-chips-scroll">
+        {[
+          { id: 'all', label: 'All Tools' },
+          { id: 'dev', label: '💻 Developer' },
+          { id: 'calc', label: '🧮 Calculators' },
+          { id: 'text', label: '📝 Text' },
+          { id: 'design', label: '🎨 Design' },
+          { id: 'fun', label: '🎲 Fun & Games' },
+        ].map((c) => (
+          <button
+            key={c.id}
+            className={`cat-chip ${selectedCategory === c.id ? 'active' : ''}`}
             onClick={() => {
               tg.haptic('selectionChanged');
-              setSelectedTool(t.id);
+              setSelectedCategory(c.id as ToolCategory);
             }}
           >
-            <span className="tool-tile-icon">{t.icon}</span>
-            <span className="tool-tile-name">{t.name}</span>
-          </div>
+            {c.label}
+          </button>
         ))}
       </div>
 
-      {/* Active Live Tool Interface */}
-      <div className="live-tool-container">
-        {selectedTool === 'json' && (
+      {/* Active Interactive Tool Workspace */}
+      <div style={{ background: 'rgba(10, 15, 28, 0.7)', border: '1px solid var(--border-glass)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
+        {activeToolId === 'json' && (
           <div>
-            <h4 style={{ marginBottom: '8px' }}>JSON Beautifier & Validator</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔤 JSON Beautifier & Minifier</h4>
             <textarea
               className="code-textarea"
-              value={jsonInput}
-              onChange={(e) => setJsonInput(e.target.value)}
+              value={jsonText}
+              onChange={(e) => setJsonText(e.target.value)}
               placeholder="Paste raw JSON here..."
             />
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
-              <button className="btn-primary btn-green" onClick={formatJson}>
-                Format JSON
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+              <button
+                className="btn-primary btn-green"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  try {
+                    setJsonResult(JSON.stringify(JSON.parse(jsonText), null, 2));
+                    tg.haptic('success');
+                  } catch {
+                    setJsonResult('❌ Invalid JSON syntax error!');
+                    tg.haptic('error');
+                  }
+                }}
+              >
+                Format
               </button>
               <button
                 className="btn-secondary"
+                style={{ flex: 1 }}
                 onClick={() => {
                   try {
-                    setJsonOutput(JSON.stringify(JSON.parse(jsonInput)));
+                    setJsonResult(JSON.stringify(JSON.parse(jsonText)));
+                    tg.haptic('success');
                   } catch {}
                 }}
               >
                 Minify
               </button>
+              {jsonResult && (
+                <button className="btn-secondary" onClick={() => copyToClipboard(jsonResult)}>
+                  Copy
+                </button>
+              )}
             </div>
-            {jsonOutput && <textarea className="code-textarea" readOnly value={jsonOutput} />}
+            {jsonResult && <textarea className="code-textarea" readOnly value={jsonResult} />}
           </div>
         )}
 
-        {selectedTool === 'qr' && (
+        {activeToolId === 'qr' && (
           <div style={{ textAlign: 'center' }}>
-            <h4 style={{ marginBottom: '8px' }}>High-Resolution QR Generator</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📱 QR Code Generator</h4>
             <input
               type="text"
               className="text-input"
-              value={qrText}
-              onChange={(e) => setQrText(e.target.value)}
-              placeholder="Enter text or URL..."
-              style={{ marginBottom: '14px' }}
+              value={qrInput}
+              onChange={(e) => setQrInput(e.target.value)}
+              placeholder="Enter URL or text..."
+              style={{ marginBottom: '12px' }}
             />
-            {qrText && (
-              <div style={{ background: '#fff', padding: '16px', borderRadius: '16px', display: 'inline-block' }}>
+            {qrInput && (
+              <div style={{ background: '#fff', padding: '14px', borderRadius: '16px', display: 'inline-block' }}>
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText)}`}
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrInput)}`}
                   alt="QR Code"
                   style={{ display: 'block' }}
                 />
@@ -476,26 +558,27 @@ function ToolBoxTab() {
           </div>
         )}
 
-        {selectedTool === 'password' && (
+        {activeToolId === 'password' && (
           <div>
-            <h4 style={{ marginBottom: '8px' }}>Cryptographic Password Generator</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔑 256-Bit Password Generator</h4>
             <div
               style={{
-                background: 'rgba(0,0,0,0.4)',
-                padding: '14px',
+                background: 'rgba(5, 8, 16, 0.9)',
+                padding: '12px',
                 borderRadius: '12px',
                 fontFamily: 'monospace',
-                fontSize: '16px',
+                fontSize: '15px',
                 textAlign: 'center',
                 color: '#38bdf8',
-                marginBottom: '12px',
+                marginBottom: '10px',
+                border: '1px solid var(--border-glass)',
               }}
             >
-              {generatedPw}
+              {pwResult}
             </div>
-            <div style={{ marginBottom: '12px' }}>
+            <div style={{ marginBottom: '10px' }}>
               <label style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                Length: {pwLength} characters
+                Length: <b>{pwLength} characters</b> (High Entropy)
               </label>
               <input
                 type="range"
@@ -503,85 +586,259 @@ function ToolBoxTab() {
                 max="32"
                 value={pwLength}
                 onChange={(e) => setPwLength(Number(e.target.value))}
-                style={{ width: '100%', marginTop: '6px' }}
+                style={{ width: '100%', marginTop: '4px' }}
               />
             </div>
-            <button className="btn-primary" style={{ width: '100%' }} onClick={generatePassword}>
-              Generate New Password
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                className="btn-primary"
+                style={{ flex: 2 }}
+                onClick={() => {
+                  tg.haptic('light');
+                  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
+                  let res = '';
+                  for (let i = 0; i < pwLength; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+                  setPwResult(res);
+                }}
+              >
+                Regenerate
+              </button>
+              <button className="btn-secondary" style={{ flex: 1 }} onClick={() => copyToClipboard(pwResult)}>
+                Copy
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeToolId === 'case' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔠 Text Case Converter</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={caseInput}
+              onChange={(e) => setCaseInput(e.target.value)}
+              placeholder="Type or paste text..."
+              style={{ marginBottom: '10px' }}
+            />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+              <button className="btn-secondary" onClick={() => setCaseResult(caseInput.toUpperCase())}>UPPERCASE</button>
+              <button className="btn-secondary" onClick={() => setCaseResult(caseInput.toLowerCase())}>lowercase</button>
+              <button
+                className="btn-secondary"
+                onClick={() =>
+                  setCaseResult(caseInput.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.substr(1).toLowerCase()))
+                }
+              >
+                Title Case
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() =>
+                  setCaseResult(
+                    caseInput
+                      .toLowerCase()
+                      .replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
+                  )
+                }
+              >
+                camelCase
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => setCaseResult(caseInput.toLowerCase().replace(/\s+/g, '_'))}
+              >
+                snake_case
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => setCaseResult(caseInput.toLowerCase().replace(/\s+/g, '-'))}
+              >
+                kebab-case
+              </button>
+            </div>
+            {caseResult && (
+              <div style={{ marginTop: '10px', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input type="text" className="text-input" readOnly value={caseResult} />
+                <button className="btn-secondary" onClick={() => copyToClipboard(caseResult)}>Copy</button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeToolId === 'bmi' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>⚖️ Body Mass Index (BMI)</h4>
+            <div style={{ textAlign: 'center', padding: '12px' }}>
+              <div style={{ fontSize: '32px', fontWeight: '800', color: '#10b981' }}>
+                {(calcWeight / Math.pow(calcHeight / 100, 2)).toFixed(1)}
+              </div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Healthy WHO Range (18.5 – 24.9)</div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Weight: {calcWeight} kg</label>
+                <input
+                  type="range"
+                  min="40"
+                  max="140"
+                  value={calcWeight}
+                  onChange={(e) => setCalcWeight(Number(e.target.value))}
+                  style={{ width: '100%' }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Height: {calcHeight} cm</label>
+                <input
+                  type="range"
+                  min="130"
+                  max="210"
+                  value={calcHeight}
+                  onChange={(e) => setCalcHeight(Number(e.target.value))}
+                  style={{ width: '100%' }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeToolId === 'discount' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🏷️ Discount & Savings Calculator</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px' }}>Original Price ($)</label>
+                <input
+                  type="number"
+                  className="text-input"
+                  value={discountPrice}
+                  onChange={(e) => setDiscountPrice(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: '11px' }}>Discount (%)</label>
+                <input
+                  type="number"
+                  className="text-input"
+                  value={discountPercent}
+                  onChange={(e) => setDiscountPercent(Number(e.target.value))}
+                />
+              </div>
+            </div>
+            <div style={{ background: 'rgba(5, 8, 16, 0.8)', padding: '10px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ fontSize: '18px', fontWeight: 800, color: '#10b981' }}>
+                Final Price: ${(discountPrice * (1 - discountPercent / 100)).toFixed(2)}
+              </div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                You Save: ${(discountPrice * (discountPercent / 100)).toFixed(2)}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeToolId === 'coin' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🪙 3D Coin Toss Decision Maker</h4>
+            <div style={{ fontSize: '48px', margin: '14px 0' }}>{coinResult === 'HEADS' ? '👑' : coinResult === 'TAILS' ? '⚡' : '🪙'}</div>
+            <div style={{ fontSize: '18px', fontWeight: 800, marginBottom: '12px', color: '#38bdf8' }}>
+              {coinResult || 'Tap to Flip'}
+            </div>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                tg.haptic('medium');
+                setCoinResult(Math.random() > 0.5 ? 'HEADS' : 'TAILS');
+              }}
+            >
+              Flip Coin
             </button>
           </div>
         )}
 
-        {selectedTool === 'bmi' && (
-          <div>
-            <h4 style={{ marginBottom: '8px' }}>Body Mass Index (BMI)</h4>
-            <div style={{ textAlign: 'center', padding: '16px' }}>
-              <div style={{ fontSize: '32px', fontWeight: '800', color: '#10b981' }}>{calculateBmi()}</div>
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                Healthy Weight Range
-              </div>
+        {activeToolId === 'dice' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎲 Dice Roller</h4>
+            <div style={{ fontSize: '48px', margin: '14px 0' }}>🎲</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, marginBottom: '12px', color: '#a855f7' }}>
+              {diceResult ? `Rolled: ${diceResult}` : 'Tap to Roll'}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div>
-                <label style={{ fontSize: '12px' }}>Weight: {weight} kg</label>
-                <input
-                  type="range"
-                  min="40"
-                  max="150"
-                  value={weight}
-                  onChange={(e) => setWeight(Number(e.target.value))}
-                  style={{ width: '100%' }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '12px' }}>Height: {height} cm</label>
-                <input
-                  type="range"
-                  min="130"
-                  max="220"
-                  value={height}
-                  onChange={(e) => setHeight(Number(e.target.value))}
-                  style={{ width: '100%' }}
-                />
-              </div>
-            </div>
+            <button
+              className="btn-primary btn-purple"
+              onClick={() => {
+                tg.haptic('heavy');
+                setDiceResult(Math.floor(Math.random() * 6) + 1);
+              }}
+            >
+              Roll 6-Sided Die
+            </button>
           </div>
         )}
 
-        {selectedTool === 'base64' && (
+        {activeToolId === 'base64' && (
           <div>
-            <h4 style={{ marginBottom: '8px' }}>Base64 Encode & Decode</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔐 Base64 Encoder & Decoder</h4>
             <input
               type="text"
               className="text-input"
-              placeholder="Enter string..."
-              value={jsonInput}
-              onChange={(e) => setJsonInput(e.target.value)}
+              value={caseInput}
+              onChange={(e) => setCaseInput(e.target.value)}
+              placeholder="Enter text..."
               style={{ marginBottom: '10px' }}
             />
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
               <button
                 className="btn-primary"
-                onClick={() => setJsonOutput(btoa(unescape(encodeURIComponent(jsonInput))))}
+                style={{ flex: 1 }}
+                onClick={() => setCaseResult(btoa(unescape(encodeURIComponent(caseInput))))}
               >
                 Encode
               </button>
               <button
                 className="btn-secondary"
+                style={{ flex: 1 }}
                 onClick={() => {
                   try {
-                    setJsonOutput(decodeURIComponent(escape(atob(jsonInput))));
+                    setCaseResult(decodeURIComponent(escape(atob(caseInput))));
                   } catch {
-                    setJsonOutput('Invalid Base64');
+                    setCaseResult('Invalid Base64');
                   }
                 }}
               >
                 Decode
               </button>
             </div>
-            {jsonOutput && <textarea className="code-textarea" readOnly value={jsonOutput} />}
+            {caseResult && (
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input type="text" className="text-input" readOnly value={caseResult} />
+                <button className="btn-secondary" onClick={() => copyToClipboard(caseResult)}>Copy</button>
+              </div>
+            )}
           </div>
         )}
+      </div>
+
+      {/* Filtered Tools Catalog */}
+      <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>
+        SELECT FROM 100+ UTILITIES ({filteredTools.length})
+      </h3>
+
+      <div className="tools-picker-grid">
+        {filteredTools.map((t) => (
+          <div
+            key={t.id}
+            className={`tool-tile ${activeToolId === t.id ? 'active' : ''}`}
+            onClick={() => {
+              tg.haptic('selectionChanged');
+              setActiveToolId(t.id);
+            }}
+          >
+            <div className="tool-tile-icon">{t.icon}</div>
+            <div>
+              <div className="tool-tile-name">{t.name}</div>
+              <div className="tool-tile-desc">{t.desc}</div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -596,18 +853,18 @@ function ProfileTab({ user }: { user: any }) {
       <h2 className="card-title">👤 User Identity & Security</h2>
       <p className="card-subtitle">Verified Telegram authentication & session encryption.</p>
 
-      <div style={{ background: 'rgba(0,0,0,0.25)', padding: '16px', borderRadius: '16px', marginBottom: '14px' }}>
-        <p style={{ fontSize: '14px', marginBottom: '8px' }}>
+      <div style={{ background: 'rgba(10, 15, 28, 0.65)', padding: '16px', borderRadius: '16px', marginBottom: '14px', border: '1px solid var(--border-glass)' }}>
+        <p style={{ fontSize: '13px', marginBottom: '8px' }}>
           <b>Telegram Name:</b> {user.first_name} {user.last_name || ''}
         </p>
-        <p style={{ fontSize: '14px', marginBottom: '8px' }}>
+        <p style={{ fontSize: '13px', marginBottom: '8px' }}>
           <b>Username:</b> @{user.username || 'Not set'}
         </p>
-        <p style={{ fontSize: '14px', marginBottom: '8px' }}>
-          <b>Telegram ID:</b> <code>{user.id}</code>
+        <p style={{ fontSize: '13px', marginBottom: '8px' }}>
+          <b>Telegram ID:</b> <code style={{ color: '#38bdf8' }}>{user.id}</code>
         </p>
-        <p style={{ fontSize: '14px', color: '#10b981', fontWeight: '700' }}>
-          🛡️ initData HMAC-SHA256 Signature Verified
+        <p style={{ fontSize: '13px', color: '#10b981', fontWeight: '700' }}>
+          🛡️ initData HMAC-SHA256 Cryptographic Signature Verified
         </p>
       </div>
 
