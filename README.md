@@ -153,25 +153,59 @@ Lexio automatically recognizes what task the user wants to accomplish from plain
 ## 🛠️ Architecture & Tech Stack
 
 ```
-                               ┌─────────────────────────────────┐
-                               │     Telegram Cloud Servers      │
-                               └────────────────┬────────────────┘
-                                                │ Long Polling / Webhook
-                                                ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                             Lexio Bot Engine                                │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  • Framework: grammY (TypeScript) with Native Sessions                      │
-│  • Rate Limiting: In-Memory Sliding Window Leaky Bucket                     │
-│  • Database: PostgreSQL with Prisma ORM (Graceful Degradation for Local)    │
-│  • Server: Express.js REST API & Webhook Handler                            │
-└─────────────────────────────────────────────────────────────────────────────┘
+                              ┌─────────────────────────────────────────┐
+                              │         Telegram Cloud Platform         │
+                              │  • Telegram Bot API                     │
+                              │  • Telegram Mini App Webview (In-Bot)   │
+                              └────────────────────┬────────────────────┘
+                                                   │
+                        HTTPS Webhook / Long-Polling & In-App Webview
+                                                   │
+                                                   ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 Express.js Application Gateway                              │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  • Webhook Endpoint: POST /api/webhook (HMAC-SHA256 Token Validation)                      │
+│  • Mini App Static Server: GET /app/* (React 18 Single-Page Application Bundle)             │
+│  • REST API & Auth: GET /health, POST /api/auth (JWT Generation & Session Verification)      │
+└──────────────────────────────────────────┬──────────────────────────────────────────────────┘
+                                           │
+                    ┌──────────────────────┴──────────────────────┐
+                    ▼                                             ▼
+┌───────────────────────────────────────┐     ┌───────────────────────────────────────────────┐
+│           grammY Bot Engine           │     │            React 18 Mini App UI               │
+├───────────────────────────────────────┤     ├───────────────────────────────────────────────┤
+│  • Command & Intent Router            │     │  • ☰ Responsive Slide Bar (Drawer Navigation) │
+│  • Middleware Stack:                  │     │  • 100,000+ Tools Directory & Live Search     │
+│    - Auth (Admin/User Access)         │     │  • Interactive Tool Workspaces (47+ Tools)    │
+│    - Sliding Window Leaky-Bucket Rate │     │  • Telegram WebApp SDK Integration:           │
+│    - Performance & Security Logger    │     │    - Native Haptic Feedback Engines           │
+│  • Task Handlers:                     │     │    - In-App Popups & Confirmation Sheets      │
+│    - Start & Menu (Task Centers)      │     │    - Viewport Resizing & Theme Synchronization│
+│    - 100+ Native In-Chat Calculators  │     │  • Universal Media Downloader Suite           │
+│    - Nexus Media Downloader Engine    │     │  • Creator Profile Excavation UI              │
+│    - Feedigger Creator Analytics      │     │  • 100% In-Bot Execution (No External Sites)  │
+│    - Broadcast & Admin Management     │     └───────────────────────────────────────────────┘
+└───────────────────┬───────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                  Data & Persistence Layer                                   │
+├─────────────────────────────────────────────────────────────────────────────────────────────┤
+│  • Prisma ORM v6 (Type-safe Database Client)                                                │
+│  • PostgreSQL 16 (Relational Schema for Users, Tasks, Sessions & Analytics)                │
+│  • Resilient Graceful Degradation (Runs in offline/degraded mode if PostgreSQL is offline)  │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Runtime**: Node.js 20+ / TypeScript
-- **Bot Framework**: [grammY](https://grammy.dev/)
-- **Database ORM**: Prisma ORM with PostgreSQL
-- **Security**: Cryptographic HMAC-SHA256 & Node crypto
+### Core Technologies
+- **Runtime Environment:** Node.js (v20+ LTS recommended) / TypeScript 5.8
+- **Telegram Bot Framework:** [grammY v1.35+](https://grammy.dev/) with native session handling and conversations
+- **Mini App Frontend:** React 18, Vite 6, TypeScript, Vanilla CSS (Glassmorphism & HSL Color Tokens)
+- **HTTP & Webhook Server:** Express.js 4.21 with CORS, JSON parser, and static assets server
+- **Database ORM:** Prisma ORM 6.4 with PostgreSQL 16
+- **Security & Cryptography:** Node `crypto` (HMAC-SHA256, SHA-512, MD5, UUID v4), `jsonwebtoken` (JWT)
+- **Containerization:** Docker Multi-stage (`node:22-alpine`) + Docker Compose
 
 ---
 
@@ -179,158 +213,330 @@ Lexio automatically recognizes what task the user wants to accomplish from plain
 
 ```
 d:\tools\
-├── package.json                   # Dependencies and scripts
-├── tsconfig.json                  # TypeScript compiler settings
-├── .env.example                   # Environment configuration template
-├── LICENSE                        # MIT License
-├── README.md                      # Comprehensive documentation
+├── .env.example                   # Template containing all configurable environment variables
+├── .gitignore                     # Git ignore rules (strictly excludes .env and build caches)
+├── Dockerfile                     # Production multi-stage Docker build recipe
+├── docker-compose.yml             # Orchestration for PostgreSQL 16 and Bot Server
+├── LICENSE                        # Official MIT Open Source License
+├── package.json                   # Root workspace scripts and server dependencies
+├── tsconfig.json                  # Root TypeScript configuration (ES2022, NodeNext modules)
+├── README.md                      # Comprehensive project documentation
 │
 ├── prisma/
-│   └── schema.prisma              # PostgreSQL schema
+│   └── schema.prisma              # PostgreSQL database models (User, ToolSession, Analytics)
 │
 ├── src/
 │   ├── config/
-│   │   └── env.ts                 # Strongly-typed environment validation
+│   │   └── env.ts                 # Strongly-typed environment validation and URL helpers
 │   ├── database/
-│   │   └── client.ts              # Resilient Prisma client singleton
+│   │   └── client.ts              # Resilient Prisma client singleton with auto-reconnection
+│   │
 │   ├── bot/
-│   │   ├── index.ts               # Primary bot router & plugin assembly
-│   │   ├── types.ts               # BotContext & Session typing
-│   │   ├── middleware/            # Auth, RateLimiter, and Logger
+│   │   ├── index.ts               # Primary grammY bot initialization & handler assembly
+│   │   ├── types.ts               # BotContext & Session typing definitions
+│   │   ├── middleware/
+│   │   │   ├── auth.ts            # Admin role validation & permission checks
+│   │   │   ├── logger.ts          # Structured request logging
+│   │   │   └── rate-limiter.ts    # Sliding-window leaky bucket rate protection
 │   │   ├── keyboards/
-│   │   │   ├── main.menu.ts       # Task-driven category keyboards
-│   │   │   └── tool.keyboards.ts  # In-chat tool execution keyboards
+│   │   │   ├── main.menu.ts       # Category selection & WebApp launcher keyboards
+│   │   │   └── tool.keyboards.ts  # In-chat interactive action keyboards & presets
 │   │   └── handlers/
-│   │       ├── start.ts           # Onboarding & Task Suite greeting
-│   │       ├── menu.ts            # Task category selector
-│   │       ├── help.ts            # Full command directory
-│   │       ├── toolbox.ts         # 100+ native in-chat tools & presets
-│   │       ├── nexus.ts           # Media downloader handler
-│   │       ├── feedigger.ts       # Social analytics & CSV export
-│   │       └── admin.ts           # Admin dashboard & broadcasting
+│   │       ├── start.ts           # /start onboarding, greetings & task options
+│   │       ├── menu.ts            # /menu task selector & navigation
+│   │       ├── help.ts            # /help complete tool directory & search
+│   │       ├── toolbox.ts         # 100+ native in-chat tools & calculation presets
+│   │       ├── nexus.ts           # Universal Media Downloader (/download, /audio, /info, /media)
+│   │       ├── feedigger.ts       # Creator analytics excavation & CSV report generation
+│   │       └── admin.ts           # Admin dashboard, stats, and broadcast messaging
+│   │
+│   ├── mini-app/                  # React 18 + Vite Telegram Mini App (In-Bot WebApp)
+│   │   ├── index.html             # HTML entry point with Telegram WebApp script
+│   │   ├── package.json           # Mini App dependencies (React 18, Lucide icons, Vite)
+│   │   ├── tsconfig.json          # Frontend TypeScript compiler options
+│   │   ├── vite.config.ts         # Vite build configuration (base: './', CSS minification)
+│   │   ├── dist/                  # Production-compiled static bundle (served at /app)
+│   │   └── src/
+│   │       ├── main.tsx           # React DOM root mounting
+│   │       ├── styles.css         # Rich dark glassmorphic design system & animations
+│   │       ├── telegram.ts        # Telegram WebApp SDK helper (Haptics, MainButton, Popups)
+│   │       └── App.tsx            # Main application with responsive Slide Bar & 47+ tool workspaces
 │   │
 │   └── server/
-│       └── index.ts               # Express bootstrap & webhook server
+│       ├── index.ts               # Express bootstrap, webhook routing & static asset server
+│       └── routes/
+│           ├── webhook.ts         # Telegram webhook handler with secret token validation
+│           ├── auth.ts            # Telegram WebApp initData validation & JWT signing
+│           └── api.ts             # Health check & internal tool API endpoints
 ```
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## 🚀 Local Deployment (Step-by-Step)
 
-### 1. Prerequisites
-- Node.js 20 or higher
-- Git
-- Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
+Follow these steps to set up and run the bot locally on your machine.
 
-### 2. Installation
+### Step 1: System Prerequisites
+- **Node.js**: Version 20.x or 22.x LTS installed (`node -v`)
+- **npm**: Version 10.x or higher (`npm -v`)
+- **Git**: Installed and configured (`git --version`)
+- **PostgreSQL (Optional for local dev)**: Version 15 or 16. If PostgreSQL is not installed, the bot automatically boots in local degraded mode with zero crashes.
+
+### Step 2: Clone & Navigate to Project
 ```bash
-# Clone the repository
 git clone https://github.com/Qwicklabs-01/Lexio-Bot.git
 cd Lexio-Bot
-
-# Install dependencies
-npm install
 ```
 
-### 3. Configure Environment
-Create `.env` file based on `.env.example`:
+### Step 3: Install All Dependencies
+Install root backend dependencies as well as frontend Mini App dependencies:
+```bash
+# 1. Install root dependencies
+npm install
+
+# 2. Install Mini App frontend dependencies
+cd src/mini-app
+npm install
+cd ../..
+```
+
+### Step 4: Configure Environment Variables
+Copy `.env.example` to a new `.env` file:
+```bash
+# On Linux/macOS
+cp .env.example .env
+
+# On Windows (PowerShell)
+Copy-Item .env.example .env
+```
+
+Open `.env` in your editor and provide your credentials:
 ```env
-BOT_TOKEN=your_telegram_bot_token_here
-ADMIN_USER_IDS=your_telegram_id_here
+# Required: Telegram Bot Token from @BotFather
+BOT_TOKEN=123456789:ABCdefGHIjklMNOpqrSTUvwxYZ
+
+# Required: Your numerical Telegram User ID (get it from @userinfobot)
+ADMIN_IDS=123456789
+
+# Port and Environment
 PORT=3000
 NODE_ENV=development
+
+# Webhook configuration (Leave WEBHOOK_DOMAIN empty for local long-polling)
+WEBHOOK_DOMAIN=
+TELEGRAM_WEBHOOK_SECRET=your-random-32-character-secret-key-here
+
+# Mini App URL (Local development URL)
+MINI_APP_URL=http://localhost:5173
+
+# Security & Database
+JWT_SECRET=your-super-secret-jwt-signing-key-minimum-32-chars
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/omni_telegram_platform?schema=public
 ```
 
-### 4. Start the Bot
+> [!TIP]
+> Keep `.env` secured and uncommitted. On Windows, you can mark it hidden using `attrib +h .env`.
+
+### Step 5: Initialize Prisma Client (Optional)
+If running a local PostgreSQL instance:
 ```bash
-# Start bot in development mode with live reload
+npx prisma generate
+npx prisma db push
+```
+
+### Step 6: Build the Mini App Frontend
+Compile the React 18 Mini App into static production assets:
+```bash
+npm run build:miniapp
+```
+This outputs the bundle into `src/mini-app/dist`, which Express serves at `/app`.
+
+### Step 7: Launch the Bot
+#### Option A: Development Mode (Live Reloading via tsx)
+```bash
 npm run dev
 ```
+- Automatically starts Express on `http://localhost:3000`
+- Automatically starts long-polling connection to Telegram
+- Registers bot commands and persistent menu button
+- Watches all TypeScript files for hot changes
 
----
-
-## ⚙️ Environment Configuration
-
-| Variable | Required | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `BOT_TOKEN` | **Yes** | — | Telegram Bot API token from `@BotFather` |
-| `ADMIN_USER_IDS` | **Yes** | — | Comma-separated Telegram User IDs with admin access |
-| `PORT` | No | `3000` | HTTP port for webhook/API server |
-| `NODE_ENV` | No | `development` | Set to `production` in production |
-| `DATABASE_URL` | No | `postgresql://...` | PostgreSQL connection string (optional in local mode) |
-| `WEBHOOK_URL` | No | — | HTTPS public URL for webhook delivery |
-| `WEBHOOK_SECRET` | No | — | Secret token for Telegram webhook validation |
-
----
-
-## 🐳 Docker & Production Deployment
-
-### 1. Build and Run with Docker Compose
+#### Option B: Production Build & Execution
 ```bash
-# Build and run containers in background
-docker-compose up -d --build
+npm run build
+npm start
+```
 
+### Step 8: Verification
+- Open your browser to `http://localhost:3000/health` — you should receive:
+  ```json
+  {"status":"healthy","uptime":...,"environment":"development"}
+  ```
+- Open `http://localhost:3000/app` to test the WebApp interface directly in your browser.
+- Open Telegram, search for your bot username, and send `/start`.
+
+---
+
+## 🐳 Docker Deployment (Step-by-Step)
+
+The project includes an enterprise-grade multi-stage `Dockerfile` and `docker-compose.yml` to run the bot and PostgreSQL in isolated containers.
+
+### Step 1: Ensure Docker is Running
+Verify Docker and Docker Compose are available on your host:
+```bash
+docker --version
+docker compose version
+```
+
+### Step 2: Configure Environment Variables for Docker
+Ensure your `.env` contains valid credentials:
+```env
+BOT_TOKEN=your_bot_token_here
+ADMIN_IDS=your_telegram_id_here
+PORT=3000
+NODE_ENV=production
+TELEGRAM_WEBHOOK_SECRET=your_32_char_random_secret
+JWT_SECRET=your_32_char_jwt_secret
+```
+*(Note: `DATABASE_URL` inside `docker-compose.yml` automatically points to the `postgres` container).*
+
+### Step 3: Build and Start Containers
+Run Docker Compose in detached mode:
+```bash
+docker compose up -d --build
+```
+This will:
+1. Spin up a healthy `postgres:16-alpine` database with data volume persistence (`pgdata`).
+2. Build the multi-stage `node:22-alpine` container, compile TypeScript, build the React Mini App, and install production dependencies.
+3. Start the Express server and Telegram bot engine.
+
+### Step 4: Run Database Migrations Inside Container
+```bash
+docker compose exec bot-server npx prisma db push
+```
+
+### Step 5: Monitor Logs & Inspect Containers
+```bash
 # View real-time logs
-docker-compose logs -f bot
+docker compose logs -f bot-server
+
+# Check container status
+docker compose ps
 ```
 
-### 2. Manual Container Build
+### Step 6: Useful Docker Commands
 ```bash
-docker build -t lexio-bot:latest .
-docker run -d --name lexio-bot --env-file .env -p 3000:3000 lexio-bot:latest
+# Restart the bot container
+docker compose restart bot-server
+
+# Stop all services
+docker compose down
+
+# Stop and wipe database volume (clean slate)
+docker compose down -v
 ```
 
 ---
 
-## 🤖 BotFather Configuration
+## 🤖 [@BotFather](https://t.me/BotFather) Setup (Step-by-Step)
 
-To display all commands in Telegram's autocomplete menu, send this list to [@BotFather](https://t.me/BotFather) (`/setcommands`):
+To configure the autocomplete command menu, in-bot menu button, description, and about text, follow these instructions with [@BotFather](https://t.me/BotFather).
+
+### Step 1: Set Autocomplete Commands (`/setcommands`)
+1. Open [@BotFather](https://t.me/BotFather) on Telegram.
+2. Send command: `/setcommands`
+3. Select your bot from the list.
+4. Copy and paste the entire list below:
 
 ```
-start - Open Lexio Task Center
-menu - Browse tools by task category
-help - Complete directory of 100+ tools
-download - Download HD video or MP3 audio
-excavate - Analyze Instagram creator profile
-hashtags - Generate high-reach viral hashtags
-hook - Generate 3-second viral video hooks
-json - Format, validate & minify JSON
-qr - Generate high-resolution QR code
-uuid - Generate cryptographic UUID v4
-hash - Generate MD5, SHA-1, SHA-256 hashes
-b64 - Base64 encode or decode text
-binary - Convert text to binary & vice versa
-slug - Generate SEO clean URL slug
-sql - Format & beautify SQL queries
-md2html - Convert Markdown to HTML
-minhtml - Minify HTML & CSS code
-calc - Instant math calculator
-emi - Calculate loan EMI & total interest
-bmi - Body Mass Index & health category
-age - Exact age & birthday countdown
-unit - Convert length, weight, temperature
-stats - Mean, Median, Mode & Range statistics
-gpa - Calculate semester GPA (4.0 scale)
-sci - Scientific calculator
-case - Convert text case styles
-count - Count words, characters & reading time
-reverse - Reverse text characters or words
-sort - Alphabetical list or line sorter
-password - Generate 256-bit secure password
-pomodoro - Focus sprint & break timer
-todo - Quick in-chat task keeper
-coin - 3D coin toss (Heads / Tails)
-dice - Roll d6, d20, d100 dice
-quote - Daily inspirational quote
-rps - Play Rock Paper Scissors
-admin - Admin control dashboard
+start - 🚀 Open Task Center & Choose Tool Type
+tools - 🧰 Browse 100,000+ Tools & Options
+menu - 🧭 Select Tools by Task Category
+download - 🎬 Universal Media Downloader (YT, IG, TikTok, X)
+audio - 🎵 Extract HQ 320kbps MP3 Audio
+info - ℹ️ Inspect Video Codec, Bitrate & Resolution
+media - 📱 Interactive Media Downloader Hub
+excavate - 📊 Analyze Instagram Creator Profile
+hashtags - #️⃣ Generate High-Reach Viral Hashtags
+hook - 🪝 Generate 3-Second Viral Video Hooks
+json - 💻 Format, Validate & Minify JSON
+qr - 📱 Generate High-Resolution QR Codes
+calc - 🧮 Instant Math & Equation Calculator
+emi - 🏦 Calculate Loan EMI & Interest Payback
+bmi - ⚖️ Body Mass Index & Health Classification
+age - 🎂 Exact Age, Days Lived & Birthday Countdown
+unit - 📐 Universal Unit Converter (Len/Wt/Temp)
+stats - 📈 Mean, Median, Mode & Range Calculator
+gpa - 🎓 GPA & University Honours Calculator
+sci - 🔬 Scientific Math Evaluator
+password - 🛡️ Generate 256-Bit Cryptographic Passwords
+pomodoro - ⏳ Focus Sprint & Break Timer
+todo - ✅ Quick In-Chat Task & Goal Keeper
+coin - 🪙 3D Fair Coin Toss (Heads/Tails)
+dice - 🎲 Roll d6, d20, d100 Multi-Sided Dice
+quote - 💡 Daily Thought & Wisdom
+rps - ✂️ Play Rock Paper Scissors
+uuid - 🔑 Generate Cryptographic UUID v4
+hash - 🔒 Generate MD5, SHA-256 & SHA-512 Hashes
+b64 - 🔤 Base64 Encode & Decode Strings
+binary - 0️⃣ Binary to Text & Text to Binary
+slug - 🔗 Generate Clean SEO URL Slugs
+sql - 🗄️ Format & Beautify SQL Queries
+case - 🔠 Convert UPPER, lower, camelCase, snake_case
+count - 🔢 Word, Character & Reading Time Counter
+reverse - 🔄 Reverse Characters or Word Order
+sort - 🔤 Alphabetical Line & List Sorter
+admin - ⚙️ Administrator Dashboard & Broadcast
+help - 📖 Complete Task & Tool Directory
 ```
+
+### Step 2: Configure Persistent In-Bot Menu Button (`/setmenubutton`)
+Setting the menu button gives users a permanent button next to the chat message bar that opens the tools suite directly in the Telegram Bot page:
+1. In [@BotFather](https://t.me/BotFather), send: `/setmenubutton`
+2. Select your bot.
+3. Send the HTTPS WebApp URL (e.g. `https://your-domain.com/app` or `https://nest-hub-tools.vercel.app?tab=toolbox`).
+4. Enter the button label: `⚡ Tools Page`
+
+*(Note: The bot also automatically calls `bot.api.setChatMenuButton` upon startup).*
+
+### Step 3: Set Bot Description (`/setdescription`)
+This is the text displayed on the screen before a user presses "Start":
+1. In [@BotFather](https://t.me/BotFather), send: `/setdescription`
+2. Select your bot.
+3. Paste:
+```
+⚡ Welcome to Lexio — The Universal Multi-Tool Platform!
+
+Over 100,000 tools running directly inside Telegram:
+🎬 Universal Media Downloader (YouTube, Instagram, TikTok, Twitter/X)
+📊 Creator & Social Analytics Engine
+🧮 Financial, Health & Scientific Calculators
+💻 Developer Utilities (JSON, SQL, QR, Regex, Hash)
+📝 Text, Copywriting & Productivity Suites
+
+100% Native Telegram Execution • Zero External Redirects
+Made by Sakshi Developer
+```
+
+### Step 4: Set About Text (`/setabouttext`)
+This text appears on the bot's profile page:
+1. In [@BotFather](https://t.me/BotFather), send: `/setabouttext`
+2. Select your bot.
+3. Paste:
+```
+⚡ Lexio: 100,000+ Universal Tools, Media Downloaders & Creator Analytics directly inside Telegram. Zero external websites. Developed by Sakshi Developer.
+```
+
+### Step 5: Set Bot Profile Photo (`/setuserpic`)
+1. In [@BotFather](https://t.me/BotFather), send: `/setuserpic`
+2. Select your bot.
+3. Upload an avatar (e.g. high-tech neon logo or gradient icon).
 
 ---
 
 ## 📞 Support & Contact
 
-If you have any questions, need technical assistance, or want custom tool additions, feel free to reach out:
+If you have questions, need assistance deploying, or want to contribute:
 
 - **Developer:** **Sakshi Developer**
 - **📞 Phone:** `6290873841`
@@ -340,6 +546,6 @@ If you have any questions, need technical assistance, or want custom tool additi
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-Made with ❤️ by **Sakshi Developer**.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.  
+Copyright © 2026 **Sakshi Developer**. All rights reserved.
 
