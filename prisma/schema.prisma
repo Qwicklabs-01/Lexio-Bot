@@ -1,0 +1,188 @@
+// Unified Prisma Schema for All-In-One Telegram Platform:
+// 1. Nexus Media Intelligence (Media downloader & capture)
+// 2. Feedigger (Instagram viral reels excavator & analytics)
+// 3. ToolBox Pro / Nest Hub Tools (Multi-tools suite & utilities)
+// 4. Telegram Users, Sessions, Subscriptions & Admin System
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  PREMIUM
+  ADMIN
+}
+
+enum DownloadStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum BroadcastStatus {
+  DRAFT
+  SENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id              String         @id @default(uuid())
+  telegramId      String         @unique
+  username        String?
+  firstName       String?
+  lastName        String?
+  languageCode    String         @default("en")
+  role            Role           @default(USER)
+  isBlocked       Boolean        @default(false)
+  downloadsCount  Int            @default(0)
+  scrapesCount    Int            @default(0)
+  toolsUsedCount  Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  downloads       MediaDownload[]
+  feedScrapes     FeedScrape[]
+  toolLogs        ToolUsageLog[]
+  auditLogs       AuditLog[]
+
+  @@index([telegramId])
+  @@index([role])
+}
+
+model Session {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ==========================================
+// 1. Nexus Media Intelligence Module
+// ==========================================
+model MediaDownload {
+  id            String         @id @default(uuid())
+  userId        String
+  sourceUrl     String
+  platform      String         // youtube, instagram, tiktok, twitter, etc.
+  title         String?
+  thumbnailUrl  String?
+  durationSec   Int?
+  format        String         // mp4_1080p, mp4_720p, mp3_audio
+  fileSizeBytes BigInt?
+  downloadUrl   String?
+  status        DownloadStatus @default(QUEUED)
+  errorMessage  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user          User           @relation(fields: [userId], references: [telegramId], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([platform])
+  @@index([status])
+}
+
+// ==========================================
+// 2. Feedigger Social Intelligence Module
+// ==========================================
+model FeedScrape {
+  id              String      @id @default(uuid())
+  userId          String
+  targetUsername  String
+  followersCount  Int         @default(0)
+  postsAnalyzed   Int         @default(0)
+  avgEngagementRate Float     @default(0.0)
+  topPostUrl      String?
+  topPostViews    BigInt?
+  csvExportUrl    String?
+  createdAt       DateTime    @default(now())
+
+  user            User        @relation(fields: [userId], references: [telegramId], onDelete: Cascade)
+  posts           FeedPost[]
+
+  @@index([userId])
+  @@index([targetUsername])
+}
+
+model FeedPost {
+  id             String      @id @default(uuid())
+  scrapeId       String
+  postUrl        String
+  thumbnailUrl   String?
+  caption        String?
+  viewsCount     BigInt      @default(0)
+  likesCount     BigInt      @default(0)
+  commentsCount  BigInt      @default(0)
+  engagementRate Float       @default(0.0)
+  publishedAt    DateTime?
+
+  scrape         FeedScrape  @relation(fields: [scrapeId], references: [id], onDelete: Cascade)
+
+  @@index([scrapeId])
+  @@index([viewsCount])
+}
+
+// ==========================================
+// 3. ToolBox Pro Multi-Tools Module
+// ==========================================
+model ToolUsageLog {
+  id         String   @id @default(uuid())
+  userId     String
+  toolName   String   // json_formatter, qr_generator, password_gen, bmi, base64, unit_converter
+  inputMeta  String?  // Sanitized summary/metadata
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [telegramId], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([toolName])
+}
+
+// User-saved digital notes & todo items from ToolBox
+model SavedNote {
+  id         String   @id @default(uuid())
+  userId     String
+  title      String
+  content    String
+  category   String   @default("general")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// ==========================================
+// 4. Admin, Broadcasts & Auditing
+// ==========================================
+model Broadcast {
+  id          String          @id @default(uuid())
+  title       String
+  content     String
+  targetRole  Role?
+  totalSent   Int             @default(0)
+  totalFailed Int             @default(0)
+  status      BroadcastStatus @default(DRAFT)
+  sentAt      DateTime?
+  createdAt   DateTime        @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [telegramId], onDelete: SetNull)
+
+  @@index([action])
+  @@index([createdAt])
+}
