@@ -175,6 +175,8 @@ export function getToolBoxCalcKeyboard(): InlineKeyboard {
     .text('🎓 GPA Calculator', 'tb_tool_gpa')
     .text('🔬 Scientific Calc', 'tb_tool_sci')
     .row()
+    .text('✨ Numerology Master', 'tb_tool_numerology')
+    .row()
     .text('🔙 Back to Task Menu', 'menu_main');
 }
 

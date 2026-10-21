@@ -1683,3 +1683,141 @@ export async function handleMultiAgentCommand(ctx: BotContext, objective?: strin
   await sendInteractiveToolMessage(ctx, msg, keyboard);
 }
 
+export async function handleNumerologyCommand(
+  ctx: BotContext,
+  dob = '1998-05-15',
+  name = 'Sakshi',
+  gender = 'female'
+): Promise<void> {
+  const chaldeanMap: Record<string, number> = {
+    A: 1, I: 1, J: 1, Q: 1, Y: 1,
+    B: 2, K: 2, R: 2,
+    C: 3, G: 3, L: 3, S: 3,
+    D: 4, M: 4, T: 4,
+    E: 5, H: 5, N: 5, X: 5,
+    U: 6, V: 6, W: 6,
+    O: 7, Z: 7,
+    F: 8, P: 8,
+  };
+  const careersMap: Record<number, string> = {
+    1: 'Leadership, Government Service, Executive Management, Entrepreneurship',
+    2: 'Creative Arts, Maritime, Navy, Liquid-based businesses, Psychology',
+    3: 'Education, Teaching, Legal, Counseling, Spiritual or Philosophical fields',
+    4: 'Technology, Engineering, IT Systems, Research, Unconventional pursuits',
+    5: 'Banking, Finance, Media, Communications, Trading, E-commerce',
+    6: 'Luxury, Hospitality, Fashion, Design, Entertainment, Wellness',
+    7: 'Research, Analytics, Philosophy, Occult, Software Architecture',
+    8: 'Law, Judiciary, Heavy Industry, Steel, Real Estate, Non-profit NGOs',
+    9: 'Armed Forces, Surgery, Sports, Engineering, Construction, Defense',
+  };
+  const remediesMap: Record<number, string> = {
+    1: "Rise before sunrise to absorb solar energy. Wear Red/Gold.",
+    2: "Drink water from a silver glass. Moonlight walks. Wear White/Silver.",
+    3: "Respect mentors and teachers. Wear Yellow/Topaz. Donate books.",
+    4: "Keep living spaces clutter-free. Carry a silver coin talisman.",
+    5: "Feed green spinach to cows. Wear Emerald or Green. Plant leafy trees.",
+    6: "Keep pleasant aromas/fragrance. Wear Diamond/Pastels/White.",
+    7: "Feed stray animals. Practice daily meditation. Wear Earthy tones.",
+    8: "Serve the needy and elderly. Avoid non-veg food to balance Saturn. Wear Blue/Iron.",
+    9: "Practice physical martial arts/yoga. Wear Red Coral. Donate blood.",
+  };
+
+  const reduceNum = (n: number | string, ignoreZero = true): number => {
+    let s = String(n).split('').reduce((a, b) => (ignoreZero && b === '0' ? a : a + parseInt(b, 10)), 0);
+    return s > 9 ? reduceNum(s, ignoreZero) : s;
+  };
+
+  let cleanDob = (dob || '1998-05-15').trim();
+  let cleanName = (name || 'Sakshi').trim();
+  let cleanGender = (gender || 'female').trim().toLowerCase();
+
+  const parts = cleanDob.split(/\s+/);
+  if (parts.length > 1) {
+    cleanDob = parts[0];
+    if (parts[1]) cleanName = parts[1];
+    if (parts[2]) cleanGender = parts[2].toLowerCase();
+  }
+  if (!cleanDob.includes('-') && !cleanDob.includes('/')) {
+    cleanDob = '1998-05-15';
+  }
+
+  const [y, m, d] = cleanDob.replace(/\//g, '-').split('-');
+  const fullStr = (d || '') + (m || '') + (y || '');
+  const mulank = reduceNum(d || '1');
+  const bhagyank = reduceNum(fullStr, true);
+  const yearSum = reduceNum(y || '1998');
+  const kua = cleanGender === 'male' ? reduceNum(11 - yearSum) : reduceNum(4 + yearSum);
+
+  let nameTotal = 0;
+  (cleanName || 'Sakshi').toUpperCase().split('').forEach((char) => {
+    if (chaldeanMap[char]) nameTotal += chaldeanMap[char];
+  });
+  const nameNum = nameTotal > 0 ? reduceNum(nameTotal) : mulank;
+
+  const loShuLayout = [
+    [4, 9, 2],
+    [3, 5, 7],
+    [8, 1, 6],
+  ];
+
+  const digits = fullStr.split('');
+  const gridCells = loShuLayout.map((row) =>
+    row.map((num) => {
+      const count = digits.filter((x) => x === num.toString()).length;
+      return count > 0 ? num.toString().repeat(count) : '-';
+    })
+  );
+
+  const has = (n: number) => fullStr.includes(n.toString());
+  const planes: string[] = [];
+  if (has(4) && has(3) && has(8)) planes.push('• *Thought Plane (4-3-8):* Superior memory & analytical thinking');
+  if (has(9) && has(5) && has(1)) planes.push('• *Willpower Line (9-5-1):* Unstoppable determination & drive');
+  if (has(2) && has(7) && has(6)) planes.push('• *Action Plane (2-7-6):* High stamina & athletic rapid execution');
+  if (has(4) && has(9) && has(2)) planes.push('• *Mental Plane (4-9-2):* Intellectual brilliance & logic');
+  if (has(3) && has(5) && has(7)) planes.push('• *Emotional Plane (3-5-7):* Deep intuition & spiritual empathy');
+  if (has(8) && has(1) && has(6)) planes.push('• *Practical Plane (8-1-6):* Grounded realism & commercial skills');
+  if (has(2) && has(5) && has(8)) planes.push('• *Property Line (2-5-8):* Success in land, property & wealth');
+  if (has(4) && has(5) && has(6)) planes.push('• *Success Line (4-5-6):* Rapid career ascent & prosperity');
+
+  const career = careersMap[mulank] || 'Executive leadership & management';
+  const remedy = remediesMap[mulank] || 'Practice daily morning meditation';
+
+  const gridAscii =
+    `┌─────────┬─────────┬─────────┐\n` +
+    `│ ${gridCells[0][0].padEnd(7)} │ ${gridCells[0][1].padEnd(7)} │ ${gridCells[0][2].padEnd(7)} │\n` +
+    `├─────────┼─────────┼─────────┤\n` +
+    `│ ${gridCells[1][0].padEnd(7)} │ ${gridCells[1][1].padEnd(7)} │ ${gridCells[1][2].padEnd(7)} │\n` +
+    `├─────────┼─────────┼─────────┤\n` +
+    `│ ${gridCells[2][0].padEnd(7)} │ ${gridCells[2][1].padEnd(7)} │ ${gridCells[2][2].padEnd(7)} │\n` +
+    `└─────────┴─────────┴─────────┘`;
+
+  const msg =
+    `✨ *MAGICAL NUMEROLOGY MASTER REPORT*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `👤 *Name:* \`${cleanName}\` | 🎂 *DOB:* \`${cleanDob}\` | 🚻 *Gender:* \`${cleanGender}\`\n\n` +
+    `🔮 *Core Planetary Vibrations:*\n` +
+    `• 🌟 *Mulank (Root Number):* \`${mulank}\` — Innate character & talent from birth\n` +
+    `• 🛤️ *Bhagyank (Destiny Number):* \`${bhagyank}\` — Life path destiny (strongest after 40)\n` +
+    `• 👼 *Kua (Angel Number):* \`${kua}\` — Feng Shui energetic alignment\n` +
+    `• ✍️ *Name (Chaldean Number):* \`${nameNum}\` — Outer persona & career vibration\n\n` +
+    `📐 *Ancient Lo Shu 3x3 Magic Square:*\n` +
+    '```\n' + gridAscii + '\n```\n\n' +
+    `⚡ *Destiny Planes & Lines:*\n` +
+    (planes.length > 0 ? planes.join('\n') : '_No complete 3-digit planes. Use remedies below to balance your grid._') +
+    `\n\n` +
+    `💼 *Career Trajectory:*\n` +
+    `${career}\n\n` +
+    `🧘 *Key Planetary Remedy:*\n` +
+    `${remedy}\n\n` +
+    `👉 *Usage:* \`/numerology <YYYY-MM-DD> [Name] [gender]\``;
+
+  const keyboard = getBackToCategoryKeyboard('calc', [
+    [
+      { text: '✨ Recalculate Sample', data: 'tb_run_num_sample' },
+      { text: '🔄 2000-01-01', data: 'tb_run_num_2000' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+

@@ -84,7 +84,8 @@ export const ALL_TOOLS: ToolItem[] = [
   { id: 'toai', name: 'Convert to Adobe AI', category: 'cad', icon: '✏️', desc: 'Convert graphics to Adobe Illustrator AI format', htmlFile: 'convert-to-ai.html' },
   { id: 'toraw', name: 'Digital Camera RAW Studio', category: 'cad', icon: '📷', desc: 'Process and develop digital camera RAW negatives', htmlFile: 'convert-to-raw.html' },
 
-  // Calculators & Financial (12 tools)
+  // Calculators & Financial (13 tools)
+  { id: 'numerology', name: 'Numerology & Destiny Master', category: 'calc', icon: '✨', desc: 'Mulank, Bhagyank, Kua, Lo Shu 3x3 Grid & Career Destiny' },
   { id: 'unit', name: 'Universal Unit Converter', category: 'calc', icon: '📐', desc: 'Convert Length, Weight, and Temperature' },
   { id: 'stats', name: 'Statistics Calculator', category: 'calc', icon: '📈', desc: 'Calculate Mean, Median, Mode, Range & Sum' },
   { id: 'gpa', name: 'GPA & Honours Calc', category: 'calc', icon: '🎓', desc: 'Calculate letter grades & 4.0 scale honours' },
@@ -929,6 +930,11 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
   const [robotsHost, setRobotsHost] = useState('https://lexio.bot');
   const [sitemapHost, setSitemapHost] = useState('https://lexio.bot');
 
+  // Numerology Tool States
+  const [numName, setNumName] = useState('Sakshi');
+  const [numDob, setNumDob] = useState('1998-05-15');
+  const [numGender, setNumGender] = useState<'male' | 'female'>('female');
+
   // Multiple-Tool-2 Intelligence States
   const [liInput, setLiInput] = useState('Building autonomous multi-agent developer tools in 2026');
   const [liTone, setLiTone] = useState<'professional' | 'casual' | 'inspirational' | 'educational' | 'humorous'>('professional');
@@ -1634,6 +1640,254 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
             </div>
           </div>
         )}
+
+        {/* Numerology & Destiny Master */}
+        {activeToolId === 'numerology' && (() => {
+          const chaldeanMap: Record<string, number> = {
+            A: 1, I: 1, J: 1, Q: 1, Y: 1,
+            B: 2, K: 2, R: 2,
+            C: 3, G: 3, L: 3, S: 3,
+            D: 4, M: 4, T: 4,
+            E: 5, H: 5, N: 5, X: 5,
+            U: 6, V: 6, W: 6,
+            O: 7, Z: 7,
+            F: 8, P: 8,
+          };
+          const careersMap: Record<number, string> = {
+            1: 'Leadership, Government Service, Executive Management, Entrepreneurship',
+            2: 'Creative Arts, Maritime, Navy, Liquid-based businesses, Psychology',
+            3: 'Education, Teaching, Legal, Counseling, Spiritual or Philosophical fields',
+            4: 'Technology, Engineering, IT Systems, Research, Unconventional pursuits',
+            5: 'Banking, Finance, Media, Communications, Trading, E-commerce',
+            6: 'Luxury, Hospitality, Fashion, Design, Entertainment, Wellness',
+            7: 'Research, Analytics, Philosophy, Occult, Software Architecture',
+            8: 'Law, Judiciary, Heavy Industry, Steel, Real Estate, Non-profit NGOs',
+            9: 'Armed Forces, Surgery, Sports, Engineering, Construction, Defense',
+          };
+          const remediesMap: Record<number, string> = {
+            1: "Rise before sunrise to absorb solar energy. Wear Red/Gold.",
+            2: "Drink water from a silver glass. Moonlight walks. Wear White/Silver.",
+            3: "Respect mentors and teachers. Wear Yellow/Topaz. Donate books.",
+            4: "Keep living spaces clutter-free. Carry a silver coin talisman.",
+            5: "Feed green spinach to cows. Wear Emerald or Green. Plant leafy trees.",
+            6: "Keep pleasant aromas/fragrance. Wear Diamond/Pastels/White.",
+            7: "Feed stray animals. Practice daily meditation. Wear Earthy tones.",
+            8: "Serve the needy and elderly. Avoid non-veg food to balance Saturn. Wear Blue/Iron.",
+            9: "Practice physical martial arts/yoga. Wear Red Coral. Donate blood.",
+          };
+
+          const reduceNum = (n: number | string, ignoreZero = true): number => {
+            let s = String(n).split('').reduce((a, b) => (ignoreZero && b === '0' ? a : a + parseInt(b, 10)), 0);
+            return s > 9 ? reduceNum(s, ignoreZero) : s;
+          };
+
+          const [y, m, d] = (numDob || '1998-05-15').split('-');
+          const fullStr = (d || '') + (m || '') + (y || '');
+          const mulank = reduceNum(d || '1');
+          const bhagyank = reduceNum(fullStr, true);
+          const yearSum = reduceNum(y || '1998');
+          const kua = numGender === 'male' ? reduceNum(11 - yearSum) : reduceNum(4 + yearSum);
+
+          let nameTotal = 0;
+          (numName || 'Sakshi').toUpperCase().split('').forEach((char) => {
+            if (chaldeanMap[char]) nameTotal += chaldeanMap[char];
+          });
+          const nameNum = nameTotal > 0 ? reduceNum(nameTotal) : mulank;
+
+          const loShuLayout = [
+            [4, 9, 2],
+            [3, 5, 7],
+            [8, 1, 6],
+          ];
+
+          const digits = fullStr.split('');
+          const gridData = loShuLayout.map((row) =>
+            row.map((num) => {
+              const count = digits.filter((x) => x === num.toString()).length;
+              return {
+                num,
+                count,
+                display: count > 0 ? num.toString().repeat(count) : '-',
+              };
+            })
+          );
+
+          const has = (n: number) => fullStr.includes(n.toString());
+          const planes: { name: string; nums: string; desc: string }[] = [];
+          if (has(4) && has(3) && has(8)) planes.push({ name: 'Thought Plane', nums: '4-3-8', desc: 'Superior memory, strategic vision and analytical thinking' });
+          if (has(9) && has(5) && has(1)) planes.push({ name: 'Willpower Line', nums: '9-5-1', desc: 'Unstoppable determination, perseverance and drive' });
+          if (has(2) && has(7) && has(6)) planes.push({ name: 'Action Plane', nums: '2-7-6', desc: 'High physical stamina, rapid execution and athletic vigor' });
+          if (has(4) && has(9) && has(2)) planes.push({ name: 'Mental Plane', nums: '4-9-2', desc: 'Intellectual brilliance and sharp logical deduction' });
+          if (has(3) && has(5) && has(7)) planes.push({ name: 'Emotional Plane', nums: '3-5-7', desc: 'Deep intuition, empathy, and spiritual consciousness' });
+          if (has(8) && has(1) && has(6)) planes.push({ name: 'Practical Plane', nums: '8-1-6', desc: 'Grounded realism, commercial acumen and hands-on ability' });
+          if (has(2) && has(5) && has(8)) planes.push({ name: 'Property / Golden Line', nums: '2-5-8', desc: 'High propensity for real estate, property and wealth accumulation' });
+          if (has(4) && has(5) && has(6)) planes.push({ name: 'Success / Silver Line', nums: '4-5-6', desc: 'Rapid career rise, prosperity and fame' });
+
+          const career = careersMap[mulank] || 'Executive management & entrepreneurship';
+          const remedy = remediesMap[mulank] || 'Practice daily morning mindfulness meditation';
+
+          const reportText = `✨ NUMEROLOGY & DESTINY MASTER REPORT\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nName: ${numName} | DOB: ${numDob} | Gender: ${numGender}\n\n• Mulank (Root): ${mulank} (Innate talent from birth)\n• Bhagyank (Destiny): ${bhagyank} (Life purpose, strongest after 40)\n• Kua Number: ${kua} (Angel vibration)\n• Name Number: ${nameNum} (Chaldean harmony)\n\nLo Shu Grid:\n[${gridData[0].map(c => c.display).join(' | ')}]\n[${gridData[1].map(c => c.display).join(' | ')}]\n[${gridData[2].map(c => c.display).join(' | ')}]\n\nActive Planes:\n${planes.map(p => '• ' + p.name + ' (' + p.nums + '): ' + p.desc).join('\n') || 'Balance grid with remedies'}\n\nCareer Guidance: ${career}\nKey Remedy: ${remedy}`;
+
+          return (
+            <div>
+              <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#a855f7' }}>
+                ✨ Magical Numerology Master & Destiny Analyzer
+              </h4>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+                Calculate your Mulank, Bhagyank, Angel Kua Number, Chaldean Name vibration and ancient 3x3 Lo Shu Grid.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+                <div>
+                  <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Full Name:</label>
+                  <input
+                    type="text"
+                    className="text-input"
+                    value={numName}
+                    onChange={(e) => setNumName(e.target.value)}
+                    placeholder="Enter full name..."
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Gender (for Kua Angel):</label>
+                  <select
+                    className="text-input"
+                    value={numGender}
+                    onChange={(e) => setNumGender(e.target.value as 'male' | 'female')}
+                  >
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Date of Birth:</label>
+                <input
+                  type="date"
+                  className="text-input"
+                  value={numDob}
+                  onChange={(e) => setNumDob(e.target.value)}
+                />
+              </div>
+
+              {/* Core 4 Number Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginBottom: '14px' }}>
+                {[
+                  { label: 'Mulank', val: mulank, sub: 'Birth Root', col: '#6366f1' },
+                  { label: 'Bhagyank', val: bhagyank, sub: 'Life Destiny', col: '#ec4899' },
+                  { label: 'Kua No.', val: kua, sub: 'Angel Energy', col: '#10b981' },
+                  { label: 'Name No.', val: nameNum, sub: 'Chaldean', col: '#f59e0b' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '10px',
+                      padding: '10px 6px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <div style={{ fontSize: '18px', fontWeight: 900, color: item.col }}>{item.val}</div>
+                    <div style={{ fontSize: '10px', fontWeight: 700, color: '#f1f5f9' }}>{item.label}</div>
+                    <div style={{ fontSize: '8px', color: 'var(--text-muted)' }}>{item.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Lo Shu 3x3 Magic Square Grid */}
+              <div style={{ marginBottom: '14px', background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
+                <div style={{ fontSize: '12px', fontWeight: 800, color: '#c084fc', marginBottom: '8px', textAlign: 'center' }}>
+                  🔮 Ancient Lo Shu 3x3 Destiny Square
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', maxWidth: '240px', margin: '0 auto' }}>
+                  {gridData.flat().map((cell, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        height: '56px',
+                        background: cell.count > 0 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255,255,255,0.02)',
+                        border: cell.count > 0 ? '2px solid #a855f7' : '1px solid rgba(255,255,255,0.06)',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <div style={{ fontSize: '15px', fontWeight: 900, color: cell.count > 0 ? '#38bdf8' : 'rgba(255,255,255,0.2)' }}>
+                        {cell.display}
+                      </div>
+                      <div style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Pos {cell.num}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Active Destiny Planes */}
+              <div style={{ marginBottom: '14px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 800, color: '#f8fafc', marginBottom: '6px' }}>
+                  ⚡ Destiny Planes of Strength
+                </div>
+                {planes.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {planes.map((p) => (
+                      <div
+                        key={p.name}
+                        style={{
+                          background: 'rgba(168, 85, 247, 0.1)',
+                          borderLeft: '3px solid #a855f7',
+                          padding: '8px 10px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                        }}
+                      >
+                        <b style={{ color: '#c084fc' }}>{p.name} ({p.nums}):</b> <span style={{ color: '#e2e8f0' }}>{p.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                    No complete 3-number lines in birth date. Activate your grid balance using planetary remedies below.
+                  </div>
+                )}
+              </div>
+
+              {/* Career & Remedy */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', marginBottom: '14px' }}>
+                <div style={{ background: 'rgba(59, 130, 246, 0.1)', borderLeft: '3px solid #3b82f6', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#60a5fa', marginBottom: '2px' }}>💼 Recommended Career Paths:</div>
+                  <div style={{ fontSize: '11px', color: '#e2e8f0' }}>{career}</div>
+                </div>
+                <div style={{ background: 'rgba(16, 185, 129, 0.1)', borderLeft: '3px solid #10b981', padding: '10px', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#34d399', marginBottom: '2px' }}>🧘 Planetary Balancing Remedy:</div>
+                  <div style={{ fontSize: '11px', color: '#e2e8f0' }}>{remedy}</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  className="btn-primary"
+                  style={{ flex: 1 }}
+                  onClick={() => copyToClipboard(reportText, 'Numerology Report')}
+                >
+                  📋 Copy Full Report
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={() => {
+                    tg.haptic('selectionChanged');
+                    setNumDob('2000-01-01');
+                    setNumName('Alexander');
+                  }}
+                >
+                  Sample Profile
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Unit Converter */}
         {activeToolId === 'unit' && (

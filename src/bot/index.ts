@@ -93,6 +93,7 @@ import {
   handleStixCommand,
   handleDesignLibCommand,
   handleMultiAgentCommand,
+  handleNumerologyCommand,
 } from './handlers/toolbox.js';
 import { getMainMenuKeyboard } from './keyboards/main.menu.js';
 import {
@@ -259,6 +260,14 @@ export function createBot(): Bot<BotContext> {
   bot.command(['stix', 'threatintel'], async (ctx) => handleStixCommand(ctx, ctx.match || ''));
   bot.command(['designlib', 'tokens'], async (ctx) => handleDesignLibCommand(ctx, ctx.match || ''));
   bot.command(['agent', 'multiagent', 'pipeline'], async (ctx) => handleMultiAgentCommand(ctx, ctx.match || ''));
+  bot.command(['numerology', 'num', 'losho'], async (ctx) => {
+    const raw = ctx.match || '';
+    const parts = raw.split(/\s+/).filter(Boolean);
+    const dob = parts[0] || '1998-05-15';
+    const name = parts[1] || 'Sakshi';
+    const gender = parts[2] || 'female';
+    await handleNumerologyCommand(ctx, dob, name, gender);
+  });
 
   bot.command('admin', handleAdminPanel);
   bot.command('broadcast', async (ctx) => handleBroadcastCommand(ctx, ctx.match || ''));
@@ -471,6 +480,10 @@ export function createBot(): Bot<BotContext> {
     await ctx.answerCallbackQuery();
     await handleMultiAgentCommand(ctx);
   });
+  bot.callbackQuery('tb_tool_numerology', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleNumerologyCommand(ctx);
+  });
 
   // Dynamic fallback for any other tb_tool_*
   bot.callbackQuery(/^tb_tool_(.+)$/, async (ctx) => {
@@ -645,6 +658,8 @@ export function createBot(): Bot<BotContext> {
     if (action === 'archiver_refresh') return handleArchiverCommand(ctx);
     if (action.startsWith('dslib_')) return handleDesignLibCommand(ctx, action.replace('dslib_', ''));
     if (action === 'multiagent_run') return handleMultiAgentCommand(ctx);
+    if (action === 'num_sample') return handleNumerologyCommand(ctx, '1998-05-15', 'Sakshi', 'female');
+    if (action === 'num_2000') return handleNumerologyCommand(ctx, '2000-01-01', 'Alexander', 'male');
   });
 
   bot.callbackQuery(/^fd_tags_(.+)$/, async (ctx) => {
@@ -818,6 +833,15 @@ export function createBot(): Bot<BotContext> {
     }
     if (lower.includes('multiagent') || lower.includes('agent pipeline')) {
       return handleMultiAgentCommand(ctx, text);
+    }
+    if (
+      lower.includes('numerology') ||
+      lower.includes('mulank') ||
+      lower.includes('bhagyank') ||
+      lower.includes('lo shu') ||
+      lower.includes('kua number')
+    ) {
+      return handleNumerologyCommand(ctx, text);
     }
 
     if (isMediaUrl(text)) {

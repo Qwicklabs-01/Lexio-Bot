@@ -67,6 +67,7 @@
 | **Statistics Calculator** | `/stats <numbers>` | Compute Mean (average), Median, Mode, Range, Sum, Count |
 | **GPA Calculator** | `/gpa <grades>` | Calculate semester GPA on 4.0 scale (`A, B+, A-`) |
 | **Scientific Calculator** | `/sci <expr>` | Advanced math: `sqrt`, `pow`, `sin`, `cos`, `log`, `pi`, `e` |
+| **Numerology & Destiny Master** | `/numerology <date> [name]` | Calculate Mulank, Bhagyank, Kua, 3x3 Lo Shu Grid & career destiny |
 
 ---
 
@@ -569,6 +570,7 @@ archiver - 🌐 Download Complete Website Source & Assets
 stix - 🛡️ Convert Security Logs to STIX 2.1 Threat Intel
 designlib - 🎨 Generate Design System Tokens & Typography
 agent - 🤖 Composable AI Multi-Agent Pipeline
+numerology - ✨ Calculate Mulank, Bhagyank, Kua & Lo Shu Grid
 case - 🔠 Convert UPPER, lower, camelCase, snake_case
 count - 🔢 Word, Character & Reading Time Counter
 reverse - 🔄 Reverse Characters or Word Order

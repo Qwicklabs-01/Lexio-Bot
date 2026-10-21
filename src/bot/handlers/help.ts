@@ -35,7 +35,8 @@ export async function handleHelp(ctx: BotContext): Promise<void> {
     `• \`/discount <price> <rate>\` — Sale discount savings\n` +
     `• \`/tip <bill> <rate> [people]\` — Tip & bill split\n` +
     `• \`/compound <amt> <rate> <yr>\` — Compound interest growth\n` +
-    `• \`/tax <amount> <rate>\` — GST / Sales Tax breakdown\n\n` +
+    `• \`/tax <amount> <rate>\` — GST / Sales Tax breakdown\n` +
+    `• \`/numerology <YYYY-MM-DD> [name]\` — Mulank, Bhagyank, Kua & Lo Shu Grid\n\n` +
     `📝 *Text & Copywriting Tasks:*\n` +
     `• \`/linkedin <topic>\` — Viral hook drafter with 5 tone presets\n` +
     `• \`/essay <topic>\` — Academic essay outliner & thesis generator\n` +
