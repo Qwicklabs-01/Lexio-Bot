@@ -85,6 +85,11 @@ export function getToolBoxDevKeyboard(): InlineKeyboard {
     .text('🧱 Elementor Prototyper', 'tb_tool_elementor')
     .text('🔌 WordPress Generator', 'tb_tool_wpgen')
     .row()
+    .text('📥 Auto-Scraper', 'tb_tool_scraper')
+    .text('🌐 Web Archiver', 'tb_tool_archiver')
+    .row()
+    .text('🛡️ STIX 2.1 Threat Intel', 'tb_tool_stix')
+    .row()
     .text('🔙 Back to Task Menu', 'menu_main');
 }
 
@@ -123,6 +128,7 @@ export function getToolBoxWriterKeyboard(): InlineKeyboard {
     .text('⚡ Sentence Finisher', 'tb_tool_paracompleter')
     .text('📖 README Architect', 'tb_tool_readmearch')
     .row()
+    .text('💼 LinkedIn Drafter', 'tb_tool_linkedin')
     .text('📝 Live Markdown Preview', 'tb_tool_mdpreview')
     .row()
     .text('🔙 Back to Task Menu', 'menu_main');
@@ -201,6 +207,7 @@ export function getToolBoxSeoKeyboard(): InlineKeyboard {
     .text('🚥 HTTP Status Codes', 'tb_tool_http')
     .row()
     .text('📊 Keyword Density', 'tb_tool_keywords')
+    .text('📈 Outlier Detector', 'tb_tool_outlier')
     .row()
     .text('🔙 Back to Task Menu', 'menu_main');
 }
@@ -221,6 +228,8 @@ export function getToolBoxDesignKeyboard(): InlineKeyboard {
     .text('📦 Box Shadow Gen', 'tb_tool_shadow')
     .text('🎨 Material Palette', 'tb_tool_palette')
     .row()
+    .text('🎨 Design System Lib', 'tb_tool_designlib')
+    .row()
     .text('🔙 Back to Task Menu', 'menu_main');
 }
 
@@ -232,6 +241,8 @@ export function getToolBoxProductivityKeyboard(): InlineKeyboard {
     .text('⏱️ Pomodoro Timer', 'tb_tool_pomodoro')
     .row()
     .text('📝 Quick Task Keeper', 'tb_tool_todo')
+    .text('🤖 Multi-Agent Pipeline', 'tb_tool_multiagent')
+    .row()
     .text('📜 Lorem Ipsum', 'tb_tool_lorem')
     .row()
     .text('🔙 Back to Task Menu', 'menu_main');

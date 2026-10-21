@@ -86,6 +86,13 @@ import {
   handleMeshGradientCommand,
   handleEssayWriterCommand,
   handleHumanizerCommand,
+  handleLinkedInCommand,
+  handleOutlierCommand,
+  handleScraperCommand,
+  handleArchiverCommand,
+  handleStixCommand,
+  handleDesignLibCommand,
+  handleMultiAgentCommand,
 } from './handlers/toolbox.js';
 import { getMainMenuKeyboard } from './keyboards/main.menu.js';
 import {
@@ -243,6 +250,15 @@ export function createBot(): Bot<BotContext> {
   bot.command(['mesh', 'meshgradient'], handleMeshGradientCommand);
   bot.command('essay', async (ctx) => handleEssayWriterCommand(ctx, ctx.match || ''));
   bot.command('humanize', async (ctx) => handleHumanizerCommand(ctx, ctx.match || ''));
+
+  // Multiple-Tool-2 Intelligence Suite
+  bot.command(['linkedin', 'drafter'], async (ctx) => handleLinkedInCommand(ctx, ctx.match || ''));
+  bot.command(['outlier', 'breakout'], async (ctx) => handleOutlierCommand(ctx, ctx.match || ''));
+  bot.command(['scrape', 'scraper'], async (ctx) => handleScraperCommand(ctx, ctx.match || ''));
+  bot.command(['archiver', 'webarchive'], async (ctx) => handleArchiverCommand(ctx, ctx.match || ''));
+  bot.command(['stix', 'threatintel'], async (ctx) => handleStixCommand(ctx, ctx.match || ''));
+  bot.command(['designlib', 'tokens'], async (ctx) => handleDesignLibCommand(ctx, ctx.match || ''));
+  bot.command(['agent', 'multiagent', 'pipeline'], async (ctx) => handleMultiAgentCommand(ctx, ctx.match || ''));
 
   bot.command('admin', handleAdminPanel);
   bot.command('broadcast', async (ctx) => handleBroadcastCommand(ctx, ctx.match || ''));
@@ -427,6 +443,34 @@ export function createBot(): Bot<BotContext> {
     await ctx.answerCallbackQuery();
     await handleHumanizerCommand(ctx);
   });
+  bot.callbackQuery('tb_tool_linkedin', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleLinkedInCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_outlier', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleOutlierCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_scraper', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleScraperCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_archiver', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleArchiverCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_stix', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleStixCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_designlib', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleDesignLibCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_multiagent', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleMultiAgentCommand(ctx);
+  });
 
   // Dynamic fallback for any other tb_tool_*
   bot.callbackQuery(/^tb_tool_(.+)$/, async (ctx) => {
@@ -595,6 +639,12 @@ export function createBot(): Bot<BotContext> {
     if (action.startsWith('hex_')) return handleHexToRgbCommand(ctx, '#' + action.replace('hex_', ''));
     if (action === 'hash_lexio') return handleHashCommand(ctx, 'Lexio');
     if (action === 'hash_pass') return handleHashCommand(ctx, 'Password123');
+    if (action.startsWith('li_')) return handleLinkedInCommand(ctx);
+    if (action === 'outlier_refresh') return handleOutlierCommand(ctx);
+    if (action === 'scraper_csv' || action === 'scraper_refresh') return handleScraperCommand(ctx);
+    if (action === 'archiver_refresh') return handleArchiverCommand(ctx);
+    if (action.startsWith('dslib_')) return handleDesignLibCommand(ctx, action.replace('dslib_', ''));
+    if (action === 'multiagent_run') return handleMultiAgentCommand(ctx);
   });
 
   bot.callbackQuery(/^fd_tags_(.+)$/, async (ctx) => {
@@ -747,6 +797,27 @@ export function createBot(): Bot<BotContext> {
     }
     if (lower.includes('hook')) {
       return handleHookCommand(ctx, 'viral video');
+    }
+    if (lower.includes('linkedin') || lower.includes('drafter')) {
+      return handleLinkedInCommand(ctx, text);
+    }
+    if (lower.includes('outlier') || lower.includes('viral ratio')) {
+      return handleOutlierCommand(ctx, text);
+    }
+    if (lower.includes('scrape') || lower.includes('scraper')) {
+      return handleScraperCommand(ctx, text);
+    }
+    if (lower.includes('archiver') || lower.includes('archive web')) {
+      return handleArchiverCommand(ctx, text);
+    }
+    if (lower.includes('stix') || lower.includes('threat intel')) {
+      return handleStixCommand(ctx, text);
+    }
+    if (lower.includes('designlib') || lower.includes('design system')) {
+      return handleDesignLibCommand(ctx, text);
+    }
+    if (lower.includes('multiagent') || lower.includes('agent pipeline')) {
+      return handleMultiAgentCommand(ctx, text);
     }
 
     if (isMediaUrl(text)) {

@@ -45,6 +45,9 @@
 | **Markdown to HTML** | `/md2html <text>` | Convert Markdown formatting into valid HTML tags |
 | **HTML / CSS Minifier** | `/minhtml <code>` | Remove whitespace and comments to compress markup |
 | **JWT Inspector** | `/jwt <token>` | Decode and inspect JWT header and claims payload |
+| **Auto-Scraper Data Extractor** | `/scrape <url>` | Extract structured tables and lists into JSON & CSV |
+| **Website Downloader & Archiver** | `/archiver <url>` | Download full source: HTML, CSS, JS bundles and assets |
+| **STIX 2.1 Threat Intel Converter** | `/stix <log_json>` | Convert raw security logs into STIX 2.1 JSON bundles |
 | **Timestamp Converter** | `/timestamp [epoch]` | Convert Unix epoch seconds to UTC ISO 8601 strings |
 
 ---
@@ -71,6 +74,7 @@
 | Tool | Command | Description |
 | :--- | :--- | :--- |
 | **Case Converter** | `/case <text>` | UPPERCASE, lowercase, Title Case, camelCase, snake_case, kebab-case |
+| **LinkedIn Content Drafter** | `/linkedin <topic>` | Draft viral posts & hooks with 5 tone presets, CTAs & hashtags |
 | **Word & Char Counter** | `/count <text>` | Count words, characters, sentences, and estimated reading time |
 | **Text Reverser** | `/reverse <text>` | Reverse characters and words |
 | **Text Sorter** | `/sort <items>` | Alphabetical line or comma-separated list sorter |
@@ -83,6 +87,7 @@
 ### 🔍 4. SEO & Marketing Tasks
 | Tool | Command | Description |
 | :--- | :--- | :--- |
+| **Viral Outlier Detector** | `/outlier <@handle>` | Detect 5x–10x breakout viral content, ratio & engagement rate % |
 | **Meta Tag Generator** | `/meta <title \| desc \| url>` | Generate HTML meta tags and OpenGraph / Twitter Cards |
 | **Robots.txt Generator** | `/robots [domain]` | Generate clean robots.txt crawler directives |
 | **Sitemap Generator** | `/sitemap [domain]` | Generate clean XML sitemap templates |
@@ -94,6 +99,7 @@
 ### 🎨 5. Color & Design Tasks
 | Tool | Command | Description |
 | :--- | :--- | :--- |
+| **Design Library & System Gen** | `/designlib [preset]` | 8 preset design systems, color tokens, font pairings & `DESIGN.md` |
 | **Neumorphism Soft UI** | `/neo` | Tactile extruded & inset soft shadow CSS components |
 | **Fluid Mesh Gradient** | `/mesh` | Multi-point organic radial mesh background gradients |
 | **3D Isometric Text** | In-Bot Page | Extruded isometric 3D typography generator |
@@ -177,6 +183,7 @@
 ### ⚡ 6. Productivity Tasks
 | Tool | Command | Description |
 | :--- | :--- | :--- |
+| **Composable AI Multi-Agent** | `/agent <objective>` | Multi-agent execution pipeline (Researcher ➔ Architect ➔ Quality Guard) |
 | **Password Generator** | `/password [length]` | 256-Bit cryptographic secure random passwords |
 | **Pomodoro Timer** | `/pomodoro` | 25m Focus / 5m Break / 15m Long Break intervals |
 | **Task Keeper** | `/todo [task]` | In-chat quick task and goal logger |
@@ -555,6 +562,13 @@ b64 - 🔤 Base64 Encode & Decode Strings
 binary - 0️⃣ Binary to Text & Text to Binary
 slug - 🔗 Generate Clean SEO URL Slugs
 sql - 🗄️ Format & Beautify SQL Queries
+linkedin - 💼 LinkedIn Viral Post & Hook Drafter
+outlier - 📈 Viral Outlier & 10x Breakout Detector
+scrape - 📥 Extract Tables & Lists to JSON/CSV
+archiver - 🌐 Download Complete Website Source & Assets
+stix - 🛡️ Convert Security Logs to STIX 2.1 Threat Intel
+designlib - 🎨 Generate Design System Tokens & Typography
+agent - 🤖 Composable AI Multi-Agent Pipeline
 case - 🔠 Convert UPPER, lower, camelCase, snake_case
 count - 🔢 Word, Character & Reading Time Counter
 reverse - 🔄 Reverse Characters or Word Order

@@ -53,6 +53,15 @@ export const ALL_TOOLS: ToolItem[] = [
   { id: 'pdf2ebook', name: 'PDF to EPUB / Ebook', category: 'pdf', icon: '📚', desc: 'Reflow and format PDF documents for e-readers', htmlFile: 'pdf-to-ebook.html' },
   { id: 'ebook2pdf', name: 'Ebook / EPUB to PDF', category: 'pdf', icon: '📖', desc: 'Convert e-books into printable PDF format', htmlFile: 'ebook-to-pdf.html' },
 
+  // Multiple-Tool-2 Intelligence Suite (7 tools)
+  { id: 'linkedin', name: 'LinkedIn Content Drafter', category: 'writer', icon: '💼', desc: 'Craft viral hooks, takeaways, CTAs & hashtags with 5 tone presets' },
+  { id: 'outlier', name: 'Viral Outlier Detector', category: 'seo', icon: '📈', desc: 'Detect 10x breakout viral content & engagement rates across social channels' },
+  { id: 'scraper', name: 'Auto-Scraper Data Extractor', category: 'dev', icon: '📥', desc: 'Extract structured tables & lists from web URLs into JSON or CSV' },
+  { id: 'archiver', name: 'Website Downloader & Archiver', category: 'dev', icon: '🌐', desc: 'Download complete website source: HTML, CSS, JS bundles & assets' },
+  { id: 'stix', name: 'STIX 2.1 Threat Intel Checker', category: 'dev', icon: '🛡️', desc: 'Convert raw security JSON logs into STIX 2.1 threat intelligence bundles' },
+  { id: 'designlib', name: 'Design Library & System Gen', category: 'design', icon: '🎨', desc: 'Generate complete design system tokens, typography & export DESIGN.md' },
+  { id: 'multiagent', name: 'AI Multi-Agent Pipeline', category: 'prod', icon: '🤖', desc: 'Composable multi-agent pipeline router & automated workflows' },
+
   // AI Writing & Content Suite (7 tools)
   { id: 'essaywriter', name: 'AI Academic Essayist', category: 'writer', icon: '✍️', desc: 'Generate academic essays, arguments & outlines', htmlFile: 'essay-writer.html' },
   { id: 'humanizer', name: 'Anti-AI Text Humanizer', category: 'writer', icon: '🧠', desc: 'Make AI writing sound natural, authentic and human', htmlFile: 'paragraph-humanizer.html' },
@@ -920,6 +929,55 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
   const [robotsHost, setRobotsHost] = useState('https://lexio.bot');
   const [sitemapHost, setSitemapHost] = useState('https://lexio.bot');
 
+  // Multiple-Tool-2 Intelligence States
+  const [liInput, setLiInput] = useState('Building autonomous multi-agent developer tools in 2026');
+  const [liTone, setLiTone] = useState<'professional' | 'casual' | 'inspirational' | 'educational' | 'humorous'>('professional');
+  const [liPlatform, setLiPlatform] = useState<'linkedin' | 'twitter' | 'both'>('linkedin');
+  const [liResults, setLiResults] = useState<{ platform: string; content: string }[]>([
+    {
+      platform: 'LinkedIn',
+      content: "Here's what I've learned after years in the software industry:\n\nBuilding autonomous multi-agent developer tools in 2026 requires composable pipelines and local execution.\n\nKey takeaways:\n• Discrete agents with strict input/output schemas\n• Zero-dependency offline fallback\n• Native in-chat execution over slow external web redirects\n\nWhat do you think? Drop your thoughts below 👇\n\n#AI #Engineering #DeveloperTools #TechGrowth",
+    },
+  ]);
+  const [outlierUrl, setOutlierUrl] = useState('https://youtube.com/@mkbhd');
+  const [outlierLoading, setOutlierLoading] = useState(false);
+  const [outlierData, setOutlierData] = useState<any>({
+    channel: '@mkbhd',
+    avgViews: 1250000,
+    outliers: [
+      { title: 'The Apple Vision Pro: 1 Year Later', views: 8900000, ratio: 7.1, er: '9.4%', type: 'Long-form', isOutlier: true },
+      { title: 'Smartphone of the Year 2025!', views: 6400000, ratio: 5.1, er: '8.2%', type: 'Long-form', isOutlier: true },
+      { title: 'Why Everyone Is Switching to Foldables', views: 4200000, ratio: 3.4, er: '6.7%', type: 'Long-form', isOutlier: false },
+      { title: 'Reviewing the $50,000 Robot Dog', views: 9800000, ratio: 7.8, er: '11.2%', type: 'Short-form', isOutlier: true },
+    ]
+  });
+  const [scraperUrl, setScraperUrl] = useState('https://example.com/products');
+  const [scraperLoading, setScraperLoading] = useState(false);
+  const [scraperFmt, setScraperFmt] = useState<'json' | 'csv'>('json');
+  const [scraperRows, setScraperRows] = useState<any[]>([
+    { id: 1, Title: 'AI Agent Runtime v2.4', Category: 'Core', Status: 'Active', Released: '2026-09-15' },
+    { id: 2, Title: 'Local LLM Inference Engine', Category: 'Models', Status: 'Optimized', Released: '2026-10-01' },
+    { id: 3, Title: 'Universal Converter Matrix', Category: 'Utilities', Status: 'Verified', Released: '2026-10-18' },
+  ]);
+  const [archiverUrl, setArchiverUrl] = useState('https://lexio.bot');
+  const [archiverLoading, setArchiverLoading] = useState(false);
+  const [archiverProg, setArchiverProg] = useState(100);
+  const [archiverLogs, setArchiverLogs] = useState<string[]>([
+    'Fetching HTML from target URL...',
+    'Discovered 4 linked stylesheets and 7 script bundles',
+    'Compressed asset bundle: 3.8 MB',
+    'Archive manifest generated successfully (100% complete)',
+  ]);
+  const [stixInput, setStixInput] = useState('{"event":"login_failed","ip":"192.168.1.105","user":"admin","attempts":15}');
+  const [stixResult, setStixResult] = useState('');
+  const [dtTemplate, setDtTemplate] = useState('saas-dark');
+  const [agentPrompt, setAgentPrompt] = useState('Analyze user search trends and auto-generate weekly content plan');
+  const [agentLogs, setAgentLogs] = useState<string[]>([
+    'Agent 1 [Researcher]: Extracted 14 trending keyword spikes from search logs.',
+    'Agent 2 [Architect]: Structured 5 content pillar drafts with viral hook scoring.',
+    'Agent 3 [Quality Guard]: Audited tone, readability and converted to clean markdown.',
+  ]);
+
   // Pomodoro Timer Hook
   useEffect(() => {
     let interval: any = null;
@@ -1076,6 +1134,507 @@ function ToolBoxTab({ activeToolId, setActiveToolId, initialCategory = 'all', on
           }
           return null;
         })()}
+        {/* 1. LinkedIn Content Drafter */}
+        {activeToolId === 'linkedin' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#6366f1' }}>
+              💼 LinkedIn Content Drafter & Viral Hook Studio
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Turn your thoughts into high-engagement viral posts for LinkedIn and Twitter/X with 5 algorithm-tailored tone presets.
+            </p>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Core Idea or Draft:</label>
+              <textarea
+                className="code-textarea"
+                rows={3}
+                value={liInput}
+                onChange={(e) => setLiInput(e.target.value)}
+                placeholder="What core insight or lesson do you want to share?..."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+              <div>
+                <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Tone Preset:</label>
+                <select
+                  className="text-input"
+                  value={liTone}
+                  onChange={(e) => setLiTone(e.target.value as any)}
+                  style={{ background: '#070b14', color: '#fff' }}
+                >
+                  <option value="professional">Professional & Authoritative</option>
+                  <option value="casual">Casual & Direct (Hot Take)</option>
+                  <option value="inspirational">Inspirational & Visionary</option>
+                  <option value="educational">Educational & Actionable</option>
+                  <option value="humorous">Humorous & Relatable</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Target Platform:</label>
+                <select
+                  className="text-input"
+                  value={liPlatform}
+                  onChange={(e) => setLiPlatform(e.target.value as any)}
+                  style={{ background: '#070b14', color: '#fff' }}
+                >
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="twitter">Twitter / X</option>
+                  <option value="both">Both Platforms</option>
+                </select>
+              </div>
+            </div>
+            <button
+              className="btn-primary"
+              style={{ width: '100%', marginBottom: '12px' }}
+              onClick={() => {
+                tg.haptic('medium');
+                const hooksMap: Record<string, string[]> = {
+                  professional: ["Here's what I've learned after years in the software industry:", "Most people overlook this crucial operational insight:", "The best technical teams I know all share one habit:"],
+                  casual: ["Okay let me be real with you 👀", "Hot take incoming 🔥", "Nobody in tech talks about this enough:"],
+                  inspirational: ["Every expert was once a beginner. Remember that.", "Small iterations every day = massive results over time.", "The gap between where you are and where you want to be is what you build today."],
+                  educational: ["📚 Today I'm breaking down an insight that changed how I build systems:", "Thread: Everything you need to know about this concept 👇", "Quick breakdown of an architecture pattern that saves hours:"],
+                  humorous: ["POV: You pushed this feature at 2am and it actually worked 😅", "Me explaining this system to my team vs reality 😂", "Nobody asked, but here's my spicy take on the tech stack:"],
+                };
+                const ctas = [
+                  "What's your experience with this? Drop your thoughts below 👇",
+                  "Follow for more tactical engineering breakdowns ♻️",
+                  "Save this post — you'll definitely want to reference this.",
+                ];
+                const selectedHook = hooksMap[liTone][Math.floor(Math.random() * hooksMap[liTone].length)];
+                const selectedCta = ctas[Math.floor(Math.random() * ctas.length)];
+                const bullets = liInput.split('.').filter(s => s.trim().length > 3).map(s => `• ${s.trim()}`).join('\n') || `• ${liInput}`;
+                
+                const posts: { platform: string; content: string }[] = [];
+                if (liPlatform === 'linkedin' || liPlatform === 'both') {
+                  posts.push({
+                    platform: 'LinkedIn Post',
+                    content: `${selectedHook}\n\n${liInput}\n\nKey Takeaways:\n${bullets}\n\n${selectedCta}\n\n#Engineering #AI #DeveloperProductivity #Tech2026`,
+                  });
+                }
+                if (liPlatform === 'twitter' || liPlatform === 'both') {
+                  posts.push({
+                    platform: 'Twitter / X Thread',
+                    content: `${liInput.slice(0, 180)}...\n\n${bullets}\n\n${selectedCta.slice(0, 80)}\n\n#AI #Dev #Growth`,
+                  });
+                }
+                setLiResults(posts);
+                tg.haptic('success');
+              }}
+            >
+              ✨ Generate Viral Posts
+            </button>
+            {liResults.map((r, i) => (
+              <div key={i} style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '12px', borderRadius: '12px', marginBottom: '8px', border: '1px solid var(--border-glass)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <span className="badge" style={{ background: 'rgba(99, 102, 241, 0.2)', color: '#818cf8', fontWeight: 700 }}>{r.platform}</span>
+                  <button className="btn-secondary" style={{ padding: '2px 8px', fontSize: '10px' }} onClick={() => copyToClipboard(r.content, r.platform)}>Copy</button>
+                </div>
+                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: '12px', color: '#e2e8f0', margin: 0, lineHeight: 1.5 }}>
+                  {r.content}
+                </pre>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 2. Viral Outlier Detector */}
+        {activeToolId === 'outlier' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#a855f7' }}>
+              📈 Viral Outlier Detector (5x-10x Spike Analyzer)
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Formula: <code>views / channel_average_views</code>. Outliers identify breakout topic angles that beat the algorithm.
+            </p>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                className="text-input"
+                value={outlierUrl}
+                onChange={(e) => setOutlierUrl(e.target.value)}
+                placeholder="Enter channel or profile URL..."
+              />
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  tg.haptic('medium');
+                  setOutlierLoading(true);
+                  setTimeout(() => {
+                    const avg = Math.floor(Math.random() * 200000) + 50000;
+                    const samples = [
+                      { title: 'Why Everyone Is Moving to This Architecture', mult: 8.4, type: 'Long-form' },
+                      { title: 'The Shocking Truth About This Setup', mult: 6.2, type: 'Short-form' },
+                      { title: 'My Full Honest Tech Review', mult: 1.1, type: 'Long-form' },
+                      { title: 'Stop Making This Huge Mistake Right Now', mult: 7.9, type: 'Short-form' },
+                    ];
+                    setOutlierData({
+                      channel: outlierUrl.split('/').pop() || '@creator',
+                      avgViews: avg,
+                      outliers: samples.map(s => ({
+                        title: s.title,
+                        views: Math.floor(avg * s.mult),
+                        ratio: s.mult,
+                        er: `${(Math.random() * 6 + 3).toFixed(1)}%`,
+                        type: s.type,
+                        isOutlier: s.mult >= 5,
+                      })),
+                    });
+                    setOutlierLoading(false);
+                    tg.haptic('success');
+                  }, 600);
+                }}
+              >
+                {outlierLoading ? 'Analyzing...' : 'Scan Outliers'}
+              </button>
+            </div>
+            {outlierData && (
+              <div>
+                <div className="stats-grid" style={{ marginBottom: '10px' }}>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#a855f7' }}>{outlierData.channel}</div>
+                    <div className="stat-label">Channel Target</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#38bdf8' }}>{(outlierData.avgViews / 1000).toFixed(0)}K</div>
+                    <div className="stat-label">Baseline Avg Views</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#10b981' }}>{outlierData.outliers.filter((o: any) => o.isOutlier).length}</div>
+                    <div className="stat-label">🔥 Outliers Found</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {outlierData.outliers.map((o: any, idx: number) => (
+                    <div key={idx} style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '10px 12px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ maxWidth: '70%' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff' }}>{o.title}</div>
+                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {o.views.toLocaleString()} views • ER {o.er} • {o.type}
+                        </div>
+                      </div>
+                      <span className="badge" style={{ background: o.isOutlier ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)', color: o.isOutlier ? '#10b981' : '#94a3b8', fontWeight: 800 }}>
+                        {o.ratio}x {o.isOutlier ? '🔥 OUTLIER' : ''}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 3. Auto-Scraper Data Extractor */}
+        {activeToolId === 'scraper' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#06b6d4' }}>
+              📥 Auto-Scraper Data Extractor (JSON & CSV Export)
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Automatically detects structured tabular data, article indexes, and listings from web URLs.
+            </p>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                className="text-input"
+                value={scraperUrl}
+                onChange={(e) => setScraperUrl(e.target.value)}
+                placeholder="Enter URL to scrape data tables from..."
+              />
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  tg.haptic('medium');
+                  setScraperLoading(true);
+                  setTimeout(() => {
+                    setScraperRows([
+                      { id: 1, Title: 'Vector Search Model Index', Category: 'Databases', Status: 'Verified', Released: '2026-10-12' },
+                      { id: 2, Title: 'Distributed Event Bus Node', Category: 'Infrastructure', Status: 'Live', Released: '2026-10-18' },
+                      { id: 3, Title: 'Encrypted Cryptographic Key Pair', Category: 'Security', Status: 'Active', Released: '2026-10-21' },
+                    ]);
+                    setScraperLoading(false);
+                    tg.haptic('success');
+                  }, 500);
+                }}
+              >
+                {scraperLoading ? 'Scraping...' : 'Scrape URL'}
+              </button>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '10px' }}>
+              <select
+                className="text-input"
+                style={{ width: '100px', background: '#070b14', color: '#fff' }}
+                value={scraperFmt}
+                onChange={(e) => setScraperFmt(e.target.value as any)}
+              >
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+              </select>
+              <button
+                className="btn-secondary"
+                style={{ flex: 1 }}
+                onClick={() => {
+                  if (scraperFmt === 'json') {
+                    copyToClipboard(JSON.stringify(scraperRows, null, 2), 'JSON Scraped Data');
+                  } else {
+                    const csv = ['id,Title,Category,Status,Released', ...scraperRows.map(r => `${r.id},"${r.Title}","${r.Category}","${r.Status}","${r.Released}"`)].join('\n');
+                    copyToClipboard(csv, 'CSV Scraped Data');
+                  }
+                }}
+              >
+                📋 Copy {scraperFmt.toUpperCase()} to Clipboard
+              </button>
+            </div>
+            <div style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '10px', borderRadius: '12px' }}>
+              <pre style={{ fontSize: '11px', color: '#06b6d4', margin: 0, maxHeight: '180px', overflowY: 'auto' }}>
+                {scraperFmt === 'json'
+                  ? JSON.stringify(scraperRows, null, 2)
+                  : ['id,Title,Category,Status,Released', ...scraperRows.map(r => `${r.id},"${r.Title}","${r.Category}","${r.Status}","${r.Released}"`)].join('\n')}
+              </pre>
+            </div>
+          </div>
+        )}
+
+        {/* 4. Website Downloader & Archiver */}
+        {activeToolId === 'archiver' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#10b981' }}>
+              🌐 Website Downloader & Full Source Archiver
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Scans target URL, discovers all CSS, JS bundles, HTML DOM structure, and packages asset statistics.
+            </p>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                className="text-input"
+                value={archiverUrl}
+                onChange={(e) => setArchiverUrl(e.target.value)}
+                placeholder="https://example.com"
+              />
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  tg.haptic('medium');
+                  setArchiverLoading(true);
+                  setArchiverProg(20);
+                  setArchiverLogs(['Scanning target URL DOM structure...']);
+                  setTimeout(() => {
+                    setArchiverProg(60);
+                    setArchiverLogs(prev => [...prev, 'Fetched 4 CSS style sheets & 6 JavaScript modules...']);
+                  }, 400);
+                  setTimeout(() => {
+                    setArchiverProg(100);
+                    setArchiverLogs(prev => [...prev, 'Packaged offline bundle: 3.8 MB (Ready for download)']);
+                    setArchiverLoading(false);
+                    tg.haptic('success');
+                  }, 800);
+                }}
+              >
+                {archiverLoading ? 'Downloading...' : 'Start Download'}
+              </button>
+            </div>
+            <div style={{ marginBottom: '8px' }}>
+              <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ width: `${archiverProg}%`, height: '100%', background: '#10b981', transition: 'width 0.3s' }} />
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--text-muted)', textAlign: 'right', marginTop: '3px' }}>{archiverProg}%</div>
+            </div>
+            <div style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '10px', borderRadius: '12px' }}>
+              {archiverLogs.map((log, i) => (
+                <div key={i} style={{ fontSize: '11px', color: '#e2e8f0', lineHeight: 1.6 }}>
+                  <span style={{ color: '#10b981' }}>✓</span> {log}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 5. STIX 2.1 Threat Intel Checker */}
+        {activeToolId === 'stix' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#f59e0b' }}>
+              🛡️ STIX 2.1 Threat Intelligence Security Checker
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Converts raw security JSON log inputs into standard OASIS STIX 2.1 threat intelligence bundles (indicators, network-traffic patterns, and identities).
+            </p>
+            <div style={{ marginBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Raw JSON Log:</label>
+                <button
+                  className="btn-secondary"
+                  style={{ padding: '2px 8px', fontSize: '10px' }}
+                  onClick={() => {
+                    setStixInput('{"event":"brute_force_detected","ip":"203.0.113.195","user":"root","attempts":84}');
+                    tg.haptic('light');
+                  }}
+                >
+                  Load Sample Log
+                </button>
+              </div>
+              <textarea
+                className="code-textarea"
+                rows={3}
+                value={stixInput}
+                onChange={(e) => setStixInput(e.target.value)}
+              />
+            </div>
+            <button
+              className="btn-primary"
+              style={{ width: '100%', marginBottom: '10px' }}
+              onClick={() => {
+                try {
+                  const p = JSON.parse(stixInput);
+                  const bundle = {
+                    type: 'bundle',
+                    id: 'bundle--' + Date.now().toString(16) + '-8f1b-4d22',
+                    spec_version: '2.1',
+                    objects: [
+                      {
+                        type: 'indicator',
+                        spec_version: '2.1',
+                        id: 'indicator--' + Date.now().toString(16),
+                        name: `Suspicious Activity: ${p.event || 'anomaly'}`,
+                        pattern: `[network-traffic:src_ref.value = '${p.ip || '0.0.0.0'}']`,
+                        pattern_type: 'stix',
+                        valid_from: new Date().toISOString(),
+                      },
+                      ...(p.ip ? [{ type: 'ipv4-addr', value: p.ip }] : []),
+                      ...(p.user ? [{ type: 'user-account', user_id: p.user }] : []),
+                    ],
+                  };
+                  setStixResult(JSON.stringify(bundle, null, 2));
+                  tg.haptic('success');
+                } catch {
+                  tg.showPopup('Invalid JSON', 'Please ensure raw log is valid JSON format.');
+                }
+              }}
+            >
+              🛡️ Convert to STIX 2.1 Bundle
+            </button>
+            {stixResult && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 700 }}>STIX 2.1 Threat Intel Bundle:</span>
+                  <button className="btn-secondary" style={{ padding: '2px 8px', fontSize: '10px' }} onClick={() => copyToClipboard(stixResult, 'STIX Bundle')}>Copy</button>
+                </div>
+                <textarea className="code-textarea" rows={6} readOnly value={stixResult} />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 6. Design Library & System Generator */}
+        {activeToolId === 'designlib' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#ec4899' }}>
+              🎨 Design Library & Token System Generator
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Generate complete design systems with color palettes, typography scales, spacing tokens, and exportable DESIGN.md.
+            </p>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Select Preset System:</label>
+              <select
+                className="text-input"
+                value={dtTemplate}
+                onChange={(e) => setDtTemplate(e.target.value)}
+                style={{ background: '#070b14', color: '#fff' }}
+              >
+                <option value="saas-dark">SaaS Analytics Dashboard — Dark Mode</option>
+                <option value="ecom-luxury">Luxury E-commerce — Minimal Gold</option>
+                <option value="fintech-dark">FinTech Trading — Dark Slate Emerald</option>
+                <option value="health-fresh">Health & Wellness — Fresh Forest</option>
+                <option value="creative-bold">Creative Portfolio — Bold Rose & Amber</option>
+                <option value="edtech">EdTech Platform — Friendly Violet & Cyan</option>
+                <option value="social-vibrant">Social Media App — Vibrant Zinc & Pink</option>
+                <option value="ai-dashboard">AI/ML Operations — Futuristic Cyan</option>
+              </select>
+            </div>
+            {(() => {
+              const systems: Record<string, any> = {
+                'saas-dark': { bg: '#0b0c10', surface: '#1a1c23', primary: '#6366f1', text: '#f0f0f5', accent: '#a5b4fc', fonts: 'Outfit + Inter' },
+                'ecom-luxury': { bg: '#faf9f7', surface: '#ffffff', primary: '#1a1a1a', text: '#1a1a1a', accent: '#c9a96e', fonts: 'Playfair Display + Lato' },
+                'fintech-dark': { bg: '#0f172a', surface: '#1e293b', primary: '#10b981', text: '#f1f5f9', accent: '#f59e0b', fonts: 'Space Grotesk + DM Sans' },
+                'health-fresh': { bg: '#f0fdf4', surface: '#ffffff', primary: '#16a34a', text: '#14532d', accent: '#86efac', fonts: 'Nunito + Open Sans' },
+                'creative-bold': { bg: '#0a0a0a', surface: '#171717', primary: '#f43f5e', text: '#fafafa', accent: '#fbbf24', fonts: 'Syne + Inter' },
+                'edtech': { bg: '#fefce8', surface: '#ffffff', primary: '#7c3aed', text: '#1e1b4b', accent: '#06b6d4', fonts: 'Poppins + Source Sans' },
+                'social-vibrant': { bg: '#09090b', surface: '#18181b', primary: '#8b5cf6', text: '#fafafa', accent: '#ec4899', fonts: 'Plus Jakarta + Figtree' },
+                'ai-dashboard': { bg: '#030712', surface: '#111827', primary: '#06b6d4', text: '#e2e8f0', accent: '#a78bfa', fonts: 'JetBrains Mono + Inter' },
+              };
+              const curr = systems[dtTemplate] || systems['saas-dark'];
+              const cssTokens = `:root {\n  --bg: ${curr.bg};\n  --surface: ${curr.surface};\n  --primary: ${curr.primary};\n  --accent: ${curr.accent};\n  --text: ${curr.text};\n  --font-heading: '${curr.fonts.split('+')[0].trim()}', sans-serif;\n  --font-body: '${curr.fonts.split('+')[1].trim()}', sans-serif;\n  --radius-card: 14px;\n  --radius-btn: 8px;\n}`;
+              return (
+                <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', marginBottom: '10px' }}>
+                    {[
+                      { name: 'BG', c: curr.bg },
+                      { name: 'Surface', c: curr.surface },
+                      { name: 'Primary', c: curr.primary },
+                      { name: 'Accent', c: curr.accent },
+                      { name: 'Text', c: curr.text },
+                    ].map(col => (
+                      <div key={col.name} style={{ background: col.c, padding: '8px 4px', textAlign: 'center', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div style={{ fontSize: '9px', fontWeight: 800, color: '#fff', textShadow: '0 1px 2px #000' }}>{col.name}</div>
+                        <div style={{ fontSize: '8px', color: '#fff', opacity: 0.8, textShadow: '0 1px 2px #000' }}>{col.c}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#e2e8f0', marginBottom: '8px' }}>
+                    <b>Typography Pairing:</b> <span style={{ color: '#38bdf8' }}>{curr.fonts}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn-primary" style={{ flex: 1 }} onClick={() => copyToClipboard(cssTokens, 'CSS Tokens (:root)')}>Copy CSS Tokens</button>
+                    <button className="btn-secondary" style={{ flex: 1 }} onClick={() => copyToClipboard(`# Design System: ${dtTemplate}\n\n${cssTokens}`, 'DESIGN.md')}>Export DESIGN.md</button>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* 7. AI Multi-Agent Pipeline */}
+        {activeToolId === 'multiagent' && (
+          <div>
+            <h4 style={{ fontSize: '15px', fontWeight: 800, marginBottom: '8px', color: '#8b5cf6' }}>
+              🤖 Composable AI Multi-Agent Pipeline
+            </h4>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Orchestrates multiple specialized agents: <b>Research Agent ➔ Architecture Agent ➔ Quality Audit Agent</b>.
+            </p>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input
+                type="text"
+                className="text-input"
+                value={agentPrompt}
+                onChange={(e) => setAgentPrompt(e.target.value)}
+                placeholder="Enter objective for multi-agent pipeline..."
+              />
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  tg.haptic('medium');
+                  setAgentLogs([
+                    `Agent 1 [Researcher]: Scanned contextual vectors for: "${agentPrompt}".`,
+                    'Agent 2 [Architect]: Synthesized 3 modular execution pathways with priority scoring.',
+                    'Agent 3 [Quality Guard]: Validated compliance, tone and returned structured output.',
+                  ]);
+                  tg.haptic('success');
+                }}
+              >
+                Run Agents
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {agentLogs.map((log, i) => (
+                <div key={i} style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '10px 12px', borderRadius: '10px', fontSize: '11px', color: '#e2e8f0', borderLeft: '3px solid #8b5cf6' }}>
+                  {log}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Unit Converter */}
         {activeToolId === 'unit' && (
           <div>

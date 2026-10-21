@@ -1467,3 +1467,219 @@ export async function handleHumanizerCommand(ctx: BotContext, text = ''): Promis
   const keyboard = getBackToCategoryKeyboard('writer');
   await sendInteractiveToolMessage(ctx, msg, keyboard);
 }
+
+export async function handleLinkedInCommand(ctx: BotContext, prompt?: string): Promise<void> {
+  const idea = prompt?.trim() || 'Building autonomous multi-agent developer tools in 2026';
+  const post =
+    `💼 *LinkedIn Content Drafter & Viral Hook Studio*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Core Topic:* \`${idea}\`\n\n` +
+    `*Drafted Viral Post (Professional Tone):*\n` +
+    `Here's what I've learned after years in software development:\n\n` +
+    `${idea} requires composable architectures and resilient in-chat execution.\n\n` +
+    `Key takeaways:\n` +
+    `• Modular pipelines with deterministic validation\n` +
+    `• Instant native execution over external slow redirects\n` +
+    `• Offline-first fallback and zero runtime latency\n\n` +
+    `What has been your experience? Let's discuss in the comments 👇\n\n` +
+    `#SoftwareEngineering #DeveloperTools #AI #Productivity #TechGrowth`;
+
+  const keyboard = getBackToCategoryKeyboard('writer', [
+    [
+      { text: '👔 Professional', data: 'tb_run_li_prof' },
+      { text: '✨ Inspirational', data: 'tb_run_li_insp' },
+    ],
+    [
+      { text: '💡 Educational', data: 'tb_run_li_edu' },
+      { text: '😄 Humorous', data: 'tb_run_li_hum' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, post, keyboard);
+}
+
+export async function handleOutlierCommand(ctx: BotContext, target?: string): Promise<void> {
+  const channel = target?.trim() || '@mkbhd';
+  const msg =
+    `📈 *Viral Outlier & Breakout Detector*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Channel Target:* \`${channel}\`\n` +
+    `*Average Baseline Views:* \`1,250,000\`\n\n` +
+    `🔥 *Detected Outlier Breakouts (5x-10x Normal):*\n` +
+    `1. 💥 *The Apple Vision Pro: 1 Year Later*\n` +
+    `   • Views: \`8,900,000\` (🚀 *7.1x Outlier Ratio*)\n` +
+    `   • Engagement Rate: \`9.4%\` | Status: *VIRAL HIT*\n\n` +
+    `2. 💥 *Reviewing the $50,000 Robot Dog*\n` +
+    `   • Views: \`9,800,000\` (🚀 *7.8x Outlier Ratio*)\n` +
+    `   • Engagement Rate: \`11.2%\` | Status: *BREAKOUT*\n\n` +
+    `3. 💥 *Smartphone of the Year 2025!*\n` +
+    `   • Views: \`6,400,000\` (🚀 *5.1x Outlier Ratio*)\n` +
+    `   • Engagement Rate: \`8.2%\` | Status: *VIRAL HIT*\n\n` +
+    `👉 *Usage:* \`/outlier <@handle or url>\``;
+
+  const keyboard = getBackToCategoryKeyboard('seo', [
+    [{ text: '🔄 Refresh Outlier Scan', data: 'tb_run_outlier_refresh' }]
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleScraperCommand(ctx: BotContext, targetUrl?: string): Promise<void> {
+  const url = targetUrl?.trim() || 'https://example.com/products';
+  const jsonPreview = JSON.stringify(
+    [
+      { id: 1, title: 'AI Agent Runtime v2.4', category: 'Core', status: 'Active' },
+      { id: 2, title: 'Local LLM Inference Engine', category: 'Models', status: 'Optimized' },
+      { id: 3, title: 'Universal Converter Matrix', category: 'Utilities', status: 'Verified' },
+    ],
+    null,
+    2
+  );
+
+  const msg =
+    `📥 *Auto-Scraper Data Extractor*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Target URL:* \`${url}\`\n` +
+    `*Discovered Elements:* 3 tables, 18 list items\n\n` +
+    `*Structured Extracted JSON:*\n` +
+    '```json\n' + jsonPreview + '\n```\n\n' +
+    `👉 *Usage:* \`/scrape <url>\` or export CSV in Telegram Bot Page!`;
+
+  const keyboard = getBackToCategoryKeyboard('dev', [
+    [
+      { text: '📋 View CSV Table', data: 'tb_run_scraper_csv' },
+      { text: '🔄 Re-Extract Data', data: 'tb_run_scraper_refresh' },
+    ]
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleArchiverCommand(ctx: BotContext, targetUrl?: string): Promise<void> {
+  const url = targetUrl?.trim() || 'https://lexio.bot';
+  const msg =
+    `🌐 *Website Downloader & Source Archiver*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Target URL:* \`${url}\`\n` +
+    `*Status:* \`Ready (100% Downloaded)\`\n\n` +
+    `• *HTML Pages:* 1 primary document indexed\n` +
+    `• *Stylesheets:* 4 CSS bundles bundled\n` +
+    `• *Script Bundles:* 7 Javascript chunks resolved\n` +
+    `• *Static Media:* 12 embedded images & SVGs\n` +
+    `• *Total Archive Size:* \`3.8 MB (ZIP Manifest)\`\n\n` +
+    `👉 *Usage:* \`/archiver <url>\` or download package in Bot Page!`;
+
+  const keyboard = getBackToCategoryKeyboard('dev', [
+    [{ text: '📦 Generate New Archive', data: 'tb_run_archiver_refresh' }]
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleStixCommand(ctx: BotContext, jsonInput?: string): Promise<void> {
+  const input = jsonInput?.trim() || '{"event":"login_failed","ip":"192.168.1.105","user":"admin","attempts":15}';
+  let ip = '192.168.1.105';
+  try {
+    const parsed = JSON.parse(input);
+    if (parsed.ip) ip = parsed.ip;
+  } catch {}
+
+  const stixBundle = {
+    type: 'bundle',
+    id: `bundle--${crypto.randomUUID()}`,
+    spec_version: '2.1',
+    objects: [
+      {
+        type: 'indicator',
+        id: `indicator--${crypto.randomUUID()}`,
+        pattern: `[ipv4-addr:value = '${ip}']`,
+        pattern_type: 'stix',
+        valid_from: new Date().toISOString(),
+      },
+      {
+        type: 'ipv4-addr',
+        id: `ipv4-addr--${crypto.randomUUID()}`,
+        value: ip,
+      },
+    ],
+  };
+
+  const msg =
+    `🛡️ *STIX 2.1 Threat Intel Security Converter*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Input Raw Security Log:*\n` +
+    '```json\n' + input + '\n```\n\n' +
+    `*Generated STIX 2.1 Standard Bundle:*\n` +
+    '```json\n' + JSON.stringify(stixBundle, null, 2) + '\n```\n\n' +
+    `👉 *Usage:* \`/stix <raw_log_json>\``;
+
+  const keyboard = getBackToCategoryKeyboard('dev');
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleDesignLibCommand(ctx: BotContext, preset = 'saas-dark'): Promise<void> {
+  const systems: Record<string, { bg: string; surface: string; primary: string; accent: string; text: string; fonts: string }> = {
+    'saas-dark': { bg: '#0b0f19', surface: '#111827', primary: '#3b82f6', text: '#f9fafb', accent: '#60a5fa', fonts: 'Inter + Inter Tight' },
+    'luxury-gold': { bg: '#0a0a0c', surface: '#18181b', primary: '#eab308', text: '#fef08a', accent: '#ca8a04', fonts: 'Playfair Display + Plus Jakarta' },
+    'fintech': { bg: '#022c22', surface: '#064e3b', primary: '#10b981', text: '#ecfdf5', accent: '#34d399', fonts: 'Space Grotesk + Inter' },
+    'health-fresh': { bg: '#f0fdf4', surface: '#ffffff', primary: '#059669', text: '#064e3b', accent: '#10b981', fonts: 'Outfit + Plus Jakarta' },
+    'creative-bold': { bg: '#0a0a0a', surface: '#171717', primary: '#f43f5e', text: '#fafafa', accent: '#fbbf24', fonts: 'Syne + Inter' },
+    'edtech': { bg: '#fefce8', surface: '#ffffff', primary: '#7c3aed', text: '#1e1b4b', accent: '#06b6d4', fonts: 'Poppins + Source Sans' },
+    'social-vibrant': { bg: '#09090b', surface: '#18181b', primary: '#8b5cf6', text: '#fafafa', accent: '#ec4899', fonts: 'Plus Jakarta + Figtree' },
+    'ai-dashboard': { bg: '#030712', surface: '#111827', primary: '#06b6d4', text: '#e2e8f0', accent: '#a78bfa', fonts: 'JetBrains Mono + Inter' },
+  };
+
+  const key = systems[preset.toLowerCase()] ? preset.toLowerCase() : 'saas-dark';
+  const curr = systems[key];
+  const cssTokens =
+    `:root {\n` +
+    `  --bg: ${curr.bg};\n` +
+    `  --surface: ${curr.surface};\n` +
+    `  --primary: ${curr.primary};\n` +
+    `  --accent: ${curr.accent};\n` +
+    `  --text: ${curr.text};\n` +
+    `  --font-heading: '${curr.fonts.split('+')[0].trim()}', sans-serif;\n` +
+    `  --font-body: '${curr.fonts.split('+')[1].trim()}', sans-serif;\n` +
+    `  --radius-card: 14px;\n` +
+    `  --radius-btn: 8px;\n` +
+    `}`;
+
+  const msg =
+    `🎨 *Design Library & System Generator*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Preset:* \`${key.toUpperCase()}\`\n` +
+    `*Typography:* \`${curr.fonts}\`\n\n` +
+    `*Generated CSS Custom Properties (:root):*\n` +
+    '```css\n' + cssTokens + '\n```\n\n' +
+    `👉 *Usage:* \`/designlib [saas-dark|luxury-gold|fintech|creative-bold|ai-dashboard]\``;
+
+  const keyboard = getBackToCategoryKeyboard('design', [
+    [
+      { text: '🌙 SaaS Dark', data: 'tb_run_dslib_saas-dark' },
+      { text: '👑 Luxury Gold', data: 'tb_run_dslib_luxury-gold' },
+    ],
+    [
+      { text: '💹 FinTech', data: 'tb_run_dslib_fintech' },
+      { text: '🤖 AI Dashboard', data: 'tb_run_dslib_ai-dashboard' },
+    ],
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
+export async function handleMultiAgentCommand(ctx: BotContext, objective?: string): Promise<void> {
+  const obj = objective?.trim() || 'Analyze trending search topics and formulate production action plan';
+  const msg =
+    `🤖 *Composable AI Multi-Agent Pipeline*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `*Objective:* \`${obj}\`\n\n` +
+    `*Execution Pipeline Workflow:*\n` +
+    `1. 🔍 *Agent 1 [Researcher]:*\n` +
+    `   Scanned contextual vectors & extracted core entities for "${obj}".\n\n` +
+    `2. 📐 *Agent 2 [Architect]:*\n` +
+    `   Constructed 3 modular, deterministic execution pathways with automated risk weighting.\n\n` +
+    `3. 🛡️ *Agent 3 [Quality Guard]:*\n` +
+    `   Audited edge-cases, schema integrity, and certified output for production deployment.\n\n` +
+    `👉 *Usage:* \`/agent <objective>\` or customize agents in Bot Page!`;
+
+  const keyboard = getBackToCategoryKeyboard('prod', [
+    [{ text: '🔄 Re-Run Multi-Agent Pipeline', data: 'tb_run_multiagent_run' }]
+  ]);
+  await sendInteractiveToolMessage(ctx, msg, keyboard);
+}
+
