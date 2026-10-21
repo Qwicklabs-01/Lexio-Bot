@@ -4,22 +4,22 @@ import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
   const keyboard = new InlineKeyboard();
 
-  // Primary CTA: Telegram Mini App (Strictly HTTPS for Telegram WebApp)
+  // Primary Action: Telegram Mini App
   keyboard.webApp('🚀 Open Lexio Studio', getValidHttpsMiniAppUrl()).row();
 
-  // Secondary Core Features
+  // Native Lexio Modules
   keyboard
-    .text('⚡ Nexus Media Downloader', 'menu_nexus')
+    .text('🎬 Media Downloader', 'menu_nexus')
     .row()
-    .text('🔍 Feedigger Social Intel', 'menu_feedigger')
+    .text('📊 Social & Creator Analytics', 'menu_feedigger')
     .row()
-    .text('🧰 100+ Free Multi-Tools', 'menu_toolbox')
+    .text('🧰 100+ Multi-Tools', 'menu_toolbox')
     .row();
 
-  // User History & Settings
+  // User Stats & Help
   keyboard
-    .text('📊 My Activity & Stats', 'user_stats')
-    .text('❓ Help & Guide', 'menu_help');
+    .text('📈 My Activity & Stats', 'user_stats')
+    .text('❓ Help & Commands', 'menu_help');
 
   if (isAdmin) {
     keyboard.row().text('👑 Admin Control Center', 'admin_panel');

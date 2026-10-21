@@ -24,7 +24,7 @@ function getMockProfileData(handle: string): {
   const clean = handle.replace('@', '');
   return {
     handle: clean,
-    name: `${clean.toUpperCase()} Official`,
+    name: `${clean.toUpperCase()}`,
     followers: 245000,
     following: 340,
     postsCount: 184,
@@ -63,7 +63,7 @@ function getMockProfileData(handle: string): {
         likes: 41000,
         comments: 980,
         er: 10.0,
-        caption: 'Behind the scenes: building viral applications from scratch 💻',
+        caption: 'Building viral applications from scratch with clean code 💻',
       },
     ],
   };
@@ -71,13 +71,13 @@ function getMockProfileData(handle: string): {
 
 export async function handleFeediggerMenu(ctx: BotContext): Promise<void> {
   const text =
-    `🔍 *Feedigger — Instagram Viral Excavator & Analytics*\n\n` +
+    `📊 *Lexio Social & Creator Intelligence*\n\n` +
     `Uncover the highest-performing content on any Instagram profile in seconds:\n\n` +
-    `• 👁️ *Sort Reels by Real Views* — Find breakthrough viral formats\n` +
-    `• ❤️ *Rank by Likes & Saves* — Identify strong audience resonance\n` +
-    `• 💬 *Spot Community Debates* — Highest commented discussions\n` +
-    `• 🔥 *Engagement Rate % (ER)* — Real engagement percentage metric\n` +
-    `• 📥 *1-Click CSV Export* — Spreadsheet download for Excel/Sheets\n\n` +
+    `• 👁️ *Sort Reels by Real Views* — Find breakthrough viral hooks\n` +
+    `• ❤️ *Rank by Likes & Saves* — Identify strong audience affinity\n` +
+    `• 💬 *Find Hot Discussions* — Spot community debates & objections\n` +
+    `• 🔥 *True Engagement Rate % (ER)* — Real engagement percentage metric\n` +
+    `• 📥 *1-Click CSV Export* — Spreadsheet download for Excel & Sheets\n\n` +
     `👉 *Usage:* Type \`/excavate @username\` (e.g. \`/excavate @mrbeast\`) or tap below to launch the visual studio!`;
 
   if (ctx.callbackQuery) {
@@ -113,7 +113,7 @@ export async function handleExcavateCommand(ctx: BotContext, handle: string): Pr
   const telegramId = ctx.from?.id.toString() || 'anonymous';
 
   const analyzingMsg = await ctx.reply(
-    `⛏️ *Feedigger excavating @${cleanHandle}...*\nScraping posts, parsing views, calculating Engagement Rate %...`,
+    `⛏️ *Lexio analyzing @${cleanHandle}...*\nScraping posts, parsing views, calculating Engagement Rate %...`,
     { parse_mode: 'Markdown' }
   );
 
@@ -141,7 +141,7 @@ export async function handleExcavateCommand(ctx: BotContext, handle: string): Pr
   } catch {}
 
   const responseText =
-    `🎯 *Feedigger Intel: @${cleanHandle}*\n\n` +
+    `🎯 *Lexio Creator Intel: @${cleanHandle}*\n\n` +
     `👤 *Account:* ${profile.name}\n` +
     `👥 *Followers:* ${(profile.followers / 1000).toFixed(1)}k | 📸 *Posts:* ${profile.postsCount}\n` +
     `🔥 *Average ER%:* 8.8% (Top 5% in category)\n\n` +
@@ -204,8 +204,8 @@ export async function handleFeediggerCsvExport(ctx: BotContext, handle: string):
   const csvContent = headers + rows;
   const buffer = Buffer.from(csvContent, 'utf-8');
 
-  await ctx.replyWithDocument(new InputFile(buffer, `feedigger_${handle}_analysis.csv`), {
-    caption: `📥 *Feedigger CSV Export for @${handle}*\nReady for import into Excel, Google Sheets, or Notion!`,
+  await ctx.replyWithDocument(new InputFile(buffer, `lexio_${handle}_analytics.csv`), {
+    caption: `📥 *Lexio CSV Export for @${handle}*\nReady for import into Excel, Google Sheets, or Notion!`,
     parse_mode: 'Markdown',
   });
 }

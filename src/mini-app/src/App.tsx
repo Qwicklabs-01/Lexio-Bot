@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { tg } from './telegram.js';
 
-type Tab = 'nexus' | 'feedigger' | 'toolbox' | 'profile';
-type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'seo' | 'design' | 'fun';
+type Tab = 'media' | 'social' | 'toolbox' | 'profile';
+type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'design' | 'fun';
 
 interface ToolItem {
   id: string;
@@ -16,7 +16,7 @@ const ALL_TOOLS: ToolItem[] = [
   // Developer
   { id: 'json', name: 'JSON Beautifier', category: 'dev', icon: '🔤', desc: 'Format, validate & minify JSON' },
   { id: 'qr', name: 'QR Code Generator', category: 'dev', icon: '📱', desc: 'Generate high-res QR codes' },
-  { id: 'base64', name: 'Base64 Encoder', category: 'dev', icon: '🔐', desc: 'Encode & decode Base64' },
+  { id: 'base64', name: 'Base64 Tool', category: 'dev', icon: '🔐', desc: 'Encode & decode Base64' },
   { id: 'uuid', name: 'UUID Generator', category: 'dev', icon: '🆔', desc: 'Generate unique v4 identifiers' },
   { id: 'slug', name: 'Slug Generator', category: 'dev', icon: '🔗', desc: 'Clean SEO friendly URL slugs' },
   // Calculators & Math
@@ -42,14 +42,14 @@ const ALL_TOOLS: ToolItem[] = [
 ];
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('nexus');
+  const [activeTab, setActiveTab] = useState<Tab>('media');
   const user = tg.getUser();
 
   useEffect(() => {
     tg.init();
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab') as Tab;
-    if (tabParam && ['nexus', 'feedigger', 'toolbox', 'profile'].includes(tabParam)) {
+    if (tabParam && ['media', 'social', 'toolbox', 'profile'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, []);
@@ -67,7 +67,7 @@ export function App() {
           <div className="brand-logo">⚡</div>
           <div className="brand-text">
             <h1>Lexio Studio</h1>
-            <span>Universal Knowledge & Multi-Tool Suite</span>
+            <span>Universal Assistant & 100+ Multi-Tools</span>
           </div>
         </div>
         <div className="user-badge">
@@ -77,8 +77,8 @@ export function App() {
 
       {/* Main Content View */}
       <main>
-        {activeTab === 'nexus' && <NexusMediaTab />}
-        {activeTab === 'feedigger' && <FeediggerTab />}
+        {activeTab === 'media' && <MediaDownloaderTab />}
+        {activeTab === 'social' && <SocialAnalyticsTab />}
         {activeTab === 'toolbox' && <ToolBoxTab />}
         {activeTab === 'profile' && <ProfileTab user={user} />}
       </main>
@@ -86,25 +86,25 @@ export function App() {
       {/* Floating Bottom Navigation Bar */}
       <nav className="bottom-nav">
         <button
-          className={`nav-item ${activeTab === 'nexus' ? 'active nexus' : ''}`}
-          onClick={() => switchTab('nexus')}
+          className={`nav-item ${activeTab === 'media' ? 'active nexus' : ''}`}
+          onClick={() => switchTab('media')}
         >
-          <span className="nav-icon">⚡</span>
-          <span>Nexus</span>
+          <span className="nav-icon">🎬</span>
+          <span>Media</span>
         </button>
         <button
-          className={`nav-item ${activeTab === 'feedigger' ? 'active feedigger' : ''}`}
-          onClick={() => switchTab('feedigger')}
+          className={`nav-item ${activeTab === 'social' ? 'active feedigger' : ''}`}
+          onClick={() => switchTab('social')}
         >
-          <span className="nav-icon">🔍</span>
-          <span>Feedigger</span>
+          <span className="nav-icon">📊</span>
+          <span>Social</span>
         </button>
         <button
           className={`nav-item ${activeTab === 'toolbox' ? 'active toolbox' : ''}`}
           onClick={() => switchTab('toolbox')}
         >
           <span className="nav-icon">🧰</span>
-          <span>Tools (100+)</span>
+          <span>100+ Tools</span>
         </button>
         <button
           className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
@@ -119,9 +119,9 @@ export function App() {
 }
 
 // ==========================================
-// 1. Nexus Media Downloader Tab
+// 1. Universal Media Downloader Tab
 // ==========================================
-function NexusMediaTab() {
+function MediaDownloaderTab() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [mediaData, setMediaData] = useState<any>(null);
@@ -146,7 +146,7 @@ function NexusMediaTab() {
         thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
       });
       tg.haptic('success');
-    }, 800);
+    }, 700);
   };
 
   const handleDownload = () => {
@@ -170,9 +170,9 @@ function NexusMediaTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">⚡ Nexus Universal Media Capture</h2>
+      <h2 className="card-title">🎬 Universal Media Downloader</h2>
       <p className="card-subtitle">
-        Extract HD videos & high-bitrate MP3 audio from YouTube, TikTok, Instagram, and Twitter/X with zero watermarks.
+        Capture videos & audio from YouTube, TikTok, Instagram, and Twitter/X with zero watermarks.
       </p>
 
       <div className="input-group">
@@ -188,7 +188,6 @@ function NexusMediaTab() {
         </button>
       </div>
 
-      {/* Quick Source Chips */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
         {['YouTube 4K', 'Instagram Reels', 'TikTok HD', 'Twitter/X Clips'].map((badge) => (
           <span
@@ -248,9 +247,9 @@ function NexusMediaTab() {
 }
 
 // ==========================================
-// 2. Feedigger Instagram Intel Tab
+// 2. Social & Creator Analytics Tab
 // ==========================================
-function FeediggerTab() {
+function SocialAnalyticsTab() {
   const [handle, setHandle] = useState('mrbeast');
   const [activeSort, setActiveSort] = useState<'views' | 'likes' | 'comments' | 'er'>('views');
   const [loading, setLoading] = useState(false);
@@ -304,9 +303,9 @@ function FeediggerTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">🔍 Feedigger Instagram Studio</h2>
+      <h2 className="card-title">📊 Social & Creator Analytics</h2>
       <p className="card-subtitle">
-        Excavate, rank and analyze top-performing Instagram Reels by Views, Likes, and true Engagement Rate (ER%).
+        Rank and analyze top-performing Instagram Reels by Views, Likes, and true Engagement Rate (ER%).
       </p>
 
       <div className="input-group">
@@ -318,11 +317,10 @@ function FeediggerTab() {
           onChange={(e) => setHandle(e.target.value)}
         />
         <button className="btn-primary btn-orange" onClick={handleExcavate} disabled={loading}>
-          {loading ? 'Digging...' : 'Analyze'}
+          {loading ? 'Analyzing...' : 'Analyze'}
         </button>
       </div>
 
-      {/* Preset Chips */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
         {['mrbeast', 'nike', 'apple', 'hubspot', 'zuck'].map((chip) => (
           <span
@@ -339,7 +337,6 @@ function FeediggerTab() {
         ))}
       </div>
 
-      {/* Stats Summary */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-value">245M</div>
@@ -351,11 +348,10 @@ function FeediggerTab() {
         </div>
         <div className="stat-card">
           <div className="stat-value">192</div>
-          <div className="stat-label">Reels Dug</div>
+          <div className="stat-label">Reels Analyzed</div>
         </div>
       </div>
 
-      {/* Sort Buttons */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
         {(['views', 'likes', 'comments', 'er'] as const).map((mode) => (
           <button
@@ -378,7 +374,6 @@ function FeediggerTab() {
         ))}
       </div>
 
-      {/* Ranked Reels List */}
       <div className="reels-grid">
         {reels.map((r) => (
           <div key={r.id} className="reel-item">
@@ -413,7 +408,6 @@ function ToolBoxTab() {
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory>('all');
   const [activeToolId, setActiveToolId] = useState<string>('json');
 
-  // Tool states
   const [jsonText, setJsonText] = useState('{"platform":"Lexio","status":"live","tools":100}');
   const [jsonResult, setJsonResult] = useState('');
   const [qrInput, setQrInput] = useState('https://nest-hub-tools.vercel.app/');
@@ -446,12 +440,11 @@ function ToolBoxTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">🧰 ToolBox Pro — 100+ Utilities</h2>
+      <h2 className="card-title">🧰 Lexio Multi-Tools Suite (100+)</h2>
       <p className="card-subtitle">
-        Instant developer formatters, financial calculators, text transformers, and productivity gadgets.
+        Instant developer formatters, financial calculators, text transformers, and productivity utilities.
       </p>
 
-      {/* Search Input */}
       <div className="search-bar-wrap">
         <span className="search-icon">🔍</span>
         <input
@@ -463,7 +456,6 @@ function ToolBoxTab() {
         />
       </div>
 
-      {/* Category Pills */}
       <div className="category-chips-scroll">
         {[
           { id: 'all', label: 'All Tools' },
@@ -486,7 +478,6 @@ function ToolBoxTab() {
         ))}
       </div>
 
-      {/* Active Interactive Tool Workspace */}
       <div style={{ background: 'rgba(10, 15, 28, 0.7)', border: '1px solid var(--border-glass)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
         {activeToolId === 'json' && (
           <div>
@@ -776,7 +767,7 @@ function ToolBoxTab() {
 
         {activeToolId === 'base64' && (
           <div>
-            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔐 Base64 Encoder & Decoder</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔐 Base64 Tool</h4>
             <input
               type="text"
               className="text-input"
@@ -817,7 +808,6 @@ function ToolBoxTab() {
         )}
       </div>
 
-      {/* Filtered Tools Catalog */}
       <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>
         SELECT FROM 100+ UTILITIES ({filteredTools.length})
       </h3>

@@ -28,20 +28,19 @@ export function detectPlatform(url: string): string {
   if (lower.includes('tiktok')) return 'TikTok';
   if (lower.includes('twitter') || lower.includes('x.com')) return 'Twitter / X';
   if (lower.includes('facebook') || lower.includes('fb.watch')) return 'Facebook';
-  return 'Universal Web';
+  return 'Web Media';
 }
 
 export async function handleNexusMenu(ctx: BotContext): Promise<void> {
   const text =
-    `⚡ *Nexus Universal Media Intelligence*\n\n` +
-    `Capture and download videos and audio from 1000+ platforms at top speed!\n\n` +
-    `Supported sources:\n` +
-    `• YouTube (4K, 1080p, 720p, MP3 Audio)\n` +
-    `• Instagram (Reels, Stories, Carousels, IGTV)\n` +
+    `🎬 *Lexio Universal Media Downloader*\n\n` +
+    `Download video & audio from 1000+ platforms at high speeds directly in Telegram:\n\n` +
+    `Supported platforms:\n` +
+    `• YouTube (4K, 1080p, 720p, 320kbps MP3)\n` +
+    `• Instagram (Reels, Carousels, Stories)\n` +
     `• TikTok (HD Watermark-Free)\n` +
-    `• Twitter / X (HD Clips)\n` +
-    `• Facebook & Reddit\n\n` +
-    `👉 *Simply send or paste any video link right here in chat!*`;
+    `• Twitter / X & Facebook\n\n` +
+    `👉 *Simply paste or send any video link here in the chat to begin!*`;
 
   if (ctx.callbackQuery) {
     try {
@@ -68,14 +67,13 @@ export async function handleIncomingMediaUrl(ctx: BotContext, url: string): Prom
   const platform = detectPlatform(url);
   const telegramId = ctx.from?.id.toString() || 'anonymous';
 
-  // Send initial analyzing feedback
   const analyzingMsg = await ctx.reply(
-    `🔍 *Analyzing ${platform} media...*\nExtracting metadata, available resolutions, and audio streams...`,
+    `🔍 *Analyzing ${platform} media...*\nExtracting streams, resolutions, and audio tracks...`,
     { parse_mode: 'Markdown' }
   );
 
   const cleanTitle = `${platform} Media Capture — ${new Date().toLocaleDateString()}`;
-  const durationSec = 142; // Simulated duration
+  const durationSec = 142;
 
   let downloadId = `dl_${Date.now().toString(36)}`;
 
@@ -93,21 +91,18 @@ export async function handleIncomingMediaUrl(ctx: BotContext, url: string): Prom
     });
     downloadId = record.id;
 
-    // Increment user downloads count
     await prisma.user.update({
       where: { telegramId },
       data: { downloadsCount: { increment: 1 } },
     });
-  } catch {
-    // If DB offline, fallback to memory ID
-  }
+  } catch {}
 
   const resultText =
-    `⚡ *Nexus Media Extraction Complete!*\n\n` +
+    `🎬 *Lexio Media Extraction Complete!*\n\n` +
     `📌 *Title:* \`${cleanTitle}\`\n` +
     `🌐 *Platform:* ${platform}\n` +
     `⏱️ *Duration:* ~2m 22s\n` +
-    `🛡️ *Status:* Ready for download (Watermark-free)\n\n` +
+    `🛡️ *Quality:* Watermark-Free\n\n` +
     `Select your desired download format below:`;
 
   try {
@@ -129,11 +124,11 @@ export async function handleMediaDownloadAction(
 
   if (format === 'info') {
     await ctx.reply(
-      `📊 *Media Technical Information:*\n\n` +
-      `• *Download ID:* \`${downloadId}\`\n` +
+      `📊 *Media Technical Specs:*\n\n` +
+      `• *ID:* \`${downloadId}\`\n` +
       `• *Video Codec:* H.264 / AAC\n` +
-      `• *Audio Bitrate:* 320 kbps High Definition\n` +
-      `• *Delivery Protocol:* Fast direct stream`,
+      `• *Audio:* 320 kbps High Definition\n` +
+      `• *Processing Protocol:* Direct high-speed capture`,
       { parse_mode: 'Markdown' }
     );
     return;
@@ -152,13 +147,11 @@ export async function handleMediaDownloadAction(
       await ctx.api.deleteMessage(ctx.chat!.id, statusMsg.message_id);
     } catch {}
 
-    const directDownloadLink = `https://nexus-media-platform.vercel.app/download?id=${downloadId}&format=${format}`;
-
     await ctx.reply(
       `✅ *Your ${label} is ready!* 🚀\n\n` +
       `📦 *File Size:* ~${isAudio ? '4.8 MB' : '32.4 MB'}\n` +
-      `🔗 *Direct High-Speed Link:* [Click here to download](${directDownloadLink})\n\n` +
-      `_Saved to your Nexus platform history._`,
+      `🔗 *Direct Stream Link:* [Tap here to download](https://nest-hub-tools.vercel.app/download?id=${downloadId}&format=${format})\n\n` +
+      `_Saved to your Lexio media history._`,
       {
         parse_mode: 'Markdown',
         reply_markup: getBackToMenuKeyboard(),
