@@ -209,3 +209,42 @@ export async function handleFeediggerCsvExport(ctx: BotContext, handle: string):
     parse_mode: 'Markdown',
   });
 }
+
+export async function handleHashtagsCommand(ctx: BotContext, niche: string): Promise<void> {
+  const query = niche.trim().toLowerCase() || 'creator';
+  const tagLibrary: Record<string, string[]> = {
+    tech: ['#tech', '#developer', '#coding', '#softwareengineer', '#webdev', '#javascript', '#ai', '#python', '#techtrends', '#programming'],
+    fitness: ['#fitness', '#workout', '#gymmotivation', '#fitlife', '#bodybuilding', '#healthy', '#training', '#gymlife', '#fitnessgoals'],
+    business: ['#entrepreneur', '#business', '#startup', '#marketing', '#success', '#smallbusiness', '#mindset', '#finance', '#wealth'],
+    creator: ['#contentcreator', '#creatoreconomy', '#viralreels', '#reelsinstagram', '#socialmediamarketing', '#digitalcreator', '#growth'],
+  };
+
+  const key = Object.keys(tagLibrary).find((k) => query.includes(k)) || 'creator';
+  const tags = tagLibrary[key];
+
+  await ctx.reply(
+    `🏷️ *High-Growth Hashtags for [${query.toUpperCase()}]:*\n\n` +
+    `\`${tags.join(' ')}\`\n\n` +
+    `Tap to copy and paste into your Reel or TikTok caption!`,
+    { parse_mode: 'Markdown', reply_markup: getBackToMenuKeyboard() }
+  );
+}
+
+export async function handleHookCommand(ctx: BotContext, topic: string): Promise<void> {
+  const t = topic.trim() || 'this topic';
+  const hooks = [
+    `"Stop scrolling if you want to master ${t} in 2026..."`,
+    `"3 secrets about ${t} that 99% of people don't know:"`,
+    `"If I had to start learning ${t} from zero, here is exactly what I would do:"`,
+    `"This one trick completely changed the way I look at ${t}..."`,
+    `"Why nobody is talking about this massive breakthrough in ${t}:"`
+  ];
+
+  await ctx.reply(
+    `🎣 *Viral Hooks for [${t}]:*\n\n` +
+    hooks.map((h, i) => `${i + 1}. *${h}*`).join('\n\n') +
+    `\n\nUse one of these in the first 3 seconds of your video to maximize retention!`,
+    { parse_mode: 'Markdown', reply_markup: getBackToMenuKeyboard() }
+  );
+}
+

@@ -5,10 +5,12 @@ declare global {
   var __prisma: PrismaClient | undefined;
 }
 
+export let isDatabaseConnected = false;
+
 export const prisma =
   global.__prisma ||
   new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: process.env.NODE_ENV === 'development' ? ['error'] : ['error'],
   });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -18,8 +20,10 @@ if (process.env.NODE_ENV !== 'production') {
 export async function connectDatabase(): Promise<void> {
   try {
     await prisma.$connect();
+    isDatabaseConnected = true;
     console.log('✅ Successfully connected to database');
   } catch (error) {
+    isDatabaseConnected = false;
     console.warn('⚠️ Database connection warning (running in degraded or local mode):', (error as Error).message);
   }
 }

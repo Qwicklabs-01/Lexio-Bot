@@ -9,7 +9,7 @@ export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
     .text('🎵 High-Quality MP3', `dl_${downloadId}_mp3`)
     .text('ℹ️ Inspect Info', `dl_${downloadId}_info`)
     .row()
-    .webApp('⚡ Open in Nexus Web App', getValidHttpsMiniAppUrl('?tab=nexus'))
+    .webApp('⚡ Open in Lexio Studio', getValidHttpsMiniAppUrl('?tab=media'))
     .row()
     .text('🔙 Back to Menu', 'menu_main');
 }
@@ -22,8 +22,11 @@ export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
     .text('💬 Top Comments', `fd_sort_${handle}_comments`)
     .text('🔥 Highest ER %', `fd_sort_${handle}_er`)
     .row()
+    .text('🏷️ Viral Hashtags', `fd_tags_${handle}`)
+    .text('🎣 Viral Hooks', `fd_hook_${handle}`)
+    .row()
     .text('📥 Export Full CSV', `fd_export_${handle}`)
-    .webApp('🔍 Open Feedigger Studio', getValidHttpsMiniAppUrl(`?tab=feedigger&user=${handle}`))
+    .webApp('🔍 Open in Lexio Studio', getValidHttpsMiniAppUrl(`?tab=social&user=${handle}`))
     .row()
     .text('🔙 Back to Menu', 'menu_main');
 }

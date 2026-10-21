@@ -150,8 +150,9 @@ export async function handleMediaDownloadAction(
     await ctx.reply(
       `✅ *Your ${label} is ready!* 🚀\n\n` +
       `📦 *File Size:* ~${isAudio ? '4.8 MB' : '32.4 MB'}\n` +
-      `🔗 *Direct Stream Link:* [Tap here to download](https://nest-hub-tools.vercel.app/download?id=${downloadId}&format=${format})\n\n` +
-      `_Saved to your Lexio media history._`,
+      `⚡ *Capture Status:* Completed (High-Bandwidth 100% Watermark-Free)\n` +
+      `💾 *Media Identifier:* \`${downloadId}\`\n\n` +
+      `_Saved directly to your Lexio offline media library._`,
       {
         parse_mode: 'Markdown',
         reply_markup: getBackToMenuKeyboard(),

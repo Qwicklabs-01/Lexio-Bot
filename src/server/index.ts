@@ -62,9 +62,9 @@ async function startServer(): Promise<void> {
   // Root welcome route
   app.get('/', (_req, res) => {
     res.json({
-      name: 'OmniPlatform Telegram Bot & Mini App Server',
+      name: 'Lexio Universal Assistant & Studio Server',
       status: 'running',
-      features: ['Nexus Media Engine', 'Feedigger Social Intel', 'ToolBox Pro Multi-Tools'],
+      features: ['Lexio Media Downloader', 'Lexio Creator & Social Intel', 'Lexio 100+ Multi-Tools Suite'],
       miniApp: `${config.miniAppUrl}`,
     });
   });
