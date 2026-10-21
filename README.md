@@ -13,7 +13,8 @@
 7. [Environment Configuration](#-environment-configuration)
 8. [Docker & Production Deployment](#-docker--production-deployment)
 9. [BotFather Configuration](#-botfather-configuration)
-10. [License](#-license)
+10. [📞 Support & Contact](#-support--contact)
+11. [License](#-license)
 
 ---
 
@@ -327,6 +328,18 @@ admin - Admin control dashboard
 
 ---
 
+## 📞 Support & Contact
+
+If you have any questions, need technical assistance, or want custom tool additions, feel free to reach out:
+
+- **Developer:** **Sakshi Developer**
+- **📞 Phone:** `6290873841`
+- **📧 Email:** [qwicklabs2@gmail.com](mailto:qwicklabs2@gmail.com)
+
+---
+
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+Made with ❤️ by **Sakshi Developer**.
+
