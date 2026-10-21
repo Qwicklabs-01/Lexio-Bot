@@ -55,7 +55,7 @@ export async function handleHelp(ctx: BotContext): Promise<void> {
     `• \`/pick <a, b, c>\` — Choice picker from options.\n` +
     `• \`/rps <rock|paper|scissors>\` — Play Rock Paper Scissors vs Lexio.\n\n` +
     `👑 *Admin Commands:* \`/admin\` | \`/broadcast <text>\`\n\n` +
-    `⚡ *Tip:* Tap *Open Lexio Studio* to use the full visual app inside Telegram!`;
+    `⚡ *Tip:* Tap any button in \`/menu\` or \`/tools\` to calculate or generate results instantly in chat!`;
 
   if (ctx.callbackQuery) {
     try {

@@ -76,9 +76,10 @@ export async function handleFeediggerMenu(ctx: BotContext): Promise<void> {
     `• 👁️ *Sort Reels by Real Views* — Find breakthrough viral hooks\n` +
     `• ❤️ *Rank by Likes & Saves* — Identify strong audience affinity\n` +
     `• 💬 *Find Hot Discussions* — Spot community debates & objections\n` +
-    `• 🔥 *True Engagement Rate % (ER)* — Real engagement percentage metric\n` +
+    `• 🏷️ *Viral Hashtags* — Discover high-growth hashtag sets\n` +
+    `• 🎣 *Viral Hooks* — 3-second hook formulas\n` +
     `• 📥 *1-Click CSV Export* — Spreadsheet download for Excel & Sheets\n\n` +
-    `👉 *Usage:* Type \`/excavate @username\` (e.g. \`/excavate @mrbeast\`) or tap below to launch the visual studio!`;
+    `👉 *Usage:* Type \`/excavate @username\` (e.g. \`/excavate @mrbeast\`) or use commands: \`/hashtags\`, \`/hook\`!`;
 
   if (ctx.callbackQuery) {
     try {

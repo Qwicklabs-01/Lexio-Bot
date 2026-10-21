@@ -5,7 +5,7 @@ export async function handleMenu(ctx: BotContext): Promise<void> {
   const isAdmin = ctx.state?.isAdmin || false;
   const menuText =
     `🧭 *Main Navigation Menu*\n\n` +
-    `Choose an action below or tap *Open All-In-One Web App* to access the full interactive interface:`;
+    `Select a tool suite below to run directly in Telegram:`;
 
   if (ctx.callbackQuery) {
     try {

@@ -1,5 +1,4 @@
 import { InlineKeyboard } from 'grammy';
-import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 
 export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
   return new InlineKeyboard()
@@ -8,8 +7,6 @@ export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
     .row()
     .text('🎵 High-Quality MP3', `dl_${downloadId}_mp3`)
     .text('ℹ️ Inspect Info', `dl_${downloadId}_info`)
-    .row()
-    .webApp('⚡ Open in Lexio Studio', getValidHttpsMiniAppUrl('?tab=media'))
     .row()
     .text('🔙 Back to Menu', 'menu_main');
 }
@@ -26,25 +23,25 @@ export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
     .text('🎣 Viral Hooks', `fd_hook_${handle}`)
     .row()
     .text('📥 Export Full CSV', `fd_export_${handle}`)
-    .webApp('🔍 Open in Lexio Studio', getValidHttpsMiniAppUrl(`?tab=social&user=${handle}`))
     .row()
     .text('🔙 Back to Menu', 'menu_main');
 }
 
 export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .text('💻 Dev & Code', 'tb_cat_dev')
-    .text('🧮 Calculators', 'tb_cat_calc')
+    .text('💻 Dev & Code Tools', 'tb_cat_dev')
+    .text('🧮 Calculators & Finance', 'tb_cat_calc')
     .row()
-    .text('📝 Text & Content', 'tb_cat_text')
-    .text('🔍 SEO & Web', 'tb_cat_seo')
+    .text('📝 Text & Content Tools', 'tb_cat_text')
+    .text('🔍 SEO & Web Utilities', 'tb_cat_seo')
     .row()
-    .text('🎨 Color & Design', 'tb_cat_design')
-    .text('🎲 Random & Fun', 'tb_cat_fun')
+    .text('🎨 Color & Design Tools', 'tb_cat_design')
+    .text('🎲 Random & Fun Games', 'tb_cat_fun')
     .row()
-    .webApp('🧰 Browse All 100+ Tools in Studio', getValidHttpsMiniAppUrl('?tab=toolbox'))
+    .text('🎬 Media Downloader', 'menu_nexus')
+    .text('📊 Creator Analytics', 'menu_feedigger')
     .row()
-    .text('🔙 Back to Main Menu', 'menu_main');
+    .text('🏠 Back to Main Menu', 'menu_main');
 }
 
 export function getToolBoxDevKeyboard(): InlineKeyboard {
@@ -104,9 +101,6 @@ export function getToolBoxSeoKeyboard(): InlineKeyboard {
     .text('🤖 Robots.txt Gen', 'tb_tool_robots')
     .row()
     .text('🗺️ Sitemap Gen', 'tb_tool_sitemap')
-    .text('🔎 Keyword Density', 'tb_tool_keyword')
-    .row()
-    .text('🌐 OpenGraph (OG) Gen', 'tb_tool_og')
     .text('🚥 HTTP Status Codes', 'tb_tool_http')
     .row()
     .text('🔙 All Categories', 'menu_toolbox')
@@ -119,10 +113,6 @@ export function getToolBoxDesignKeyboard(): InlineKeyboard {
     .text('🌈 Gradient Gen', 'tb_tool_gradient')
     .row()
     .text('📦 Box Shadow Gen', 'tb_tool_shadow')
-    .text('🔘 CSS Button Gen', 'tb_tool_button')
-    .row()
-    .text('👁️ Contrast Checker', 'tb_tool_contrast')
-    .text('🎭 CSS Filters', 'tb_tool_filters')
     .row()
     .text('🔙 All Categories', 'menu_toolbox')
     .text('🏠 Main Menu', 'menu_main');
@@ -139,8 +129,40 @@ export function getToolBoxFunKeyboard(): InlineKeyboard {
     .text('🎯 Choice Picker', 'tb_tool_pick')
     .text('🔐 Password Gen', 'tb_tool_password')
     .row()
+    .text('🎮 Rock Paper Scissors', 'tb_tool_rps')
+    .row()
     .text('🔙 All Categories', 'menu_toolbox')
     .text('🏠 Main Menu', 'menu_main');
+}
+
+export function getBackToCategoryKeyboard(
+  category: string,
+  extraRows?: { text: string; data: string }[][]
+): InlineKeyboard {
+  const keyboard = new InlineKeyboard();
+
+  if (extraRows && extraRows.length > 0) {
+    for (const row of extraRows) {
+      for (const btn of row) {
+        keyboard.text(btn.text, btn.data);
+      }
+      keyboard.row();
+    }
+  }
+
+  const catNames: Record<string, string> = {
+    dev: '💻 Dev Tools',
+    calc: '🧮 Calculators',
+    text: '📝 Text Tools',
+    seo: '🔍 SEO Tools',
+    design: '🎨 Design Tools',
+    fun: '🎲 Fun Tools',
+  };
+
+  const backLabel = catNames[category] ? `🔙 ${catNames[category]}` : '🔙 Category Menu';
+
+  keyboard.text(backLabel, `tb_cat_${category}`).text('🏠 Main Menu', 'menu_main');
+  return keyboard;
 }
 
 export function getBackToMenuKeyboard(): InlineKeyboard {

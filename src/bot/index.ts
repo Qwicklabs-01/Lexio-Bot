@@ -380,7 +380,46 @@ export function createBot(): Bot<BotContext> {
   });
   bot.callbackQuery('tb_tool_password', async (ctx) => {
     await ctx.answerCallbackQuery();
-    await handlePasswordCommand(ctx, '18');
+    await handlePasswordCommand(ctx, '16');
+  });
+  bot.callbackQuery('tb_tool_rps', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await handleRpsCommand(ctx, 'rock');
+  });
+
+  // Dynamic Rerun & Preset Tool Actions (Instant in-chat execution)
+  bot.callbackQuery(/^tb_run_(.+)$/, async (ctx) => {
+    const action = ctx.match[1];
+    if (action === 'coin') return handleCoinCommand(ctx);
+    if (action.startsWith('dice_')) return handleDiceCommand(ctx, action.replace('dice_', ''));
+    if (action.startsWith('pw_')) return handlePasswordCommand(ctx, action.replace('pw_', ''));
+    if (action === 'quote') return handleQuoteCommand(ctx);
+    if (action === 'uuid') return handleUuidCommand(ctx);
+    if (action === 'gradient') return handleGradientCommand(ctx);
+    if (action === 'shadow') return handleShadowCommand(ctx);
+    if (action === '8ball') return handle8BallCommand(ctx, '');
+    if (action.startsWith('rps_')) return handleRpsCommand(ctx, action.replace('rps_', ''));
+    if (action === 'bmi_65_172') return handleBmiCommand(ctx, '65', '172');
+    if (action === 'bmi_85_180') return handleBmiCommand(ctx, '85', '180');
+    if (action === 'age_1998') return handleAgeCommand(ctx, '1998-05-15');
+    if (action === 'age_2002') return handleAgeCommand(ctx, '2002-10-20');
+    if (action === 'emi_25_7_3') return handleEmiCommand(ctx, '25000', '7', '3');
+    if (action === 'emi_100_9_10') return handleEmiCommand(ctx, '100000', '9', '10');
+    if (action === 'pct_15_200') return handlePercentCommand(ctx, '15', '200');
+    if (action === 'pct_25_800') return handlePercentCommand(ctx, '25', '800');
+    if (action === 'disc_80_20') return handleDiscountCommand(ctx, '80', '20');
+    if (action === 'disc_250_50') return handleDiscountCommand(ctx, '250', '50');
+    if (action === 'tip_100_15_2') return handleTipCommand(ctx, '100', '15', '2');
+    if (action === 'tip_200_20_4') return handleTipCommand(ctx, '200', '20', '4');
+    if (action === 'comp_5_8_5') return handleCompoundCommand(ctx, '5000', '8', '5');
+    if (action === 'comp_20_10_15') return handleCompoundCommand(ctx, '20000', '10', '15');
+    if (action === 'tax_500_10') return handleTaxCommand(ctx, '500', '10');
+    if (action === 'tax_2000_18') return handleTaxCommand(ctx, '2000', '18');
+    if (action.startsWith('lorem_')) return handleLoremCommand(ctx, action.replace('lorem_', ''));
+    if (action.startsWith('http_')) return handleHttpStatusCommand(ctx, action.replace('http_', ''));
+    if (action.startsWith('hex_')) return handleHexToRgbCommand(ctx, '#' + action.replace('hex_', ''));
+    if (action === 'hash_lexio') return handleHashCommand(ctx, 'Lexio');
+    if (action === 'hash_pass') return handleHashCommand(ctx, 'Password123');
   });
 
   bot.callbackQuery(/^fd_tags_(.+)$/, async (ctx) => {
@@ -409,19 +448,38 @@ export function createBot(): Bot<BotContext> {
     await handleFeediggerCsvExport(ctx, handle);
   });
 
-  // 6. Generic Text Listener (Auto-detect pasted media links)
+  // 6. Generic Text Listener (Auto-detect tools, math, media links, and menus)
   bot.on('message:text', async (ctx) => {
-    const text = ctx.message.text;
+    const text = ctx.message.text.trim();
+
+    // Fast-path for menu shortcuts
+    if (text === '🧰 100+ Multi-Tools' || text.toLowerCase() === 'tools') {
+      return handleToolBoxMenu(ctx);
+    }
+    if (text === '🎬 Media Downloader' || text.toLowerCase() === 'download') {
+      return handleNexusMenu(ctx);
+    }
+    if (text === '📊 Creator Analytics' || text === '📊 Social Analytics' || text.toLowerCase() === 'social') {
+      return handleFeediggerMenu(ctx);
+    }
+    if (text === '❓ Help & Commands' || text === '❓ Help & Guide' || text.toLowerCase() === 'help') {
+      return handleHelp(ctx);
+    }
+
+    // Auto-detect math expressions (e.g. 150 * 20 or 25 + 40 / 2)
+    if (/^[0-9+\-*/().% ]+$/.test(text) && /[+\-*/%]/.test(text) && !isNaN(Number(text.charAt(0)))) {
+      return handleCalcCommand(ctx, text);
+    }
+
     if (isMediaUrl(text)) {
       await handleIncomingMediaUrl(ctx, text);
     } else {
       await ctx.reply(
         `💬 *Message received!*\n\n` +
+        `• Tap \`/tools\` to open the category selector and use 100+ utilities in chat.\n` +
         `• Send a video link (YouTube, IG, TikTok) to download media.\n` +
         `• Type \`/excavate @username\` to analyze an Instagram profile.\n` +
-        `• Type \`/tools\` to open the 100+ utilities directory.\n` +
-        `• Type \`/help\` to view all commands & shortcuts.\n` +
-        `• Type \`/menu\` to open the main navigation.`,
+        `• Type \`/menu\` to open the navigation.`,
         { parse_mode: 'Markdown' }
       );
     }
