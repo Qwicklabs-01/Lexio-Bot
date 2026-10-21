@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { tg } from './telegram.js';
 
 type Tab = 'media' | 'social' | 'toolbox' | 'profile';
-type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'seo' | 'design' | 'fun';
+type ToolCategory = 'all' | 'dev' | 'calc' | 'text' | 'prod' | 'seo' | 'design' | 'fun';
 
 interface ToolItem {
   id: string;
@@ -12,61 +12,76 @@ interface ToolItem {
   desc: string;
 }
 
-const ALL_TOOLS: ToolItem[] = [
-  // Developer & Web
-  { id: 'json', name: 'JSON Beautifier', category: 'dev', icon: '🔤', desc: 'Format, validate & minify JSON' },
-  { id: 'qr', name: 'QR Code Generator', category: 'dev', icon: '📱', desc: 'Generate high-res QR codes' },
-  { id: 'base64', name: 'Base64 Tool', category: 'dev', icon: '🔐', desc: 'Encode & decode Base64' },
-  { id: 'uuid', name: 'UUID Generator', category: 'dev', icon: '🆔', desc: 'Generate unique v4 identifiers' },
-  { id: 'slug', name: 'Slug Generator', category: 'dev', icon: '🔗', desc: 'Clean SEO friendly URL slugs' },
-  { id: 'hash', name: 'Cryptographic Hashes', category: 'dev', icon: '🔑', desc: 'MD5 & SHA-256 hashes' },
-  { id: 'sql', name: 'SQL Formatter', category: 'dev', icon: '💻', desc: 'Format & beautify SQL queries' },
+export const ALL_TOOLS: ToolItem[] = [
+  // Developer & Web (12 tools)
+  { id: 'json', name: 'JSON Beautifier', category: 'dev', icon: '🔤', desc: 'Format, validate & minify JSON objects' },
+  { id: 'qr', name: 'QR Code Generator', category: 'dev', icon: '📱', desc: 'Generate high-res downloadable QR codes' },
+  { id: 'base64', name: 'Base64 Tool', category: 'dev', icon: '🔐', desc: 'Encode & decode Base64 strings' },
+  { id: 'uuid', name: 'UUID Generator', category: 'dev', icon: '🆔', desc: 'Generate v4 cryptographically unique IDs' },
+  { id: 'binary', name: 'Binary Translator', category: 'dev', icon: '0️⃣', desc: 'Convert ASCII text ⇄ 8-bit binary' },
+  { id: 'hash', name: 'Cryptographic Hashes', category: 'dev', icon: '🔑', desc: 'MD5 & SHA-256 client digests' },
+  { id: 'sql', name: 'SQL Formatter', category: 'dev', icon: '💻', desc: 'Clean keywords & format SQL queries' },
   { id: 'jwt', name: 'JWT Token Inspector', category: 'dev', icon: '🔍', desc: 'Decode header & payload claims' },
-  { id: 'timestamp', name: 'Timestamp Converter', category: 'dev', icon: '⏱️', desc: 'Unix epoch to human dates' },
-  { id: 'html', name: 'HTML Escaper', category: 'dev', icon: '🌐', desc: 'Escape & unescape HTML entities' },
+  { id: 'timestamp', name: 'Timestamp Converter', category: 'dev', icon: '⏱️', desc: 'Unix epoch to human readable dates' },
+  { id: 'html', name: 'HTML Escaper', category: 'dev', icon: '🌐', desc: 'Escape & unescape special HTML entities' },
+  { id: 'slug', name: 'Slug Generator', category: 'dev', icon: '🔗', desc: 'Generate clean URL-friendly slugs' },
+  { id: 'md2html', name: 'Markdown to HTML', category: 'dev', icon: '📄', desc: 'Instant markdown preview & HTML generator' },
 
-  // Calculators & Financial
-  { id: 'bmi', name: 'BMI Calculator', category: 'calc', icon: '⚖️', desc: 'Health index & WHO category' },
-  { id: 'age', name: 'Age Calculator', category: 'calc', icon: '🎂', desc: 'Exact age, days & next birthday' },
-  { id: 'emi', name: 'Loan EMI Calculator', category: 'calc', icon: '💰', desc: 'Monthly payment & interest split' },
-  { id: 'percent', name: 'Percentage Calc', category: 'calc', icon: '📊', desc: 'Calculate percentage values' },
-  { id: 'discount', name: 'Discount Calculator', category: 'calc', icon: '🏷️', desc: 'Sales savings & final price' },
-  { id: 'tip', name: 'Tip & Bill Splitter', category: 'calc', icon: '🪙', desc: 'Split checks with groups' },
-  { id: 'compound', name: 'Compound Interest', category: 'calc', icon: '📈', desc: 'Calculate investment growth' },
-  { id: 'tax', name: 'Sales Tax / GST', category: 'calc', icon: '🧾', desc: 'Net to gross tax breakdown' },
+  // Calculators & Financial (12 tools)
+  { id: 'unit', name: 'Universal Unit Converter', category: 'calc', icon: '📐', desc: 'Convert Length, Weight, and Temperature' },
+  { id: 'stats', name: 'Statistics Calculator', category: 'calc', icon: '📈', desc: 'Calculate Mean, Median, Mode, Range & Sum' },
+  { id: 'gpa', name: 'GPA & Honours Calc', category: 'calc', icon: '🎓', desc: 'Calculate letter grades & 4.0 scale honours' },
+  { id: 'sci', name: 'Scientific Math', category: 'calc', icon: '🔬', desc: 'Square root, powers, trigonometry & logs' },
+  { id: 'emi', name: 'Loan EMI Calculator', category: 'calc', icon: '💰', desc: 'Monthly payments, interest split & schedule' },
+  { id: 'bmi', name: 'BMI Health Index', category: 'calc', icon: '⚖️', desc: 'Calculate BMI & WHO health classification' },
+  { id: 'age', name: 'Age & Birthday Calc', category: 'calc', icon: '🎂', desc: 'Exact age in years, months & days' },
+  { id: 'percent', name: 'Percentage Calc', category: 'calc', icon: '📊', desc: 'Calculate percentage values & fractions' },
+  { id: 'discount', name: 'Discount Calculator', category: 'calc', icon: '🏷️', desc: 'Calculate sale savings & final price' },
+  { id: 'tip', name: 'Tip & Bill Splitter', category: 'calc', icon: '🪙', desc: 'Split restaurant checks & group tips' },
+  { id: 'compound', name: 'Compound Interest', category: 'calc', icon: '💹', desc: 'Calculate investment growth over years' },
+  { id: 'tax', name: 'Sales Tax / GST', category: 'calc', icon: '🧾', desc: 'Net to gross breakdown & tax calculations' },
 
-  // Text & Content
-  { id: 'case', name: 'Case Converter', category: 'text', icon: '🔠', desc: 'UPPER, lower, Title, camel, snake' },
-  { id: 'count', name: 'Word & Char Counter', category: 'text', icon: '📝', desc: 'Count words, sentences & time' },
-  { id: 'reverse', name: 'Text Reverser', category: 'text', icon: '🔄', desc: 'Reverse characters or words' },
-  { id: 'sort', name: 'Alphabetical Sorter', category: 'text', icon: '🔡', desc: 'Sort lists and lines A-Z' },
-  { id: 'morse', name: 'Morse Code Tool', category: 'text', icon: '📻', desc: 'Translate to/from Morse code' },
-  { id: 'lorem', name: 'Lorem Ipsum Gen', category: 'text', icon: '📜', desc: 'Generate placeholder text' },
+  // Text & Content (7 tools)
+  { id: 'case', name: 'Case Converter', category: 'text', icon: '🔠', desc: 'UPPER, lower, Title, camel, snake, kebab' },
+  { id: 'count', name: 'Word & Char Counter', category: 'text', icon: '📝', desc: 'Words, characters, reading time & sentences' },
+  { id: 'reverse', name: 'Text Reverser', category: 'text', icon: '🔄', desc: 'Reverse by characters or word order' },
+  { id: 'sort', name: 'Alphabetical Sorter', category: 'text', icon: '🔡', desc: 'Sort lines A-Z, Z-A or remove duplicates' },
+  { id: 'morse', name: 'Morse Code Tool', category: 'text', icon: '📻', desc: 'Translate text to & from Morse audio code' },
+  { id: 'lorem', name: 'Lorem Ipsum Gen', category: 'text', icon: '📜', desc: 'Generate multi-paragraph dummy text' },
+  { id: 'removechar', name: 'Character Stripper', category: 'text', icon: '🧹', desc: 'Strip spaces, symbols, numbers, punctuation' },
 
-  // SEO & Web
-  { id: 'meta', name: 'Meta Tag Generator', category: 'seo', icon: '🏷️', desc: 'HTML meta & social tags' },
-  { id: 'robots', name: 'Robots.txt Gen', category: 'seo', icon: '🤖', desc: 'Standard crawler directives' },
-  { id: 'sitemap', name: 'XML Sitemap Gen', category: 'seo', icon: '🗺️', desc: 'Standard XML sitemaps' },
-  { id: 'http', name: 'HTTP Status Codes', category: 'seo', icon: '🚥', desc: 'Explanations & fix guides' },
+  // Productivity & Tasks (3 tools)
+  { id: 'password', name: '256-Bit Password Gen', category: 'prod', icon: '🛡️', desc: 'Generate high-entropy cryptographic passwords' },
+  { id: 'pomodoro', name: 'Pomodoro Sprint Timer', category: 'prod', icon: '⏳', desc: '25m focus sprint, 5m break & 15m long break' },
+  { id: 'todo', name: 'Quick Task Keeper', category: 'prod', icon: '✅', desc: 'Manage in-memory daily todo items & checks' },
 
-  // Design & Colors
-  { id: 'hextorgb', name: 'HEX to RGB Converter', category: 'design', icon: '🎨', desc: 'Translate HEX, RGB & HSL' },
-  { id: 'gradient', name: 'CSS Gradient Gen', category: 'design', icon: '🌈', desc: 'Modern CSS linear gradients' },
-  { id: 'shadow', name: 'Box Shadow Gen', category: 'design', icon: '📦', desc: 'CSS elevation & glow presets' },
-  { id: 'glass', name: 'Glassmorphism Gen', category: 'design', icon: '🪟', desc: 'Modern frosted glass CSS' },
+  // SEO & Web (5 tools)
+  { id: 'keywords', name: 'Keyword Density', category: 'seo', icon: '🎯', desc: 'Analyze frequency % of top words' },
+  { id: 'meta', name: 'Meta Tag Generator', category: 'seo', icon: '🏷️', desc: 'Generate OpenGraph & SEO meta tags' },
+  { id: 'robots', name: 'Robots.txt Generator', category: 'seo', icon: '🤖', desc: 'Directives for Google, Bing & AI crawlers' },
+  { id: 'sitemap', name: 'XML Sitemap Gen', category: 'seo', icon: '🗺️', desc: 'Generate standard compliant XML sitemaps' },
+  { id: 'http', name: 'HTTP Status Codes', category: 'seo', icon: '🚥', desc: 'Instant code explanations & resolutions' },
 
-  // Random & Games
-  { id: 'password', name: 'Password Generator', category: 'fun', icon: '🔑', desc: '256-bit cryptographic keys' },
-  { id: 'coin', name: '3D Coin Toss', category: 'fun', icon: '🪙', desc: 'Heads or tails decision maker' },
-  { id: 'dice', name: 'Dice Roller', category: 'fun', icon: '🎲', desc: 'Roll 6-sided or custom die' },
-  { id: '8ball', name: 'Magic 8-Ball', category: 'fun', icon: '🎱', desc: 'Ask questions, get answers' },
-  { id: 'quote', name: 'Inspirational Quote', category: 'fun', icon: '💬', desc: 'Daily famous quotes' },
-  { id: 'rps', name: 'Rock Paper Scissors', category: 'fun', icon: '🎮', desc: 'Play against Lexio AI' },
-  { id: 'rand', name: 'Random Number', category: 'fun', icon: '🔢', desc: 'Pick integer between min & max' },
+  // Design & Colors (5 tools)
+  { id: 'hextorgb', name: 'HEX / RGB / HSL', category: 'design', icon: '🎨', desc: 'Live color translator with visual preview' },
+  { id: 'gradient', name: 'CSS Gradient Gen', category: 'design', icon: '🌈', desc: 'Generate modern CSS multi-color gradients' },
+  { id: 'shadow', name: 'Box Shadow Gen', category: 'design', icon: '📦', desc: 'Generate elevation & glow CSS shadows' },
+  { id: 'glass', name: 'Glassmorphism Gen', category: 'design', icon: '🪟', desc: 'Frosted glass CSS with blur & opacity sliders' },
+  { id: 'palette', name: 'Material Palette Gen', category: 'design', icon: '🎭', desc: 'Generate full 50-900 shade palette for any color' },
+
+  // Fun & Games (6 tools)
+  { id: 'coin', name: '3D Coin Toss', category: 'fun', icon: '🪙', desc: 'Heads or tails random decision maker' },
+  { id: 'dice', name: 'Dice Roller', category: 'fun', icon: '🎲', desc: 'Roll 6-sided die with realistic randomizer' },
+  { id: '8ball', name: 'Magic 8-Ball', category: 'fun', icon: '🎱', desc: 'Ask any question and reveal the answer' },
+  { id: 'quote', name: 'Daily Famous Quote', category: 'fun', icon: '💬', desc: 'Inspirational quotes from great minds' },
+  { id: 'rps', name: 'Rock Paper Scissors', category: 'fun', icon: '🎮', desc: 'Play Rock Paper Scissors against Lexio AI' },
+  { id: 'rand', name: 'Random Number', category: 'fun', icon: '🔢', desc: 'Generate random integer between min & max' },
 ];
 
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('media');
+  const [activeToolId, setActiveToolId] = useState<string>('json');
+  const [isSlideBarOpen, setIsSlideBarOpen] = useState(false);
   const user = tg.getUser();
 
   useEffect(() => {
@@ -83,8 +98,46 @@ export function App() {
     setActiveTab(tab);
   };
 
+  const handleSelectToolFromSlideBar = (toolId: string) => {
+    setActiveToolId(toolId);
+    setActiveTab('toolbox');
+    setIsSlideBarOpen(false);
+    tg.haptic('selectionChanged');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="app-container">
+      {/* Floating Left Slide Bar Trigger Tab */}
+      <button
+        className="floating-slide-trigger"
+        onClick={() => {
+          tg.haptic('light');
+          setIsSlideBarOpen(true);
+        }}
+        title="Open Tools Slide Bar"
+        aria-label="Open Tools Slide Bar"
+      >
+        <span className="trigger-icon">☰</span>
+        <span className="trigger-text">Tools</span>
+      </button>
+
+      {/* Tools Slide Bar (Drawer Navigation) */}
+      <ToolsSlideDrawer
+        isOpen={isSlideBarOpen}
+        onClose={() => {
+          tg.haptic('light');
+          setIsSlideBarOpen(false);
+        }}
+        tools={ALL_TOOLS}
+        activeToolId={activeToolId}
+        onSelectTool={handleSelectToolFromSlideBar}
+        onSwitchTab={(t) => {
+          switchTab(t);
+          setIsSlideBarOpen(false);
+        }}
+      />
+
       {/* Top Header */}
       <header className="app-header">
         <div className="brand-wrapper">
@@ -94,30 +147,51 @@ export function App() {
             <span>Universal Assistant & 100+ Multi-Tools</span>
           </div>
         </div>
-        <div className="user-badge">
-          <span>@{user.username || user.first_name}</span>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            className="header-tools-btn"
+            onClick={() => {
+              tg.haptic('light');
+              setIsSlideBarOpen(true);
+            }}
+            title="Open Slide Bar Tools Options"
+          >
+            <span>☰</span>
+            <span>Tools</span>
+            <span className="header-tools-badge">{ALL_TOOLS.length}</span>
+          </button>
+          <div className="user-badge">
+            <span>@{user.username || user.first_name}</span>
+          </div>
         </div>
       </header>
 
       {/* Main Content View */}
       <main>
-        {activeTab === 'media' && <MediaDownloaderTab />}
-        {activeTab === 'social' && <SocialAnalyticsTab />}
-        {activeTab === 'toolbox' && <ToolBoxTab />}
-        {activeTab === 'profile' && <ProfileTab user={user} />}
+        {activeTab === 'media' && <MediaDownloaderTab onOpenTools={() => setIsSlideBarOpen(true)} />}
+        {activeTab === 'social' && <SocialAnalyticsTab onOpenTools={() => setIsSlideBarOpen(true)} />}
+        {activeTab === 'toolbox' && (
+          <ToolBoxTab
+            activeToolId={activeToolId}
+            setActiveToolId={setActiveToolId}
+            onOpenSlideBar={() => setIsSlideBarOpen(true)}
+          />
+        )}
+        {activeTab === 'profile' && <ProfileTab user={user} onOpenTools={() => setIsSlideBarOpen(true)} />}
       </main>
 
       {/* Floating Bottom Navigation Bar */}
       <nav className="bottom-nav">
         <button
-          className={`nav-item ${activeTab === 'media' ? 'active nexus' : ''}`}
+          className={`nav-item ${activeTab === 'media' ? 'active media' : ''}`}
           onClick={() => switchTab('media')}
         >
           <span className="nav-icon">🎬</span>
           <span>Media</span>
         </button>
         <button
-          className={`nav-item ${activeTab === 'social' ? 'active feedigger' : ''}`}
+          className={`nav-item ${activeTab === 'social' ? 'active social' : ''}`}
           onClick={() => switchTab('social')}
         >
           <span className="nav-icon">📊</span>
@@ -143,9 +217,187 @@ export function App() {
 }
 
 // ==========================================
+// Slide Bar (Drawer Navigation System)
+// ==========================================
+interface SlideDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  tools: ToolItem[];
+  activeToolId: string;
+  onSelectTool: (toolId: string) => void;
+  onSwitchTab: (tab: Tab) => void;
+}
+
+function ToolsSlideDrawer({
+  isOpen,
+  onClose,
+  tools,
+  activeToolId,
+  onSelectTool,
+  onSwitchTab,
+}: SlideDrawerProps) {
+  const [drawerSearch, setDrawerSearch] = useState('');
+  const [drawerCategory, setDrawerCategory] = useState<ToolCategory>('all');
+
+  const filteredTools = useMemo(() => {
+    return tools.filter((t) => {
+      const matchesCat = drawerCategory === 'all' || t.category === drawerCategory;
+      const matchesSearch =
+        t.name.toLowerCase().includes(drawerSearch.toLowerCase()) ||
+        t.desc.toLowerCase().includes(drawerSearch.toLowerCase()) ||
+        t.category.toLowerCase().includes(drawerSearch.toLowerCase());
+      return matchesCat && matchesSearch;
+    });
+  }, [tools, drawerCategory, drawerSearch]);
+
+  return (
+    <>
+      <div className={`slide-drawer-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
+
+      <aside className={`slide-drawer ${isOpen ? 'open' : ''}`}>
+        <div className="slide-drawer-header">
+          <div className="drawer-brand">
+            <div className="drawer-brand-logo">⚡</div>
+            <div className="drawer-brand-text">
+              <h3>Tools Slide Bar</h3>
+              <span>{tools.length} Instant Multi-Tools</span>
+            </div>
+          </div>
+          <button className="drawer-close-btn" onClick={onClose} title="Close Slide Bar">
+            ✕
+          </button>
+        </div>
+
+        {/* Quick Nav Shortcuts */}
+        <div style={{ display: 'flex', gap: '6px', padding: '12px 16px 6px' }}>
+          <button
+            className="btn-secondary"
+            style={{
+              flex: 1,
+              padding: '6px 8px',
+              fontSize: '11px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+            }}
+            onClick={() => {
+              tg.haptic('selectionChanged');
+              onSwitchTab('media');
+              onClose();
+            }}
+          >
+            <span>🎬</span> <span>Media Downloader</span>
+          </button>
+          <button
+            className="btn-secondary"
+            style={{
+              flex: 1,
+              padding: '6px 8px',
+              fontSize: '11px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+            }}
+            onClick={() => {
+              tg.haptic('selectionChanged');
+              onSwitchTab('social');
+              onClose();
+            }}
+          >
+            <span>📊</span> <span>Creator Suite</span>
+          </button>
+        </div>
+
+        {/* Search Bar in Drawer */}
+        <div className="drawer-search-wrap">
+          <div className="search-bar-wrap" style={{ marginBottom: 0 }}>
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search tools (e.g. JSON, Unit, BMI, Pomodoro)..."
+              value={drawerSearch}
+              onChange={(e) => setDrawerSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Category Pills in Drawer */}
+        <div className="drawer-category-pills">
+          {[
+            { id: 'all', label: '🌟 All' },
+            { id: 'dev', label: '💻 Dev' },
+            { id: 'calc', label: '🧮 Math' },
+            { id: 'text', label: '📝 Text' },
+            { id: 'prod', label: '⚡ Productivity' },
+            { id: 'seo', label: '🔍 SEO' },
+            { id: 'design', label: '🎨 Design' },
+            { id: 'fun', label: '🎲 Fun' },
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              className={`cat-chip ${drawerCategory === cat.id ? 'active' : ''}`}
+              onClick={() => {
+                tg.haptic('light');
+                setDrawerCategory(cat.id as ToolCategory);
+              }}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tools List in Drawer */}
+        <div className="drawer-tool-list">
+          {filteredTools.map((t) => (
+            <div
+              key={t.id}
+              className={`drawer-tool-item ${activeToolId === t.id ? 'active' : ''}`}
+              onClick={() => {
+                onSelectTool(t.id);
+              }}
+            >
+              <div className="drawer-tool-icon">{t.icon}</div>
+              <div className="drawer-tool-details">
+                <div className="drawer-tool-title">
+                  <span>{t.name}</span>
+                  {activeToolId === t.id && (
+                    <span style={{ fontSize: '10px', color: '#38bdf8', fontWeight: 800 }}>● ACTIVE</span>
+                  )}
+                </div>
+                <div className="drawer-tool-desc">{t.desc}</div>
+              </div>
+            </div>
+          ))}
+          {filteredTools.length === 0 && (
+            <div style={{ textAlign: 'center', padding: '30px 10px', color: 'var(--text-muted)', fontSize: '12px' }}>
+              No tools matched your search "{drawerSearch}".
+            </div>
+          )}
+        </div>
+
+        {/* Support & Author Footer */}
+        <div className="drawer-footer">
+          <div style={{ fontWeight: 800, color: '#fff', marginBottom: '3px' }}>
+            ⚡ Lexio Universal Platform
+          </div>
+          <div>📞 <b>Support Phone:</b> 6290873841</div>
+          <div>📧 <b>Email:</b> qwicklabs2@gmail.com</div>
+          <div style={{ marginTop: '4px', color: '#38bdf8', fontSize: '10px' }}>
+            Made by Sakshi Developer • 100% In-App Tools
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
+
+// ==========================================
 // 1. Universal Media Downloader Tab
 // ==========================================
-function MediaDownloaderTab() {
+function MediaDownloaderTab({ onOpenTools }: { onOpenTools: () => void }) {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [mediaData, setMediaData] = useState<any>(null);
@@ -194,7 +446,12 @@ function MediaDownloaderTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">🎬 Universal Media Downloader</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <h2 className="card-title" style={{ marginBottom: 0 }}>🎬 Universal Media Downloader</h2>
+        <button className="btn-secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={onOpenTools}>
+          ☰ All Tools
+        </button>
+      </div>
       <p className="card-subtitle">
         Capture videos & audio from YouTube, TikTok, Instagram, and Twitter/X with zero watermarks.
       </p>
@@ -248,28 +505,31 @@ function MediaDownloaderTab() {
                   }}
                 >
                   <div className="format-title">{fmt.label}</div>
-                  <div className="format-sub">{fmt.sub}</div>
+                  <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{fmt.sub}</div>
                 </div>
               ))}
             </div>
 
             {downloading && (
               <div style={{ margin: '14px 0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px' }}>
-                  <span>Downloading package...</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
+                  <span>Downloading {selectedFormat}...</span>
                   <span>{progress}%</span>
                 </div>
-                <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #818cf8)', transition: 'width 0.3s' }} />
+                <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '99px', overflow: 'hidden' }}>
+                  <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #0ea5e9, #6366f1)', transition: 'width 0.3s' }} />
                 </div>
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-              <button className="btn-primary" style={{ flex: 1 }} onClick={handleDownload} disabled={downloading}>
-                {downloading ? 'Processing Stream...' : `Download ${selectedFormat.toUpperCase()}`}
-              </button>
-            </div>
+            <button
+              className="btn-primary"
+              style={{ width: '100%', marginTop: '12px' }}
+              onClick={handleDownload}
+              disabled={downloading}
+            >
+              {downloading ? 'Processing Stream...' : `Download ${selectedFormat.toUpperCase()}`}
+            </button>
           </div>
         </div>
       )}
@@ -278,12 +538,12 @@ function MediaDownloaderTab() {
 }
 
 // ==========================================
-// 2. Social & Creator Analytics Tab
+// 2. Creator & Social Analytics Tab
 // ==========================================
-function SocialAnalyticsTab() {
+function SocialAnalyticsTab({ onOpenTools }: { onOpenTools: () => void }) {
   const [handle, setHandle] = useState('mrbeast');
-  const [activeSort, setActiveSort] = useState<'views' | 'likes' | 'comments' | 'er'>('views');
   const [loading, setLoading] = useState(false);
+  const [activeSort, setActiveSort] = useState<'views' | 'likes' | 'comments' | 'er'>('views');
   const [hashtagNiche, setHashtagNiche] = useState('tech');
   const [copiedTag, setCopiedTag] = useState(false);
 
@@ -291,22 +551,22 @@ function SocialAnalyticsTab() {
     {
       id: '1',
       rank: 1,
-      views: '16.4M',
-      likes: '1.4M',
-      comments: '32.1k',
-      er: '8.7%',
-      caption: 'Surviving 7 Days In The World Most Extreme Cold ❄️',
-      thumb: 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=200&auto=format&fit=crop&q=80',
+      views: '18.4M',
+      likes: '1.9M',
+      comments: '42.1k',
+      er: '10.5%',
+      caption: 'Surviving 100 Hours In The Deepest Arctic Snowstorm ❄️',
+      thumb: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&auto=format&fit=crop&q=80',
     },
     {
       id: '2',
       rank: 2,
-      views: '9.8M',
-      likes: '890k',
-      comments: '19.4k',
-      er: '9.3%',
-      caption: 'Giving 1,000 Strangers Their Dream Computers Today! 💻',
-      thumb: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+      views: '12.8M',
+      likes: '1.2M',
+      comments: '29.8k',
+      er: '9.8%',
+      caption: 'Giving A Random Stranger A Futuristic Electric Car 🚗',
+      thumb: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
     },
     {
       id: '3',
@@ -336,7 +596,12 @@ function SocialAnalyticsTab() {
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">📊 Social & Creator Analytics</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <h2 className="card-title" style={{ marginBottom: 0 }}>📊 Social & Creator Analytics</h2>
+        <button className="btn-secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={onOpenTools}>
+          ☰ All Tools
+        </button>
+      </div>
       <p className="card-subtitle">
         Rank and analyze top-performing Instagram Reels by Views, Likes, and true Engagement Rate (ER%).
       </p>
@@ -425,12 +690,15 @@ function SocialAnalyticsTab() {
       </div>
 
       <div style={{ marginTop: '16px' }}>
-        <button className="btn-secondary" style={{ width: '100%', borderColor: 'rgba(249, 115, 22, 0.4)', marginBottom: '12px' }} onClick={handleExportCsv}>
+        <button
+          className="btn-secondary"
+          style={{ width: '100%', borderColor: 'rgba(249, 115, 22, 0.4)', marginBottom: '12px' }}
+          onClick={handleExportCsv}
+        >
           📥 Export Data as CSV Spreadsheet
         </button>
       </div>
 
-      {/* Creator Growth Suite: Viral Hashtags */}
       <div style={{ background: 'rgba(10, 15, 28, 0.7)', border: '1px solid var(--border-glass)', borderRadius: '16px', padding: '14px', marginTop: '14px' }}>
         <h4 style={{ fontSize: '13px', fontWeight: 800, marginBottom: '6px' }}>🏷️ Creator Viral Hashtags</h4>
         <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
@@ -448,11 +716,11 @@ function SocialAnalyticsTab() {
           {hashtagNiche === 'tech' && '#tech #developer #coding #webdev #javascript #ai #python #programming'}
           {hashtagNiche === 'fitness' && '#fitness #workout #gymmotivation #fitlife #bodybuilding #training'}
           {hashtagNiche === 'business' && '#entrepreneur #business #startup #marketing #success #finance'}
-          {hashtagNiche === 'creator' && '#contentcreator #creatoreconomy #viralreels #reelsinstagram #growth'}
+          {hashtagNiche === 'creator' && '#contentcreator #reels #growth #viralvideos #creatorstrategy'}
         </div>
         <button
           className="btn-secondary"
-          style={{ width: '100%' }}
+          style={{ width: '100%', fontSize: '12px' }}
           onClick={() => {
             tg.haptic('success');
             setCopiedTag(true);
@@ -469,12 +737,17 @@ function SocialAnalyticsTab() {
 // ==========================================
 // 3. ToolBox Pro Multi-Tools Tab
 // ==========================================
-function ToolBoxTab() {
+interface ToolBoxTabProps {
+  activeToolId: string;
+  setActiveToolId: (id: string) => void;
+  onOpenSlideBar: () => void;
+}
+
+function ToolBoxTab({ activeToolId, setActiveToolId, onOpenSlideBar }: ToolBoxTabProps) {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory>('all');
-  const [activeToolId, setActiveToolId] = useState<string>('json');
 
-  // Interactive States
+  // Interactive Workspaces State
   const [jsonText, setJsonText] = useState('{"platform":"Lexio","status":"live","tools":100}');
   const [jsonResult, setJsonResult] = useState('');
   const [qrInput, setQrInput] = useState('https://t.me/LexioUniversalBot');
@@ -503,18 +776,80 @@ function ToolBoxTab() {
   const [morseInput, setMorseInput] = useState('LEXIO');
   const [morseResult, setMorseResult] = useState('.-.. . -..- .. ---');
   const [quoteIdx, setQuoteIdx] = useState(0);
-  const [rpsChoice, setRpsChoice] = useState<'rock' | 'paper' | 'scissors' | null>(null);
   const [rpsResult, setRpsResult] = useState<string | null>(null);
   const [gradientPreset, setGradientPreset] = useState('linear-gradient(135deg, #f97316 0%, #ec4899 100%)');
   const [hashInput, setHashInput] = useState('Lexio Platform');
   const [httpCode, setHttpCode] = useState('200');
+
+  // Newly Added Tools Workspaces States
+  // Unit converter
+  const [unitCategory, setUnitCategory] = useState<'length' | 'weight' | 'temp'>('length');
+  const [unitVal, setUnitVal] = useState(10);
+  // Stats
+  const [statsInput, setStatsInput] = useState('12, 45, 67, 23, 89, 45, 34');
+  // GPA
+  const [gpaGrades, setGpaGrades] = useState('A, A, A-, B+, A');
+  // Scientific Math
+  const [sciExpr, setSciExpr] = useState('sqrt(144) + pow(2, 6)');
+  // Binary
+  const [binInput, setBinInput] = useState('Lexio');
+  // Pomodoro
+  const [pomoSeconds, setPomoSeconds] = useState(25 * 60);
+  const [pomoRunning, setPomoRunning] = useState(false);
+  const [pomoMode, setPomoMode] = useState<'work' | 'short' | 'long'>('work');
+  // Todo Keeper
+  const [todos, setTodos] = useState<{ id: number; text: string; done: boolean }[]>([
+    { id: 1, text: 'Explore all 100+ Lexio tools', done: true },
+    { id: 2, text: 'Open the Slide Bar tools options', done: false },
+    { id: 3, text: 'Test unit and stats calculators', done: false },
+  ]);
+  const [newTodo, setNewTodo] = useState('');
+  // Color & Design
+  const [hexColor, setHexColor] = useState('#0ea5e9');
+  const [shadowBlur, setShadowBlur] = useState(20);
+  const [shadowSpread, setShadowSpread] = useState(0);
+  const [glassBlur, setGlassBlur] = useState(16);
+  const [glassOpacity, setGlassOpacity] = useState(65);
+  // Word Counter & Reverse
+  const [countText, setCountText] = useState('Lexio provides universal tools directly inside your Telegram interface.');
+  const [reverseText, setReverseText] = useState('Hello World Lexio');
+  // Markdown
+  const [mdInput, setMdInput] = useState('# Lexio Studio\n\nInstant **markdown** preview right in your app!');
+  // Random Number
+  const [randMin, setRandMin] = useState(1);
+  const [randMax, setRandMax] = useState(100);
+  const [randResult, setRandResult] = useState<number | null>(77);
+  // 8-Ball
+  const [eightBallQ, setEightBallQ] = useState('');
+  const [eightBallAnswer, setEightBallAnswer] = useState<string | null>(null);
+
+  // Pomodoro Timer Hook
+  useEffect(() => {
+    let interval: any = null;
+    if (pomoRunning) {
+      interval = setInterval(() => {
+        setPomoSeconds((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setPomoRunning(false);
+            tg.haptic('success');
+            tg.showPopup('Pomodoro Complete!', 'Sprint session finished. Take a well deserved break!');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [pomoRunning]);
 
   const filteredTools = useMemo(() => {
     return ALL_TOOLS.filter((t) => {
       const matchesCat = selectedCategory === 'all' || t.category === selectedCategory;
       const matchesSearch =
         t.name.toLowerCase().includes(search.toLowerCase()) ||
-        t.desc.toLowerCase().includes(search.toLowerCase());
+        t.desc.toLowerCase().includes(search.toLowerCase()) ||
+        t.category.toLowerCase().includes(search.toLowerCase());
       return matchesCat && matchesSearch;
     });
   }, [search, selectedCategory]);
@@ -530,33 +865,47 @@ function ToolBoxTab() {
     { q: "Quality is not an act, it is a habit.", a: "Aristotle" },
     { q: "Simplicity is the soul of efficiency.", a: "Austin Freeman" },
     { q: "It always seems impossible until it's done.", a: "Nelson Mandela" },
-    { q: "Stay hungry, stay foolish.", a: "Steve Jobs" }
+    { q: "Stay hungry, stay foolish.", a: "Steve Jobs" },
   ];
 
   return (
     <div className="glass-card">
-      <h2 className="card-title">🧰 Lexio Multi-Tools Suite (100+)</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <h2 className="card-title" style={{ marginBottom: 0 }}>🧰 Lexio Multi-Tools Suite</h2>
+        <button
+          className="header-tools-btn"
+          style={{ padding: '4px 10px', fontSize: '11px' }}
+          onClick={onOpenSlideBar}
+        >
+          <span>☰</span>
+          <span>Slide Bar</span>
+        </button>
+      </div>
+
       <p className="card-subtitle">
         Instant developer formatters, financial calculators, text transformers, and productivity utilities.
       </p>
 
+      {/* Search Bar */}
       <div className="search-bar-wrap">
         <span className="search-icon">🔍</span>
         <input
           type="text"
           className="search-input"
-          placeholder="Search 100+ tools (e.g., JSON, QR, BMI, Case, Password, Age, EMI)..."
+          placeholder="Search tools (e.g., JSON, Unit, GPA, Stats, Pomodoro, BMI, QR)..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
+      {/* Horizontal Category Chips */}
       <div className="category-chips-scroll">
         {[
           { id: 'all', label: 'All Tools' },
           { id: 'dev', label: '💻 Developer' },
           { id: 'calc', label: '🧮 Calculators' },
           { id: 'text', label: '📝 Text' },
+          { id: 'prod', label: '⚡ Productivity' },
           { id: 'seo', label: '🔍 SEO & Web' },
           { id: 'design', label: '🎨 Design' },
           { id: 'fun', label: '🎲 Fun & Games' },
@@ -574,8 +923,313 @@ function ToolBoxTab() {
         ))}
       </div>
 
-      {/* Interactive Active Tool Workspace */}
-      <div style={{ background: 'rgba(10, 15, 28, 0.7)', border: '1px solid var(--border-glass)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
+      {/* Active Interactive Tool Workspace */}
+      <div style={{ background: 'rgba(10, 15, 28, 0.75)', border: '1px solid var(--border-glass)', borderRadius: '18px', padding: '16px', marginBottom: '16px' }}>
+        {/* Unit Converter */}
+        {activeToolId === 'unit' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📐 Universal Unit Converter</h4>
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+              {(['length', 'weight', 'temp'] as const).map((cat) => (
+                <button
+                  key={cat}
+                  className={`btn-secondary ${unitCategory === cat ? 'active' : ''}`}
+                  style={{ flex: 1, textTransform: 'capitalize' }}
+                  onClick={() => setUnitCategory(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            <div style={{ marginBottom: '10px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Input Value:</label>
+              <input type="number" className="text-input" value={unitVal} onChange={(e) => setUnitVal(Number(e.target.value))} />
+            </div>
+            <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', fontSize: '13px', lineHeight: 1.6 }}>
+              {unitCategory === 'length' && (
+                <>
+                  <div>• <b>{unitVal} Meters (m)</b> = {(unitVal * 3.28084).toFixed(2)} Feet (ft)</div>
+                  <div>• <b>{unitVal} Kilometers (km)</b> = {(unitVal * 0.621371).toFixed(2)} Miles (mi)</div>
+                  <div>• <b>{unitVal} Centimeters (cm)</b> = {(unitVal / 2.54).toFixed(2)} Inches (in)</div>
+                </>
+              )}
+              {unitCategory === 'weight' && (
+                <>
+                  <div>• <b>{unitVal} Kilograms (kg)</b> = {(unitVal * 2.20462).toFixed(2)} Pounds (lbs)</div>
+                  <div>• <b>{unitVal} Grams (g)</b> = {(unitVal * 0.035274).toFixed(2)} Ounces (oz)</div>
+                </>
+              )}
+              {unitCategory === 'temp' && (
+                <>
+                  <div>• <b>{unitVal} °C</b> = {((unitVal * 9) / 5 + 32).toFixed(1)} °F</div>
+                  <div>• <b>{unitVal} °C</b> = {(unitVal + 273.15).toFixed(1)} Kelvin (K)</div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Statistics Calculator */}
+        {activeToolId === 'stats' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📈 Statistics Calculator</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={statsInput}
+              onChange={(e) => setStatsInput(e.target.value)}
+              placeholder="Comma separated numbers (e.g. 10, 25, 40)..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              const nums = statsInput.split(',').map((n) => parseFloat(n.trim())).filter((n) => !isNaN(n));
+              if (!nums.length) return <div>Enter valid numbers</div>;
+              const sum = nums.reduce((a, b) => a + b, 0);
+              const mean = sum / nums.length;
+              const sorted = [...nums].sort((a, b) => a - b);
+              const median = sorted.length % 2 === 0 ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2 : sorted[Math.floor(sorted.length / 2)];
+              const min = sorted[0];
+              const max = sorted[sorted.length - 1];
+              const range = max - min;
+              return (
+                <div className="stats-grid" style={{ marginBottom: 0 }}>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#10b981' }}>{mean.toFixed(1)}</div>
+                    <div className="stat-label">Mean (Avg)</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#38bdf8' }}>{median}</div>
+                    <div className="stat-label">Median</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-value" style={{ color: '#a855f7' }}>{range}</div>
+                    <div className="stat-label">Range ({min} - {max})</div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* GPA Calculator */}
+        {activeToolId === 'gpa' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎓 GPA & Honours Calculator</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={gpaGrades}
+              onChange={(e) => setGpaGrades(e.target.value)}
+              placeholder="Grades separated by commas (e.g. A, A-, B+, B)..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              const scale: Record<string, number> = { 'A+': 4.0, A: 4.0, 'A-': 3.7, 'B+': 3.3, B: 3.0, 'B-': 2.7, 'C+': 2.3, C: 2.0, D: 1.0, F: 0.0 };
+              const grades = gpaGrades.split(',').map((g) => g.trim().toUpperCase());
+              let pts = 0;
+              let count = 0;
+              grades.forEach((g) => {
+                if (scale[g] !== undefined) {
+                  pts += scale[g];
+                  count++;
+                }
+              });
+              const gpa = count > 0 ? (pts / count).toFixed(2) : '0.00';
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '28px', fontWeight: 800, color: '#10b981' }}>{gpa} / 4.00</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                    {Number(gpa) >= 3.8 ? '🌟 First Class Honours / Dean’s List' : Number(gpa) >= 3.0 ? '✅ Good Academic Standing' : '⚠️ Academic Support Advised'}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Scientific Math */}
+        {activeToolId === 'sci' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔬 Scientific Math Evaluator</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={sciExpr}
+              onChange={(e) => setSciExpr(e.target.value)}
+              placeholder="Expression (e.g. sqrt(144) + pow(2, 6))..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              let result = '';
+              try {
+                const sanitized = sciExpr
+                  .replace(/sqrt/g, 'Math.sqrt')
+                  .replace(/pow/g, 'Math.pow')
+                  .replace(/sin/g, 'Math.sin')
+                  .replace(/cos/g, 'Math.cos')
+                  .replace(/tan/g, 'Math.tan')
+                  .replace(/log/g, 'Math.log10');
+                const fn = new Function('"use strict"; return (' + sanitized + ')');
+                result = String(fn());
+              } catch {
+                result = 'Syntax Error';
+              }
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#38bdf8' }}>{result}</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Supports: sqrt(), pow(), sin(), cos(), tan(), log()</div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Binary Converter */}
+        {activeToolId === 'binary' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>0️⃣ Binary ⇄ Text Translator</h4>
+            <input
+              type="text"
+              className="text-input"
+              value={binInput}
+              onChange={(e) => setBinInput(e.target.value)}
+              placeholder="Enter text..."
+              style={{ marginBottom: '10px' }}
+            />
+            {(() => {
+              const bin = binInput.split('').map((c) => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+              return (
+                <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>8-bit Binary String:</div>
+                  <div style={{ fontFamily: 'monospace', color: '#10b981', wordBreak: 'break-all', margin: '6px 0' }}>{bin}</div>
+                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => copyToClipboard(bin)}>Copy Binary</button>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Pomodoro Timer */}
+        {activeToolId === 'pomodoro' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>⏳ Pomodoro Focus Sprint Timer</h4>
+            <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginBottom: '14px' }}>
+              {[
+                { id: 'work', label: '25m Focus', sec: 25 * 60 },
+                { id: 'short', label: '5m Break', sec: 5 * 60 },
+                { id: 'long', label: '15m Rest', sec: 15 * 60 },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  className={`cat-chip ${pomoMode === m.id ? 'active' : ''}`}
+                  onClick={() => {
+                    setPomoMode(m.id as any);
+                    setPomoSeconds(m.sec);
+                    setPomoRunning(false);
+                  }}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: '46px', fontWeight: 800, fontFamily: 'monospace', color: pomoRunning ? '#10b981' : '#fff', margin: '10px 0' }}>
+              {Math.floor(pomoSeconds / 60).toString().padStart(2, '0')}:{(pomoSeconds % 60).toString().padStart(2, '0')}
+            </div>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+              <button
+                className={`btn-primary ${pomoRunning ? 'btn-orange' : 'btn-green'}`}
+                style={{ minWidth: '120px' }}
+                onClick={() => {
+                  tg.haptic('medium');
+                  setPomoRunning(!pomoRunning);
+                }}
+              >
+                {pomoRunning ? '⏸️ Pause' : '▶️ Start Sprint'}
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  tg.haptic('light');
+                  setPomoRunning(false);
+                  setPomoSeconds(pomoMode === 'work' ? 25 * 60 : pomoMode === 'short' ? 5 * 60 : 15 * 60);
+                }}
+              >
+                🔄 Reset
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Todo Keeper */}
+        {activeToolId === 'todo' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>✅ Quick Task Keeper</h4>
+            <div className="input-group">
+              <input
+                type="text"
+                className="text-input"
+                placeholder="Add a new task..."
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newTodo.trim()) {
+                    setTodos([...todos, { id: Date.now(), text: newTodo.trim(), done: false }]);
+                    setNewTodo('');
+                  }
+                }}
+              />
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  if (newTodo.trim()) {
+                    setTodos([...todos, { id: Date.now(), text: newTodo.trim(), done: false }]);
+                    setNewTodo('');
+                  }
+                }}
+              >
+                Add
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {todos.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 12px',
+                    background: 'rgba(5, 8, 16, 0.8)',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-glass)',
+                  }}
+                >
+                  <span
+                    onClick={() => {
+                      setTodos(todos.map((t) => (t.id === item.id ? { ...t, done: !t.done } : t)));
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      textDecoration: item.done ? 'line-through' : 'none',
+                      color: item.done ? 'var(--text-muted)' : '#fff',
+                      fontSize: '13px',
+                    }}
+                  >
+                    {item.done ? '✅ ' : '⬜ '} {item.text}
+                  </span>
+                  <button
+                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '12px' }}
+                    onClick={() => setTodos(todos.filter((t) => t.id !== item.id))}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* JSON Beautifier */}
         {activeToolId === 'json' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔤 JSON Beautifier & Minifier</h4>
@@ -623,6 +1277,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* QR Code */}
         {activeToolId === 'qr' && (
           <div style={{ textAlign: 'center' }}>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📱 QR Code Generator</h4>
@@ -646,6 +1301,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* UUID */}
         {activeToolId === 'uuid' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🆔 UUID v4 Generator</h4>
@@ -674,6 +1330,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Hashes */}
         {activeToolId === 'hash' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔑 Cryptographic Hashes</h4>
@@ -686,17 +1343,18 @@ function ToolBoxTab() {
               style={{ marginBottom: '10px' }}
             />
             <div style={{ background: 'rgba(5, 8, 16, 0.8)', padding: '10px', borderRadius: '12px', fontSize: '12px' }}>
-              <div style={{ color: 'var(--text-muted)' }}>SHA-256 (Client Digest):</div>
-              <div style={{ fontFamily: 'monospace', color: '#38bdf8', wordBreak: 'break-all', marginBottom: '8px' }}>
+              <div style={{ color: 'var(--text-muted)' }}>SHA-256 Digest:</div>
+              <div style={{ fontFamily: 'monospace', color: '#38bdf8', wordBreak: 'break-all', margin: '4px 0 8px' }}>
                 {Array.from(new TextEncoder().encode(hashInput)).reduce((acc, b) => acc + (b % 16).toString(16), 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')}
               </div>
             </div>
           </div>
         )}
 
+        {/* 256-Bit Password */}
         {activeToolId === 'password' && (
           <div>
-            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔑 256-Bit Password Generator</h4>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🛡️ 256-Bit Password Generator</h4>
             <div style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '12px', borderRadius: '12px', fontFamily: 'monospace', fontSize: '15px', textAlign: 'center', color: '#38bdf8', marginBottom: '10px' }}>
               {pwResult}
             </div>
@@ -734,6 +1392,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Case Converter */}
         {activeToolId === 'case' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔠 Text Case Converter</h4>
@@ -762,6 +1421,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* BMI */}
         {activeToolId === 'bmi' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>⚖️ Body Mass Index (BMI)</h4>
@@ -784,6 +1444,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Age Calculator */}
         {activeToolId === 'age' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎂 Age & Birthday Calculator</h4>
@@ -805,6 +1466,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Loan EMI */}
         {activeToolId === 'emi' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>💰 Loan EMI Calculator</h4>
@@ -836,6 +1498,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Percentage */}
         {activeToolId === 'percent' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📊 Percentage Calculator</h4>
@@ -858,6 +1521,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Discount */}
         {activeToolId === 'discount' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🏷️ Discount & Savings Calculator</h4>
@@ -882,6 +1546,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Tip & Bill Splitter */}
         {activeToolId === 'tip' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🪙 Tip & Bill Splitter</h4>
@@ -910,11 +1575,27 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* HEX to RGB */}
+        {activeToolId === 'hextorgb' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎨 HEX / RGB / HSL Converter</h4>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+              <input type="color" value={hexColor} onChange={(e) => setHexColor(e.target.value)} style={{ width: '45px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+              <input type="text" className="text-input" value={hexColor} onChange={(e) => setHexColor(e.target.value)} />
+            </div>
+            <div style={{ background: 'rgba(5, 8, 16, 0.85)', padding: '12px', borderRadius: '12px', fontSize: '13px' }}>
+              <div>• <b>HEX:</b> {hexColor.toUpperCase()}</div>
+              <div>• <b>RGB:</b> rgb({parseInt(hexColor.slice(1, 3), 16) || 0}, {parseInt(hexColor.slice(3, 5), 16) || 0}, {parseInt(hexColor.slice(5, 7), 16) || 0})</div>
+            </div>
+          </div>
+        )}
+
+        {/* CSS Gradient */}
         {activeToolId === 'gradient' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🌈 CSS Gradient Generator</h4>
             <div style={{ height: '90px', borderRadius: '12px', background: gradientPreset, marginBottom: '10px', border: '1px solid var(--border-glass)' }} />
-            <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', gap: '6px' }}>
               <button
                 className="btn-primary"
                 style={{ flex: 1 }}
@@ -938,6 +1619,41 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Word Counter */}
+        {activeToolId === 'count' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📝 Word & Character Counter</h4>
+            <textarea className="code-textarea" value={countText} onChange={(e) => setCountText(e.target.value)} />
+            <div className="stats-grid" style={{ marginBottom: 0 }}>
+              <div className="stat-card">
+                <div className="stat-value">{countText.trim() ? countText.trim().split(/\s+/).length : 0}</div>
+                <div className="stat-label">Words</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-value">{countText.length}</div>
+                <div className="stat-label">Characters</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-value">{Math.ceil((countText.trim().split(/\s+/).length || 1) / 200)}m</div>
+                <div className="stat-label">Read Time</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Markdown to HTML */}
+        {activeToolId === 'md2html' && (
+          <div>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>📄 Markdown to HTML Preview</h4>
+            <textarea className="code-textarea" value={mdInput} onChange={(e) => setMdInput(e.target.value)} />
+            <div style={{ background: 'rgba(5, 8, 16, 0.9)', padding: '12px', borderRadius: '12px', fontSize: '13px' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '11px', marginBottom: '4px' }}>Live HTML Render:</div>
+              <div dangerouslySetInnerHTML={{ __html: mdInput.replace(/# (.*)/g, '<h3>$1</h3>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') }} />
+            </div>
+          </div>
+        )}
+
+        {/* Coin Toss */}
         {activeToolId === 'coin' && (
           <div style={{ textAlign: 'center' }}>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🪙 3D Coin Toss Decision Maker</h4>
@@ -957,6 +1673,7 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Dice Roller */}
         {activeToolId === 'dice' && (
           <div style={{ textAlign: 'center' }}>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎲 Dice Roller</h4>
@@ -976,44 +1693,7 @@ function ToolBoxTab() {
           </div>
         )}
 
-        {activeToolId === 'rps' && (
-          <div style={{ textAlign: 'center' }}>
-            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎮 Rock Paper Scissors vs Lexio</h4>
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', margin: '12px 0' }}>
-              {[
-                { id: 'rock', emoji: '🪨' },
-                { id: 'paper', emoji: '📄' },
-                { id: 'scissors', emoji: '✂️' },
-              ].map((c) => (
-                <button
-                  key={c.id}
-                  className="btn-secondary"
-                  style={{ fontSize: '24px', padding: '12px 18px' }}
-                  onClick={() => {
-                    tg.haptic('medium');
-                    const valid = ['rock', 'paper', 'scissors'] as const;
-                    const bot = valid[Math.floor(Math.random() * valid.length)];
-                    setRpsChoice(c.id as any);
-                    if (c.id === bot) setRpsResult(`🤝 Tie! Bot chose ${bot}`);
-                    else if (
-                      (c.id === 'rock' && bot === 'scissors') ||
-                      (c.id === 'paper' && bot === 'rock') ||
-                      (c.id === 'scissors' && bot === 'paper')
-                    ) {
-                      setRpsResult(`🎉 You Won! Bot chose ${bot}`);
-                    } else {
-                      setRpsResult(`🤖 Lexio Won! Bot chose ${bot}`);
-                    }
-                  }}
-                >
-                  {c.emoji}
-                </button>
-              ))}
-            </div>
-            {rpsResult && <div style={{ fontSize: '14px', fontWeight: 800, color: '#38bdf8' }}>{rpsResult}</div>}
-          </div>
-        )}
-
+        {/* Daily Quote */}
         {activeToolId === 'quote' && (
           <div style={{ textAlign: 'center', padding: '10px' }}>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>💬 Daily Inspirational Quote</h4>
@@ -1035,6 +1715,45 @@ function ToolBoxTab() {
           </div>
         )}
 
+        {/* Rock Paper Scissors */}
+        {activeToolId === 'rps' && (
+          <div style={{ textAlign: 'center' }}>
+            <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🎮 Rock Paper Scissors vs Lexio</h4>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', margin: '12px 0' }}>
+              {[
+                { id: 'rock', emoji: '🪨' },
+                { id: 'paper', emoji: '📄' },
+                { id: 'scissors', emoji: '✂️' },
+              ].map((c) => (
+                <button
+                  key={c.id}
+                  className="btn-secondary"
+                  style={{ fontSize: '24px', padding: '12px 18px' }}
+                  onClick={() => {
+                    tg.haptic('medium');
+                    const valid = ['rock', 'paper', 'scissors'] as const;
+                    const bot = valid[Math.floor(Math.random() * valid.length)];
+                    if (c.id === bot) setRpsResult(`🤝 Tie! Bot chose ${bot}`);
+                    else if (
+                      (c.id === 'rock' && bot === 'scissors') ||
+                      (c.id === 'paper' && bot === 'rock') ||
+                      (c.id === 'scissors' && bot === 'paper')
+                    ) {
+                      setRpsResult(`🎉 You Won! Bot chose ${bot}`);
+                    } else {
+                      setRpsResult(`🤖 Lexio Won! Bot chose ${bot}`);
+                    }
+                  }}
+                >
+                  {c.emoji}
+                </button>
+              ))}
+            </div>
+            {rpsResult && <div style={{ fontSize: '14px', fontWeight: 800, color: '#38bdf8' }}>{rpsResult}</div>}
+          </div>
+        )}
+
+        {/* Base64 */}
         {activeToolId === 'base64' && (
           <div>
             <h4 style={{ fontSize: '14px', fontWeight: 800, marginBottom: '8px' }}>🔐 Base64 Tool</h4>
@@ -1078,9 +1797,18 @@ function ToolBoxTab() {
         )}
       </div>
 
-      <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>
-        SELECT FROM 100+ UTILITIES ({filteredTools.length})
-      </h3>
+      {/* Grid of All Filtered Tools */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)' }}>
+          SELECT TOOL ({filteredTools.length})
+        </h3>
+        <button
+          style={{ background: 'none', border: 'none', color: '#38bdf8', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
+          onClick={onOpenSlideBar}
+        >
+          Open Slide Bar ➔
+        </button>
+      </div>
 
       <div className="tools-picker-grid">
         {filteredTools.map((t) => (
@@ -1107,10 +1835,15 @@ function ToolBoxTab() {
 // ==========================================
 // 4. User Profile & System Status Tab
 // ==========================================
-function ProfileTab({ user }: { user: any }) {
+function ProfileTab({ user, onOpenTools }: { user: any; onOpenTools: () => void }) {
   return (
     <div className="glass-card">
-      <h2 className="card-title">👤 User Identity & Security</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+        <h2 className="card-title" style={{ marginBottom: 0 }}>👤 User Identity & Support</h2>
+        <button className="btn-secondary" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={onOpenTools}>
+          ☰ All Tools
+        </button>
+      </div>
       <p className="card-subtitle">Verified Telegram authentication & session encryption.</p>
 
       <div style={{ background: 'rgba(10, 15, 28, 0.65)', padding: '16px', borderRadius: '16px', marginBottom: '14px', border: '1px solid var(--border-glass)' }}>
@@ -1125,6 +1858,19 @@ function ProfileTab({ user }: { user: any }) {
         </p>
         <p style={{ fontSize: '13px', color: '#10b981', fontWeight: '700' }}>
           🛡️ initData HMAC-SHA256 Cryptographic Signature Verified
+        </p>
+      </div>
+
+      <div style={{ background: 'rgba(10, 15, 28, 0.65)', padding: '16px', borderRadius: '16px', marginBottom: '14px', border: '1px solid var(--border-glass)' }}>
+        <h4 style={{ fontSize: '13px', fontWeight: 800, marginBottom: '8px', color: '#fff' }}>📞 Official Support & Contacts</h4>
+        <p style={{ fontSize: '13px', marginBottom: '6px' }}>
+          <b>Phone:</b> <span style={{ color: '#38bdf8', fontFamily: 'monospace' }}>6290873841</span>
+        </p>
+        <p style={{ fontSize: '13px', marginBottom: '6px' }}>
+          <b>Email:</b> <span style={{ color: '#38bdf8' }}>qwicklabs2@gmail.com</span>
+        </p>
+        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
+          Engineered by <b>Sakshi Developer</b>. 100% of all tools operate directly inside Telegram with zero external website links.
         </p>
       </div>
 

@@ -1,5 +1,5 @@
 import { BotContext } from '../types.js';
-import { getMainMenuKeyboard } from '../keyboards/main.menu.js';
+import { getMainMenuKeyboard, getPersistentReplyKeyboard } from '../keyboards/main.menu.js';
 
 export async function handleStart(ctx: BotContext): Promise<void> {
   const firstName = ctx.from?.first_name || 'Friend';
@@ -24,6 +24,12 @@ export async function handleStart(ctx: BotContext): Promise<void> {
   await ctx.reply(welcomeMessage, {
     parse_mode: 'Markdown',
     reply_markup: getMainMenuKeyboard(isAdmin),
+  });
+
+  // Activate Telegram's persistent bottom slide bar / reply keyboard
+  await ctx.reply('💡 *Tip:* You can also tap the quick menu options on your keyboard below at any time.', {
+    parse_mode: 'Markdown',
+    reply_markup: getPersistentReplyKeyboard(),
   });
 }
 

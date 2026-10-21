@@ -85,8 +85,8 @@ export const tg = {
     return (
       this.app?.initDataUnsafe?.user || {
         id: 12345678,
-        first_name: 'Developer',
-        username: 'nexus_user',
+        first_name: 'Friend',
+        username: 'lexio_user',
         language_code: 'en',
       }
     );

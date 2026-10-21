@@ -64,7 +64,11 @@ export async function handleHelp(ctx: BotContext): Promise<void> {
     `• \`/pick <a, b, c>\` — Choice picker from options\n` +
     `• \`/rps <choice>\` — Rock Paper Scissors vs Lexio\n\n` +
     `🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
-    `📊 *Creator Analytics:* \`/excavate @username\` | \`/hashtags\` | \`/hook\``;
+    `📊 *Creator Analytics:* \`/excavate @username\` | \`/hashtags\` | \`/hook\`\n\n` +
+    `📞 *Support & Contact:*\n` +
+    `Phone: \`6290873841\`\n` +
+    `Email: \`qwicklabs2@gmail.com\`\n` +
+    `Made by *Sakshi Developer*`;
 
   const keyboard = new InlineKeyboard()
     .text('💻 Dev Tasks', 'tb_cat_dev')

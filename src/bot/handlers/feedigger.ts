@@ -1,6 +1,6 @@
 import { BotContext } from '../types.js';
 import { getFeediggerActionsKeyboard, getBackToMenuKeyboard } from '../keyboards/tool.keyboards.js';
-import { InputFile } from 'grammy';
+import { InputFile, InlineKeyboard } from 'grammy';
 import { prisma } from '../../database/client.js';
 
 interface MockReel {
