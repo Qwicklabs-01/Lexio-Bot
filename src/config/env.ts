@@ -36,9 +36,9 @@ export const config: AppConfig = {
 };
 
 export function getValidHttpsMiniAppUrl(queryOrPath = ''): string {
-  let base = config.miniAppUrl.trim();
-  if (!base.startsWith('https://')) {
-    base = 'https://nest-hub-tools.vercel.app';
+  let base = (config.miniAppUrl || '').trim();
+  if (!base.startsWith('https://') || base.includes('nest-hub-tools.vercel.app')) {
+    base = 'https://qwicklabs-01.github.io/Lexio-Bot';
   }
   if (!queryOrPath) return base;
   if (queryOrPath.startsWith('?') || queryOrPath.startsWith('/')) {
