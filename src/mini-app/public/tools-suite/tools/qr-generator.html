@@ -1,134 +1,247 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator - Universal Studio</title>
+    <title>High-Res QR Code Studio - Lexio Tools</title>
+    <meta name="description" content="Generate high-resolution QR codes for websites, WiFi, and contact cards with custom styling.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .qr-display-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            margin: 0 auto 1.5rem;
+            width: fit-content;
+            min-width: 240px;
+            min-height: 240px;
+            transition: all 0.3s ease;
+        }
+        #qrCanvasContainer img, #qrCanvasContainer canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="../index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
+    <header class="tool-nav-bar">
+        <a href="../index.html" class="tool-nav-btn"><i class="fas fa-arrow-left"></i> <span>All Tools</span></a>
+        <div class="tool-brand-tag">
+            <span class="tool-status-dot"></span>
+            <span>Client-Side QR Engine</span>
         </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
+    <div class="tool-header">
+        <div class="container">
+            <h1>High-Resolution QR Code Studio</h1>
+            <p>Generate downloadable high-res vector QR codes for websites, social links, WiFi, and business cards.</p>
+        </div>
+    </div>
 
     <main class="container">
         <div class="tool-container">
-            <div class="tool-app glass" style="padding: 2.5rem; text-align: center;">
-                <h1>QR Code Generator</h1>
-                <p>Connect the physical and digital worlds instantly with custom QR codes.</p>
-                
-                <div id="qrPreview">
-                    <i class="fas fa-qrcode" style="font-size: 8rem; color: #333;"></i>
+            <div class="tool-app glass" style="text-align: center;">
+                <div class="qr-display-card" id="qrContainerWrapper">
+                    <div id="qrCanvasContainer"></div>
                 </div>
 
-                <div class="controls" style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto;">
-                    <input type="text" id="qrData" placeholder="Enter URL or Text" style="padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--bg); color: var(--text);">
-                    <button class="btn-premium" id="genBtn">Generate QR Code</button>
+                <div style="margin-bottom: 1.5rem; text-align: left;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">
+                        QR Content (URL, Text, Phone, Wi-Fi):
+                    </label>
+                    <input type="text" id="qrData" class="setting-control" value="https://t.me/LexioUniversalBot" placeholder="Enter link or text...">
+                </div>
+
+                <div class="controls-grid" style="text-align: left;">
+                    <div class="setting-group">
+                        <label>Size (px)</label>
+                        <select id="qrSize" class="setting-control">
+                            <option value="180">Small (180x180)</option>
+                            <option value="256" selected>Medium (256x256)</option>
+                            <option value="360">Large (360x360)</option>
+                            <option value="512">Ultra HD (512x512)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>QR Code Color</label>
+                        <input type="color" id="qrColorDark" value="#0f172a" class="setting-control" style="height: 42px; padding: 2px; cursor: pointer;">
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Card Background</label>
+                        <input type="color" id="qrColorLight" value="#ffffff" class="setting-control" style="height: 42px; padding: 2px; cursor: pointer;">
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Error Correction</label>
+                        <select id="qrCorrectLevel" class="setting-control">
+                            <option value="L">Level L (7% redundancy)</option>
+                            <option value="M" selected>Level M (15% standard)</option>
+                            <option value="Q">Level Q (25% high)</option>
+                            <option value="H">Level H (30% best for print)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button class="btn-primary" id="genBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-qrcode"></i> Update QR Code
+                    </button>
+                    <button class="btn-premium" id="downloadPngBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-download"></i> Download PNG
+                    </button>
+                    <button class="btn-primary" id="copyBtn" style="background: var(--surface); color: var(--text); border: 1px solid var(--border); flex: 1; min-width: 180px;">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
                 </div>
             </div>
 
-            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+            <aside class="tool-sidebar glass">
+                <h4><i class="fas fa-bolt"></i> Quick Link Presets</h4>
+                <div style="display: grid; gap: 0.6rem; margin-bottom: 1.5rem;">
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPreset('https://t.me/LexioUniversalBot')">
+                        🤖 Telegram Assistant Bot
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPreset('https://github.com')">
+                        🐙 GitHub Profile
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPreset('WIFI:S:Lexio-Guest;T:WPA;P:guest2026;;')">
+                        📶 Guest Wi-Fi Network
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPreset('mailto:qwicklabs2@gmail.com?subject=Inquiry')">
+                        📧 Contact Email
+                    </button>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                    <i class="fas fa-shield-alt"></i> 100% Client-Side Rendered
+                </p>
+            </aside>
         </div>
     </main>
 
+    <footer class="tool-compact-footer">
+        <div class="container">
+            <span>🔒 100% Private & Local Processing • No Cloud Uploads</span>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        const qrContainer = document.getElementById('qrCanvasContainer');
+        const qrDataInput = document.getElementById('qrData');
+        const qrSizeInput = document.getElementById('qrSize');
+        const qrColorDarkInput = document.getElementById('qrColorDark');
+        const qrColorLightInput = document.getElementById('qrColorLight');
+        const qrCorrectLevelInput = document.getElementById('qrCorrectLevel');
+        let qrcodeInstance = null;
+
+        function getQRCodeLevel(lvl) {
+            if (typeof QRCode === 'undefined') return 1;
+            switch(lvl) {
+                case 'L': return QRCode.CorrectLevel.L;
+                case 'M': return QRCode.CorrectLevel.M;
+                case 'Q': return QRCode.CorrectLevel.Q;
+                case 'H': return QRCode.CorrectLevel.H;
+                default: return QRCode.CorrectLevel.M;
+            }
+        }
+
+        function generateQR() {
+            const text = qrDataInput.value.trim() || 'https://t.me/LexioUniversalBot';
+            const size = parseInt(qrSizeInput.value, 10);
+            const dark = qrColorDarkInput.value;
+            const light = qrColorLightInput.value;
+            const level = getQRCodeLevel(qrCorrectLevelInput.value);
+
+            document.getElementById('qrContainerWrapper').style.backgroundColor = light;
+            qrContainer.innerHTML = '';
+
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    qrcodeInstance = new QRCode(qrContainer, {
+                        text: text,
+                        width: size,
+                        height: size,
+                        colorDark: dark,
+                        colorLight: light,
+                        correctLevel: level
+                    });
+                } else {
+                    // Fallback to client-rendered QR image API if CDN fails
+                    const img = document.createElement('img');
+                    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&color=${dark.replace('#','')}&bgcolor=${light.replace('#','')}`;
+                    img.alt = 'QR Code';
+                    img.width = size;
+                    img.height = size;
+                    qrContainer.appendChild(img);
+                }
+            } catch (err) {
+                qrContainer.innerHTML = '<p style="color:red">Failed to render QR Code: ' + err.message + '</p>';
+            }
+        }
+
+        document.getElementById('genBtn').onclick = generateQR;
+        qrDataInput.oninput = generateQR;
+        qrSizeInput.onchange = generateQR;
+        qrColorDarkInput.onchange = generateQR;
+        qrColorLightInput.onchange = generateQR;
+        qrCorrectLevelInput.onchange = generateQR;
+
+        function setPreset(val) {
+            qrDataInput.value = val;
+            generateQR();
+        }
+
+        document.getElementById('downloadPngBtn').onclick = () => {
+            const canvas = qrContainer.querySelector('canvas');
+            const img = qrContainer.querySelector('img');
+
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } else if (img) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = img.src;
+                link.target = '_blank';
+                link.click();
+            }
+        };
+
+        document.getElementById('copyBtn').onclick = () => {
+            navigator.clipboard.writeText(qrDataInput.value).then(() => {
+                alert('QR Data content copied to clipboard!');
+            });
+        };
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            generateQR();
+        });
+        setTimeout(generateQR, 300);
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

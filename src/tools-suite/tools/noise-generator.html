@@ -1,203 +1,290 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organic Noise Generator - Universal Studio</title>
-    <meta name="description" content="Add soul to your pixels. Create custom grain and tactile noise to elevate your designs and photography.">
+    <title>Organic Noise Generator - Lexio Tools</title>
+    <meta name="description" content="Generate custom organic grain textures and SVG noise overlays for modern UI design.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .noise-canvas-box {
+            width: 100%;
+            height: 260px;
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            background: #0f172a;
+        }
+        #noiseCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+        .noise-badge-center {
+            position: relative;
+            z-index: 2;
+            padding: 0.8rem 1.5rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.05em;
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        @media(max-width: 600px) {
+            .controls-grid { grid-template-columns: 1fr; }
+        }
+        .range-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .code-output-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            word-break: break-all;
+            margin-top: 1rem;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="../index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
+    <header class="tool-nav-bar">
+        <a href="../index.html" class="tool-nav-btn"><i class="fas fa-arrow-left"></i> <span>All Tools</span></a>
+        <div class="tool-brand-tag">
+            <span class="tool-status-dot"></span>
+            <span>Procedural Canvas Engine</span>
         </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
-
-    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Organic Noise Generator</h1>
-            <p>Add soul to your pixels. Create custom grain and tactile noise to elevate your designs and photography.</p>
+    <div class="tool-header">
+        <div class="container">
+            <h1>Organic Noise & Film Grain Generator</h1>
+            <p>Generate tactile film grain and organic canvas noise overlays with instant SVG and CSS export.</p>
         </div>
     </div>
 
     <main class="container">
         <div class="tool-container">
-            <div class="tool-app glass" style="padding: 2.5rem;">
-                <div id="noisePreview">GRAIN PREVIEW</div>
-                
-                <div class="controls" style="display: grid; gap: 1.5rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <label>Grain Density</label>
-                        <input type="range" id="density" min="1" max="100" value="65">
+            <div class="tool-app glass">
+                <div class="noise-canvas-box" id="previewContainer">
+                    <canvas id="noiseCanvas" width="400" height="260"></canvas>
+                    <div class="noise-badge-center">TACTILE GRAIN PREVIEW</div>
+                </div>
+
+                <div class="controls-grid">
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Grain Density</label>
+                            <span id="densityVal">60%</span>
+                        </div>
+                        <input type="range" id="density" min="10" max="100" value="60" class="setting-control">
+                    </div>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Noise Opacity</label>
+                            <span id="opacityVal">35%</span>
+                        </div>
+                        <input type="range" id="opacity" min="5" max="95" value="35" class="setting-control">
+                    </div>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Noise Mode</label>
+                        </div>
+                        <select id="noiseMode" class="setting-control">
+                            <option value="monochrome">Monochrome Clean</option>
+                            <option value="vintage">Vintage 35mm Film</option>
+                            <option value="color">RGB Digital Static</option>
+                        </select>
+                    </div>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Background Mood</label>
+                        </div>
+                        <select id="bgMood" class="setting-control">
+                            <option value="#0f172a">Dark Slate (#0f172a)</option>
+                            <option value="#1e1b4b">Indigo Velvet (#1e1b4b)</option>
+                            <option value="#312e81">Deep Violet (#312e81)</option>
+                            <option value="#18181b">True Charcoal (#18181b)</option>
+                            <option value="#ffffff">Clean White (#ffffff)</option>
+                        </select>
                     </div>
                 </div>
-                <button class="btn-premium" style="margin-top: 2rem; width: 100%;">Copy SVG Filter Code</button>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button class="btn-primary" id="copySvgBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-copy"></i> Copy SVG Filter
+                    </button>
+                    <button class="btn-premium" id="copyCssBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-code"></i> Copy CSS Rule
+                    </button>
+                    <button class="btn-primary" id="downloadPngBtn" style="background: var(--surface); color: var(--text); border: 1px solid var(--border); flex: 1; min-width: 180px;">
+                        <i class="fas fa-download"></i> Download PNG Tile
+                    </button>
+                </div>
+
+                <div class="code-output-box" id="codeOutput">
+                    background-image: url("data:image/svg+xml,...");
+                </div>
             </div>
 
-            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+            <aside class="tool-sidebar glass">
+                <h4><i class="fas fa-cog"></i> Preset Styles</h4>
+                <div style="display: grid; gap: 0.6rem; margin-bottom: 1.5rem;">
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="applyPreset(40, 20, 'monochrome', '#0f172a')">
+                        ✨ Subtle UI Glass Grain
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="applyPreset(75, 45, 'vintage', '#1e1b4b')">
+                        🎞️ 35mm Analog Film
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="applyPreset(90, 60, 'color', '#18181b')">
+                        📺 Cyberpunk CRT Static
+                    </button>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                    <i class="fas fa-shield-alt"></i> 100% Client-Side Rendered
+                </p>
+            </aside>
         </div>
-
-        <article class="tool-content">
-            <section>
-                <h2>The Aesthetic of Imperfection</h2>
-                <p>Digital design can often feel "too clean" or sterile. Professional designers use subtle noise and film grain to break up flat surfaces and add a layer of sophistication. Our **Noise Generator** uses Perlin and Fractal noise algorithms to generate seamless textures that you can overlay on your UI components. Whether you are aiming for a vintage film look or a high-end tactile material feel (like paper or brushed aluminum), Universal Studio gives you the tools to create organic variety instantly.</p>
-            </section>
-        </article>
     </main>
 
-    <footer>
+    <footer class="tool-compact-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Universal Studio</h4>
-                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Legals</h4>
-                    <ul class="footer-links">
-                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
-                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
-                        <li><a href="pages/terms.html">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html#about">About Us</a></li>
-                        
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <div class="footer-social-grid">
-                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
-                            <i class="fas fa-briefcase"></i>
-                        </a>
-                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
-                            <i class="fas fa-tools"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
-            </div>
+            <span>🔒 100% Private & Local Processing • No Cloud Uploads</span>
         </div>
     </footer>
 
     <script src="../js/main.js"></script>
+    <script>
+        const canvas = document.getElementById('noiseCanvas');
+        const ctx = canvas.getContext('2d');
+        const densityInput = document.getElementById('density');
+        const opacityInput = document.getElementById('opacity');
+        const noiseModeInput = document.getElementById('noiseMode');
+        const bgMoodInput = document.getElementById('bgMood');
+        const container = document.getElementById('previewContainer');
+        const codeOutput = document.getElementById('codeOutput');
+
+        function renderNoise() {
+            const density = parseInt(densityInput.value, 10);
+            const opacity = parseInt(opacityInput.value, 10) / 100;
+            const mode = noiseModeInput.value;
+            const bg = bgMoodInput.value;
+
+            container.style.backgroundColor = bg;
+            document.getElementById('densityVal').textContent = density + '%';
+            document.getElementById('opacityVal').textContent = Math.round(opacity * 100) + '%';
+
+            const w = canvas.width = 300;
+            const h = canvas.height = 200;
+            const imgData = ctx.createImageData(w, h);
+            const data = imgData.data;
+
+            const threshold = (100 - density) / 100;
+
+            for (let i = 0; i < data.length; i += 4) {
+                if (Math.random() > threshold) {
+                    let r, g, b;
+                    if (mode === 'color') {
+                        r = Math.floor(Math.random() * 256);
+                        g = Math.floor(Math.random() * 256);
+                        b = Math.floor(Math.random() * 256);
+                    } else if (mode === 'vintage') {
+                        const val = Math.floor(Math.random() * 200) + 55;
+                        r = val;
+                        g = Math.floor(val * 0.9);
+                        b = Math.floor(val * 0.7);
+                    } else {
+                        const val = Math.floor(Math.random() * 256);
+                        r = g = b = val;
+                    }
+                    data[i] = r;
+                    data[i + 1] = g;
+                    data[i + 2] = b;
+                    data[i + 3] = Math.floor(opacity * 255);
+                } else {
+                    data[i + 3] = 0;
+                }
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+
+            // Update code snippet
+            const baseFrequency = (density / 120).toFixed(3);
+            const svgCode = `<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='${baseFrequency}' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#noiseFilter)' opacity='${opacity}'/></svg>`;
+            codeOutput.textContent = `background-image: url("data:image/svg+xml,${encodeURIComponent(svgCode)}");`;
+        }
+
+        densityInput.oninput = renderNoise;
+        opacityInput.oninput = renderNoise;
+        noiseModeInput.onchange = renderNoise;
+        bgMoodInput.onchange = renderNoise;
+
+        function applyPreset(d, o, m, b) {
+            densityInput.value = d;
+            opacityInput.value = o;
+            noiseModeInput.value = m;
+            bgMoodInput.value = b;
+            renderNoise();
+        }
+
+        document.getElementById('copySvgBtn').onclick = () => {
+            const density = parseInt(densityInput.value, 10);
+            const opacity = parseInt(opacityInput.value, 10) / 100;
+            const baseFreq = (density / 120).toFixed(3);
+            const svg = `<svg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'>\n  <filter id='noise'>\n    <feTurbulence type='fractalNoise' baseFrequency='${baseFreq}' numOctaves='3' stitchTiles='stitch'/>\n  </filter>\n  <rect width='100%' height='100%' filter='url(#noise)' opacity='${opacity}'/>\n</svg>`;
+            navigator.clipboard.writeText(svg).then(() => alert('SVG Filter code copied to clipboard!'));
+        };
+
+        document.getElementById('copyCssBtn').onclick = () => {
+            navigator.clipboard.writeText(codeOutput.textContent).then(() => alert('CSS background rule copied to clipboard!'));
+        };
+
+        document.getElementById('downloadPngBtn').onclick = () => {
+            const link = document.createElement('a');
+            link.download = 'organic-noise-texture.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        };
+
+        // Initial render
+        renderNoise();
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

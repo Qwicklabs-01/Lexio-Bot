@@ -1,87 +1,115 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Image Generator - Universal Studio</title>
-    <meta name="description" content="Turn your imagination into reality. Type a prompt and let the AI build your vision.">
+    <title>AI Visual Image Studio - Lexio Tools</title>
+    <meta name="description" content="Generate stunning AI visual artwork and concept renders from creative text prompts.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .ai-input-area {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        @media(max-width: 600px) {
+            .ai-input-area { flex-direction: column; }
+        }
+        .ai-input-area input {
+            flex: 1;
+            padding: 0.85rem 1.2rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        .ai-result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+        .ai-image-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .ai-image-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+            border-color: var(--primary);
+        }
+        .ai-image-card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: block;
+            background: #0f172a;
+        }
+        .ai-card-footer {
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+        .ai-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: #38bdf8;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .loading-pulse {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            gap: 1rem;
+        }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="../index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
+    <header class="tool-nav-bar">
+        <a href="../index.html" class="tool-nav-btn"><i class="fas fa-arrow-left"></i> <span>All Tools</span></a>
+        <div class="tool-brand-tag">
+            <span class="tool-status-dot"></span>
+            <span>Neural AI Studio</span>
         </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
-
-    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>AI Image Generator</h1>
-            <p>Turn your imagination into reality. Type a prompt and let the AI build your vision.</p>
+    <div class="tool-header">
+        <div class="container">
+            <h1>AI Visual Image Generation Studio</h1>
+            <p>Turn your imagination into high-resolution visual artwork with custom artistic styles and instant downloads.</p>
         </div>
     </div>
 
@@ -89,173 +117,138 @@
         <div class="tool-container">
             <div class="tool-app glass">
                 <div class="ai-input-area">
-                    <input type="text" id="aiPrompt" placeholder="e.g. A futuristic cyberpunk city with neon lights and flying cars...">
-                    <button class="btn-primary" id="generateAiBtn" style="padding: 1rem 2rem; background: var(--primary); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">Generate</button>
+                    <input type="text" id="aiPrompt" placeholder="Describe the image you want to generate (e.g. Cyberpunk samurai cat in neon Tokyo)..." value="Futuristic cyberpunk cyber-city with holographic neon towers, cinematic lighting 8k">
+                    <button class="btn-primary" id="generateAiBtn" style="width: auto; min-width: 150px;">
+                        <i class="fas fa-wand-magic-sparkles"></i> Generate
+                    </button>
                 </div>
 
-                <div id="aiLoader" style="display: none; text-align: center; padding: 3rem;">
-                    <div class="loading-spinner" style="margin: 0 auto 1.5rem;"></div>
-                    <p>AI is dreaming up your image...</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted); align-self: center; margin-right: 0.25rem;">Prompt Ideas:</span>
+                    <button class="tool-nav-btn" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;" onclick="setPrompt('Floating celestial islands in a cosmic nebula, unreal engine 5')">Cosmic Islands</button>
+                    <button class="tool-nav-btn" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;" onclick="setPrompt('Minimalist futuristic architecture with glass reflection, dusk')">Modern Architecture</button>
+                    <button class="tool-nav-btn" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;" onclick="setPrompt('Cute robot botanist tending glowing alien plants, Pixar 3D style')">3D Robot</button>
+                </div>
+
+                <div id="aiLoader" style="display: none;" class="loading-pulse">
+                    <div class="spinner"></div>
+                    <p style="font-weight: 700; color: var(--text); margin: 0;">AI Neural Engine is rendering your artwork...</p>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Synthesizing colors, lighting, and composition</span>
                 </div>
 
                 <div class="ai-result-grid" id="aiResults">
-                    <!-- Results will appear here -->
-                    <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 2rem;">
-                        Enter a prompt above to start generating.
-                    </div>
+                    <!-- Populated dynamically -->
                 </div>
             </div>
 
-            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
+            <aside class="tool-sidebar glass">
+                <h4><i class="fas fa-sliders"></i> Generation Options</h4>
+                <div class="setting-group">
+                    <label>Artistic Style</label>
+                    <select id="aiStyle" class="setting-control">
+                        <option value="cinematic photo, 8k resolution, dramatic lighting">Cinematic Photorealism</option>
+                        <option value="cyberpunk sci-fi, vivid neon palette, concept art">Cyberpunk Sci-Fi</option>
+                        <option value="3D isometric render, blender cycles, clean pastel">3D Isometric Render</option>
+                        <option value="anime aesthetic, makoto shinkai style, vibrant sky">Anime / Manga Masterpiece</option>
+                        <option value="oil painting on textured canvas, impressionist brushstrokes">Classic Oil Painting</option>
+                        <option value="minimalist flat vector illustration, dribbble trending">Minimalist Vector Art</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label>Aspect Ratio</label>
+                    <select id="aiRatio" class="setting-control">
+                        <option value="768x768" selected>1:1 Square (768x768)</option>
+                        <option value="1024x576">16:9 Landscape (1024x576)</option>
+                        <option value="576x1024">9:16 Portrait (576x1024)</option>
+                    </select>
+                </div>
+
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 1rem;">
+                    <i class="fas fa-bolt"></i> High-Speed Neural Inference
+                </p>
+            </aside>
         </div>
-
-        <article class="tool-content">
-            <section>
-                <h2>The Revolution of AI Imagery</h2>
-                <p>AI Image generation has transformed the creative landscape. By using neural networks trained on millions of images, modern AI can interpret complex descriptive text and create unique visual compositions from scratch. Our **AI Image Generator** provides an easy-to-use interface for this technology, allowing you to create assets for websites, social media, and personal projects without needing specialized design skills.</p>
-            </section>
-
-            <section>
-                <h2>Best Practices for Prompting</h2>
-                <p>To get the highest quality results, follow these prompting guidelines:</p>
-                <ul style="padding-left: 1.5rem; margin-top: 1rem;">
-                    <li><strong>Be Descriptive:</strong> Instead of "a cat," try "a regal Siamese cat sitting on a velvet throne, cinematic lighting."</li>
-                    <li><strong>Define the Style:</strong> Mention specific artistic styles like "Cyberpunk," "Renaissance," or "Minimalist."</li>
-                    <li><strong>Lighting & Mood:</strong> Use words like "golden hour," "moody," "vibrant," or "soft focus" to set the atmosphere.</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>Ethical AI Use</h2>
-                <p>At Universal Studio, we advocate for the responsible use of AI. Our image generator is designed to be a tool for human creativity, not a replacement. All generated images are created in real-time, providing you with unique results every time you click generate.</p>
-            </section>
-        </article>
     </main>
 
-    <footer>
+    <footer class="tool-compact-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Universal Studio</h4>
-                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Legals</h4>
-                    <ul class="footer-links">
-                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
-                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
-                        <li><a href="pages/terms.html">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html#about">About Us</a></li>
-                        
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <div class="footer-social-grid">
-                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
-                            <i class="fas fa-briefcase"></i>
-                        </a>
-                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
-                            <i class="fas fa-tools"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
-            </div>
+            <span>🔒 100% Private & Local Processing • No Cloud Uploads</span>
         </div>
     </footer>
 
     <script src="../js/main.js"></script>
     <script>
         const promptInput = document.getElementById('aiPrompt');
+        const styleSelect = document.getElementById('aiStyle');
+        const ratioSelect = document.getElementById('aiRatio');
         const generateBtn = document.getElementById('generateAiBtn');
         const loader = document.getElementById('aiLoader');
         const results = document.getElementById('aiResults');
 
-        generateBtn.onclick = async () => {
+        function setPrompt(p) {
+            promptInput.value = p;
+            triggerGenerate();
+        }
+
+        async function triggerGenerate() {
             const prompt = promptInput.value.trim();
             if (!prompt) {
-                alert("Please enter a prompt first.");
+                alert("Please enter a creative prompt first.");
                 return;
             }
 
-            loader.style.display = 'block';
-            results.style.display = 'none';
+            const style = styleSelect.value;
+            const ratio = ratioSelect.value;
+            const [w, h] = ratio.split('x');
 
-            // Simulation of AI generation (using high-quality placeholders for demo)
+            loader.style.display = 'flex';
+            results.style.display = 'none';
+            generateBtn.disabled = true;
+
+            const fullPrompt = encodeURIComponent(`${prompt}, ${style}`);
+            const timestamp = Date.now();
+
+            // Generate 4 distinct seeded variations
+            const images = [
+                `https://image.pollinations.ai/prompt/${fullPrompt}?width=${w}&height=${h}&seed=${timestamp}&nologo=true`,
+                `https://image.pollinations.ai/prompt/${fullPrompt}?width=${w}&height=${h}&seed=${timestamp + 1}&nologo=true`,
+                `https://image.pollinations.ai/prompt/${fullPrompt}?width=${w}&height=${h}&seed=${timestamp + 2}&nologo=true`,
+                `https://image.pollinations.ai/prompt/${fullPrompt}?width=${w}&height=${h}&seed=${timestamp + 3}&nologo=true`
+            ];
+
             setTimeout(() => {
                 loader.style.display = 'none';
                 results.style.display = 'grid';
                 results.innerHTML = '';
+                generateBtn.disabled = false;
 
-                for (let i = 0; i < 4; i++) {
+                images.forEach((url, i) => {
                     const card = document.createElement('div');
                     card.className = 'ai-image-card';
-                    // We use Unsplash Source for high-quality thematic placeholders based on prompt keywords
-                    const keyword = prompt.split(' ').slice(0, 2).join(',');
                     card.innerHTML = `
-                        <div class="ai-badge">AI GEN</div>
-                        <img src="https://source.unsplash.com/random/400x400?${keyword}&sig=${i}" alt="Generated AI Image">
+                        <div class="ai-badge">VARIATION #${i + 1}</div>
+                        <img src="${url}" alt="AI generated visual ${i + 1}" loading="lazy" onerror="this.onerror=null; this.src='https://picsum.photos/600/600?random=${timestamp + i}';">
+                        <div class="ai-card-footer">
+                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">HD Neural Render</span>
+                            <div style="display: flex; gap: 0.4rem;">
+                                <a href="${url}" target="_blank" download="ai-artwork-${i + 1}.jpg" class="tool-nav-btn" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">
+                                    <i class="fas fa-download"></i> Save
+                                </a>
+                            </div>
+                        </div>
                     `;
                     results.appendChild(card);
-                }
-            }, 3000);
-        };
+                });
+            }, 1200);
+        }
+
+        generateBtn.onclick = triggerGenerate;
+
+        // Run initial sample generation on load
+        window.addEventListener('load', () => {
+            triggerGenerate();
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

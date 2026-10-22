@@ -1,139 +1,249 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World - Universal Studio</title>
+    <title>Live Markdown Studio - Lexio Tools</title>
+    <meta name="description" content="Interactive live markdown editor and HTML renderer with table and code block support.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .md-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            width: 100%;
+        }
+        @media(max-width: 800px) {
+            .md-workspace { grid-template-columns: 1fr; }
+        }
+        .md-editor-box, .md-preview-box {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            min-height: 440px;
+        }
+        .md-box-header {
+            padding: 0.6rem 1rem;
+            background: var(--surface-hover);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #mdInput {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+            min-height: 380px;
+        }
+        #mdOutput {
+            flex: 1;
+            padding: 1.25rem;
+            overflow-y: auto;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 380px;
+        }
+        #mdOutput h1, #mdOutput h2, #mdOutput h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3rem;
+        }
+        #mdOutput pre {
+            background: rgba(0,0,0,0.25);
+            padding: 0.85rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+        #mdOutput code {
+            font-family: monospace;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+        }
+        #mdOutput table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        #mdOutput th, #mdOutput td {
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        #mdOutput th {
+            background: var(--surface-hover);
+        }
+        #mdOutput blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            color: var(--text-muted);
+            margin: 0.8rem 0;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="../index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
+    <header class="tool-nav-bar">
+        <a href="../index.html" class="tool-nav-btn"><i class="fas fa-arrow-left"></i> <span>All Tools</span></a>
+        <div class="tool-brand-tag">
+            <span class="tool-status-dot"></span>
+            <span>Live Markdown Engine</span>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
 
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
+    <div class="tool-header">
+        <div class="container">
+            <h1>Live Markdown Studio & Previewer</h1>
+            <p>Real-time interactive markdown authoring, syntax parsing, and one-click HTML code generator.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="tool-nav-btn" onclick="insertSyntax('# ')">H1</button>
+                <button class="tool-nav-btn" onclick="insertSyntax('## ')">H2</button>
+                <button class="tool-nav-btn" onclick="insertSyntax('**', '**')"><b>B</b></button>
+                <button class="tool-nav-btn" onclick="insertSyntax('*', '*')"><i>I</i></button>
+                <button class="tool-nav-btn" onclick="insertSyntax('[Link](', ')')">🔗 Link</button>
+                <button class="tool-nav-btn" onclick="insertCodeBlock()">💻 Code</button>
+                <button class="tool-nav-btn" onclick="insertSyntax('> ')">❝ Quote</button>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-primary" id="copyHtmlBtn" style="padding: 0.45rem 0.9rem; font-size: 0.85rem; width: auto; min-height: 36px;">
+                    <i class="fas fa-code"></i> Copy HTML
+                </button>
+                <button class="tool-nav-btn" id="copyMdBtn">
+                    <i class="fas fa-copy"></i> Copy MD
                 </button>
             </div>
         </div>
-    </header>
 
+        <div class="md-workspace">
+            <div class="md-editor-box">
+                <div class="md-box-header">
+                    <span><i class="fab fa-markdown"></i> MARKDOWN INPUT</span>
+                    <span id="charCount">0 chars</span>
+                </div>
+                <textarea id="mdInput" placeholder="Type or paste markdown content here..."># ⚡ Lexio Live Studio
 
-    <main class="container">
-        <h1 style="margin: 2rem 0 1rem;">Markdown Previewer</h1>
-        <div class="md-grid">
-            <textarea id="mdInput" placeholder="# Hello World\nType your markdown here..."></textarea>
-            <div id="mdOutput" class="markdown-body">
-                <h1>Hello World</h1>
-                <p>Type your markdown here...</p>
+Welcome to the **fastest** client-side markdown previewer.
+
+### Features
+* Instant syntax evaluation
+* Full HTML output extraction
+* Zero server latency
+
+| Feature | Support | Performance |
+| :--- | :--- | :--- |
+| Tables | Full GFM | Instant |
+| Code Blocks | Syntax Highlight | Client-side |
+
+> "Clean code and simple design build resilient software."
+
+Enjoy building with Lexio Tools Studio!</textarea>
+            </div>
+
+            <div class="md-preview-box">
+                <div class="md-box-header">
+                    <span><i class="fas fa-eye"></i> LIVE HTML PREVIEW</span>
+                    <span style="color:#10b981;">● Synced</span>
+                </div>
+                <div id="mdOutput"></div>
             </div>
         </div>
     </main>
 
+    <footer class="tool-compact-footer">
+        <div class="container">
+            <span>🔒 100% Private & Local Processing • No Cloud Uploads</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="../js/main.js"></script>
     <script>
         const input = document.getElementById('mdInput');
         const output = document.getElementById('mdOutput');
+        const charCount = document.getElementById('charCount');
 
-        input.oninput = () => {
-            // Very simple rendering simulation
-            let val = input.value
-                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-                .replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>')
-                .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>');
-            output.innerHTML = val || '<p style="color: grey">Output will appear here...</p>';
+        function renderMarkdown() {
+            const raw = input.value;
+            charCount.textContent = raw.length + ' chars';
+
+            if (typeof marked !== 'undefined') {
+                output.innerHTML = marked.parse(raw);
+            } else {
+                let html = raw
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                    .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+                    .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
+                    .replace(/\*(.*)\*/gim, '<i>$1</i>')
+                    .replace(/\n/gim, '<br>');
+                output.innerHTML = html;
+            }
+        }
+
+        input.oninput = renderMarkdown;
+
+        function insertSyntax(prefix, suffix) {
+            suffix = suffix || '';
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            const selected = text.substring(start, end);
+
+            input.value = text.substring(0, start) + prefix + selected + suffix + text.substring(end);
+            input.focus();
+            input.setSelectionRange(start + prefix.length, end + prefix.length);
+            renderMarkdown();
+        }
+
+        function insertCodeBlock() {
+            const bt = String.fromCharCode(96);
+            const prefix = bt + bt + bt + 'javascript\n';
+            const suffix = '\n' + bt + bt + bt;
+            insertSyntax(prefix, suffix);
+        }
+
+        document.getElementById('copyHtmlBtn').onclick = () => {
+            navigator.clipboard.writeText(output.innerHTML).then(() => {
+                alert('Rendered HTML copied to clipboard!');
+            });
         };
+
+        document.getElementById('copyMdBtn').onclick = () => {
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('Markdown source copied to clipboard!');
+            });
+        };
+
+        window.addEventListener('load', renderMarkdown);
+        setTimeout(renderMarkdown, 200);
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,0 +1,10 @@
+# Mini App Local Environment & Secrets
+.env
+.env*
+*.env
+*.env.*
+.env.local
+.env.*.local
+dist/
+node_modules/
+*.log

@@ -1,604 +1,1240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Multi-Tools Engine</title>
-    <meta name="description" content="Explore a massive collection of free professional online tools for designers, developers, and writers. SEO optimized, fast, and secure.">
+    <title>Lexio Universal Tools Studio - 73+ Instant Tools</title>
+    <meta name="description" content="73+ high-performance client-side tools for developers, designers, writers, and document specialists. 100% private and responsive.">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --studio-bg: #0a0f1d;
+            --studio-card: rgba(16, 24, 45, 0.7);
+            --studio-border: rgba(255, 255, 255, 0.08);
+            --studio-glow: rgba(99, 102, 241, 0.25);
+        }
+        [data-theme="light"] {
+            --studio-bg: #f8fafc;
+            --studio-card: rgba(255, 255, 255, 0.9);
+            --studio-border: rgba(0, 0, 0, 0.08);
+            --studio-glow: rgba(99, 102, 241, 0.15);
+        }
+        body {
+            background-color: var(--studio-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .studio-top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .studio-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .studio-logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+        .studio-brand-text h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin: 0;
+            line-height: 1.1;
+        }
+        .studio-brand-text span {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+        .studio-search-bar {
+            flex: 1;
+            max-width: 520px;
+            position: relative;
+        }
+        .studio-search-bar input {
+            width: 100%;
+            padding: 0.65rem 1rem 0.65rem 2.5rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        .studio-search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 16px var(--primary-glow);
+        }
+        .studio-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+        .category-nav-bar {
+            padding: 1rem 0;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .category-nav-bar::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+        .cat-btn .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.1rem 0.45rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+        }
+        .tools-studio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+        @media(max-width: 640px) {
+            .tools-studio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .studio-tool-card {
+            background: var(--studio-card);
+            border: 1px solid var(--studio-border);
+            border-radius: var(--radius-md);
+            padding: 1.35rem;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .studio-tool-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 28px -8px var(--studio-glow);
+        }
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+        }
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .studio-tool-card:hover .card-icon {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 6px 16px var(--primary-glow);
+        }
+        .card-tag {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            background: var(--surface-hover);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        .studio-tool-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        .studio-tool-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+        .card-footer i {
+            transition: transform 0.25s ease;
+        }
+        .studio-tool-card:hover .card-footer i {
+            transform: translateX(4px);
+        }
+        .no-results-box {
+            text-align: center;
+            padding: 4rem 1rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="tools/ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="tools/ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="tools/compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="tools/essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <a href="pages/login.html" class="nav-link btn-login" style="margin-right: 0.5rem; font-weight: 700; color: var(--primary);">Login</a>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
+    <header class="studio-top-bar">
+        <a href="index.html" class="studio-brand">
+            <div class="studio-logo-icon">⚡</div>
+            <div class="studio-brand-text">
+                <h2>LEXIO TOOLS</h2>
+                <span>73+ CLIENT-SIDE TOOLS</span>
             </div>
+        </a>
+
+        <div class="studio-search-bar">
+            <i class="fas fa-search studio-search-icon"></i>
+            <input type="text" id="toolSearch" placeholder="Instant search 73+ tools (e.g. OCR, PDF, AI, 3D, Gradient)..." autocomplete="off">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <button class="tool-nav-btn theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1>The Ultimate Hub for <br><span style="background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Professional Tools.</span></h1>
-                <p>Process your data securely on your local device. Fast, private, and powerful tools for creators, developers, and document masters.</p>
-                <div class="search-container">
-                    <input type="text" id="toolSearch" placeholder="Search 73+ professional tools (e.g. PDF, AI, DXF)..." autocomplete="off">
+    <main class="container" style="flex: 1; padding-top: 1.25rem;">
+        <!-- Category Filter Pills -->
+        <nav class="category-nav-bar">
+            <button class="cat-btn active" data-cat="all">🌟 All Tools <span class="badge">73</span></button>
+            <button class="cat-btn" data-cat="pdf">📄 PDF & Docs <span class="badge">28</span></button>
+            <button class="cat-btn" data-cat="writer">✍️ AI Writing <span class="badge">7</span></button>
+            <button class="cat-btn" data-cat="cad">📐 CAD & 3D <span class="badge">9</span></button>
+            <button class="cat-btn" data-cat="design">🎨 Design & UI <span class="badge">19</span></button>
+            <button class="cat-btn" data-cat="dev">💻 Developer <span class="badge">6</span></button>
+            <button class="cat-btn" data-cat="calc">🧮 Calculators <span class="badge">2</span></button>
+            <button class="cat-btn" data-cat="media">🎬 Media & Social <span class="badge">2</span></button>
+        </nav>
+
+        <!-- Tools Grid -->
+        <div class="tools-studio-grid" id="toolsGrid">
+            <a href="tools/3d-text-generator.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-cube"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
                 </div>
-                <div class="hero-stats" id="features">
-                    <span><i class="fas fa-shield-alt"></i> 100% Private</span>
-                    <span><i class="fas fa-bolt"></i> Client-Side Processing</span>
-                    <span><i class="fas fa-check-circle"></i> No Sign-up Required</span>
+                <h3>3D Text Generator</h3>
+                <p>Create high-impact cinematic typography with depth and architectural perspective.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
                 </div>
-            </div>
-        </section>
-
-        <section class="tools-section">
-            <div class="container">
-
-
-            <!-- Featured Tools -->
-            <h3 class="category-title" id="featured"><i class="fas fa-star" style="color: gold;"></i> Featured Favorites</h3>
-            <div class="tool-grid">
-                <a href="tools/ocr.html" class="tool-card glass featured">
-                    <div class="featured-badge">PRO</div>
-                    <i class="fa-solid fa-magnifying-glass-chart tool-icon"></i>
-                    <h3>Optical Character Recognition (OCR)</h3>
-                    <p>Extract text from images locally for maximum privacy.</p>
-                </a>
-                <a href="tools/ai-image-generator.html" class="tool-card glass featured">
-                    <div class="featured-badge">NEW</div>
-                    <i class="fa-solid fa-wand-magic-sparkles tool-icon"></i>
-                    <h3>AI Image Generation Studio</h3>
-                    <p>Generate unique visuals from text prompts instantly.</p>
-                </a>
-                <a href="tools/essay-writer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>AI Academic Essay Analyst</h3>
-                    <p>Generate professional essays on any topic instantly.</p>
-                </a>
-                <a href="tools/elementor.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Drag-and-Drop Page Prototyper</h3>
-                    <p>Visual Elementor-style builder for fast landing page prototyping.</p>
-                </a>
-            </div>
-
-            <!-- Multimedia & Creative -->
-            <h3 class="category-title" id="multimedia"><i class="fas fa-palette"></i> Multimedia & Creative</h3>
-            <div class="tool-grid">
-                <a href="tools/logo-designer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>AI Brand Identity Designer</h3>
-                    <p>Generate expert brand identities for any niche or industry.</p>
-                </a>
-                <a href="tools/social-post-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Social Media Post Architect</h3>
-                    <p>Beat the algorithm with viral captions and post ideas.</p>
-                </a>
-                <a href="tools/style-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>CSS Component Studio</h3>
-                    <p>Design professional UI styles and components with AI.</p>
-                </a>
-                <a href="tools/gradient-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Precision Gradient Laboratory</h3>
-                    <p>Create stunning CSS gradients with real-time preview.</p>
-                </a>
-                <a href="tools/mesh-gradient.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Mesh Gradient</h3>
-                    <p>Design complex, organic color blends for modern backgrounds.</p>
-                </a>
-                <a href="tools/3d-text-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Cinematic 3D Typography</h3>
-                    <p>Create impactful cinematic typography with depth and perspective.</p>
-                </a>
-                <a href="tools/text-design.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Advanced Text Effects Studio</h3>
-                    <p>Create professional typography and stunning text effects.</p>
-                </a>
-                <a href="tools/psd-brushes.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PSD Brushes</h3>
-                    <p>Create custom high-quality Photoshop brush tips.</p>
-                </a>
-                <a href="tools/remove-watermark.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Remove Watermark</h3>
-                    <p>Clean images by removing unwanted artifacts and watermarks.</p>
-                </a>
-                <a href="tools/upscale-image.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Upscale Image</h3>
-                    <p>Enhance resolution and clarity with AI-powered sharpening.</p>
-                </a>
-                <a href="tools/image-to-vector.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Image to Vector</h3>
-                    <p>Transform raster images into infinitely scalable SVG graphics.</p>
-                </a>
-                <a href="tools/color-palette.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Color Palette</h3>
-                    <p>Generate harmonious color schemes for your UI/UX projects.</p>
-                </a>
-                <a href="tools/glassmorphism.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Glassmorphism</h3>
-                    <p>Create modern frosted-glass effects with CSS backdrop filters.</p>
-                </a>
-                <a href="tools/neumorphism.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Neumorphism</h3>
-                    <p>Design soft, tactile UI components with organic shadows.</p>
-                </a>
-                <a href="tools/shadow-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Shadow Gen</h3>
-                    <p>Master depth with professional multi-layered CSS box shadows.</p>
-                </a>
-                <a href="tools/gradient-map.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Gradient Map</h3>
-                    <p>Map colors to luminosity for professional cinematic color grades.</p>
-                </a>
-                <a href="tools/pattern-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Pattern Gen</h3>
-                    <p>Generate seamless geometric backgrounds for web and print.</p>
-                </a>
-                <a href="tools/noise-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Noise Gen</h3>
-                    <p>Create organic film grain and tactile noise for your designs.</p>
-                </a>
-                <a href="tools/color-blindness.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Access Audit</h3>
-                    <p>Simulate color vision deficiency and audit UI accessibility.</p>
-                </a>
-                <a href="tools/thumb-downloader.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Thumb Downloader</h3>
-                    <p>Extract high-definition YouTube video thumbnails instantly.</p>
-                </a>
-                <a href="tools/social-downloader.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Social Downloader</h3>
-                    <p>Download HD videos from major social platforms privately.</p>
-                </a>
-                <a href="tools/favicon-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Favicon Gen</h3>
-                    <p>Create professional multi-size browser icons for your website.</p>
-                </a>
-                <a href="tools/app-icon-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>App Icon Gen</h3>
-                    <p>Generate full asset sets of iOS and Android app icons.</p>
-                </a>
-                <a href="tools/seo-auditor.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>SEO Auditor</h3>
-                    <p>Analyze your web pages for technical SEO and rankings.</p>
-                </a>
-            </div>
-
-            <!-- AI Writing & Content -->
-            <h3 class="category-title" id="ai-writing"><i class="fas fa-pen-nib"></i> AI Writing & Content</h3>
-            <div class="tool-grid">
-                <a href="tools/paragraph-writer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Para Writer</h3>
-                    <p>Construct high-quality paragraphs with AI assistance.</p>
-                </a>
-                <a href="tools/essay-writer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>AI Academic Essay Analyst</h3>
-                    <p>Generate professional essays on any topic instantly.</p>
-                </a>
-                <a href="tools/content-improver.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Content Improver</h3>
-                    <p>Refine your writing, enhance vocabulary, and polish your prose.</p>
-                </a>
-                <a href="tools/paragraph-completer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Para Completer</h3>
-                    <p>Finish your paragraphs and overcome writer's block with AI.</p>
-                </a>
-                <a href="tools/paragraph-humanizer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Para Humanizer</h3>
-                    <p>Transform robotic AI text into natural, human-sounding prose.</p>
-                </a>
-                <a href="tools/readme-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>README Gen</h3>
-                    <p>Build professional GitHub Profile READMEs with dynamic stats.</p>
-                </a>
-            </div>
-
-            <!-- PDF & Document Suite -->
-            <h3 class="category-title" id="pdf-suite"><i class="fas fa-file-pdf"></i> PDF & Document Suite</h3>
-            <div class="tool-grid">
-                <a href="tools/compress-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF Optimization Engine</h3>
-                    <p>Reduce PDF file size without losing visual quality.</p>
-                </a>
-                <a href="tools/pdf-to-word.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Document Conversion Suite</h3>
-                    <p>Restore editability by converting PDFs back into Word documents.</p>
-                </a>
-                <a href="tools/word-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF Publishing Engine</h3>
-                    <p>Transform Microsoft Word documents into universal PDF files.</p>
-                </a>
-                <a href="tools/excel-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Excel to PDF</h3>
-                    <p>Convert your spreadsheets into professional, clean PDF reports.</p>
-                </a>
-                <a href="tools/pdf-to-excel.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to Excel</h3>
-                    <p>Extract structured tabular data from PDF files for analysis.</p>
-                </a>
-                <a href="tools/powerpoint-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PPT to PDF</h3>
-                    <p>Export your PowerPoint slides to high-fidelity PDF handouts.</p>
-                </a>
-                <a href="tools/pdf-to-audio.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to Audio</h3>
-                    <p>Convert your PDF documents into spoken audio instantly.</p>
-                </a>
-                <a href="tools/pdf-to-ebook.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to Ebook</h3>
-                    <p>Convert static PDF files into reflowable high-quality ebooks.</p>
-                </a>
-                <a href="tools/ebook-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Ebook to PDF</h3>
-                    <p>Transform reflowable ebooks into static, printable PDF documents.</p>
-                </a>
-                <a href="tools/pdf-to-rar.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to RAR</h3>
-                    <p>Compress your PDF documents into high-compression RAR archives.</p>
-                </a>
-                <a href="tools/pdf-to-zip.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to ZIP</h3>
-                    <p>Bundle multiple PDF documents into a single universal ZIP package.</p>
-                </a>
-                <a href="tools/pdf-translator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF Translator</h3>
-                    <p>Translate your PDF documents into multiple languages instantly.</p>
-                </a>
-                <a href="tools/pdf-to-png.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to PNG</h3>
-                    <p>Extract your PDF pages as high-quality lossless PNG images.</p>
-                </a>
-                <a href="tools/png-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PNG to PDF</h3>
-                    <p>Merge your PNG image assets into a professional PDF document.</p>
-                </a>
-                <a href="tools/audio-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Audio to PDF</h3>
-                    <p>Generate professional transcripts from your audio recordings instantly.</p>
-                </a>
-                <a href="tools/docs-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Docs to PDF</h3>
-                    <p>The universal converter for all your documents and graphic files.</p>
-                </a>
-                <a href="tools/media-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Media to PDF</h3>
-                    <p>Convert audio and video files into high-quality PDF transcripts.</p>
-                </a>
-                <a href="tools/zip-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>ZIP to PDF</h3>
-                    <p>Extract and merge compressed archives into a single PDF document.</p>
-                </a>
-                <a href="tools/rar-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>RAR to PDF</h3>
-                    <p>Convert and merge RAR archive contents into a professional PDF.</p>
-                </a>
-                <a href="tools/epdf-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>EPDF to PDF</h3>
-                    <p>Normalize and repair Encapsulated PDF files for universal viewing.</p>
-                </a>
-            </div>
-
-            <!-- Professional & CAD -->
-            <h3 class="category-title" id="professional"><i class="fas fa-drafting-compass"></i> Professional & CAD</h3>
-            <div class="tool-grid">
-                <a href="tools/pdf-to-dwg.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to DWG</h3>
-                    <p>Convert blueprints and static PDF plans into editable CAD drawings.</p>
-                </a>
-                <a href="tools/dwg-to-pdf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>DWG to PDF</h3>
-                    <p>View and share CAD drawings as standard PDF documents.</p>
-                </a>
-                <a href="tools/pdf-to-dst.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to DST</h3>
-                    <p>Convert logos to industrial embroidery formats for production.</p>
-                </a>
-                <a href="tools/pdf-to-dxf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to DXF</h3>
-                    <p>Accurately convert PDF drawings into Design Exchange Format files.</p>
-                </a>
-                <a href="tools/pdf-to-xml.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to XML</h3>
-                    <p>Extract structured data from PDF documents for analysis.</p>
-                </a>
-                <a href="tools/pdf-to-ttf.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>PDF to TTF</h3>
-                    <p>Extract and recover embedded fonts from your PDF documents.</p>
-                </a>
-            </div>
-
-            <!-- Developer Utilities -->
-            <h3 class="category-title" id="developer"><i class="fas fa-code"></i> Developer Utilities</h3>
-            <div class="tool-grid">
-                <a href="tools/elementor.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Drag-and-Drop Page Prototyper</h3>
-                    <p>Visual Elementor-style builder for fast landing page prototyping.</p>
-                </a>
-                <a href="tools/wordpress-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>WP Theme Gen</h3>
-                    <p>Build professional WordPress starter themes in seconds.</p>
-                </a>
-                <a href="tools/chrome-extension.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Chrome Ext Gen</h3>
-                    <p>Turn your ideas into functional Chrome extensions instantly.</p>
-                </a>
-                <a href="tools/convert-to-ai.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Convert to AI</h3>
-                    <p>Transform standard graphics into editable vector AI files.</p>
-                </a>
-                <a href="tools/convert-to-psd.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Convert to PSD</h3>
-                    <p>Package your designs into professional Layered Photoshop files.</p>
-                </a>
-                <a href="tools/convert-to-figma.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>To Figma</h3>
-                    <p>Convert your designs into collaborative Figma projects.</p>
-                </a>
-                <a href="tools/convert-to-xd.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>To Adobe XD</h3>
-                    <p>Transform mockups into professional Adobe XD prototypes.</p>
-                </a>
-                <a href="tools/convert-to-sketch.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>To Sketch</h3>
-                    <p>Export layer-perfect designs for professional Sketch projects.</p>
-                </a>
-                <a href="tools/convert-to-3d.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>To 3D Model</h3>
-                    <p>Transform 2D images into editable 3D objects and meshes.</p>
-                </a>
-                <a href="tools/convert-to-raw.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>To RAW</h3>
-                    <p>Recover uncompressed sensor data for professional grading.</p>
-                </a>
-                <a href="tools/universal-converter.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Universal Conv</h3>
-                    <p>The one-stop solution for any file conversion task.</p>
-                </a>
-                <a href="tools/qr-generator.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>QR Generator</h3>
-                    <p>Generate high-resolution QR codes for websites and data.</p>
-                </a>
-                <a href="tools/markdown-previewer.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>MD Previewer</h3>
-                    <p>Real-time Markdown editor with professional rendering.</p>
-                </a>
-                <a href="tools/code-formatter.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Advanced Code Prettifier</h3>
-                    <p>Prettify and clean your HTML, CSS, and JS code instantly.</p>
-                </a>
-                <a href="tools/unit-converter.html" class="tool-card glass">
-                    <i class="fa-solid fa-screwdriver-wrench tool-icon"></i>
-                    <h3>Scientific Unit Converter</h3>
-                    <p>Convert distance, weight, and temperature between any units.</p>
-                </a>
-            </div>
-        </section>
-        <!-- About Section -->
-        <section class="tools-section" id="about">
-            <div class="container">
-                <h3 class="category-title"><i class="fas fa-info-circle"></i> About Universal Studio</h3>
-                <div class="glass" style="padding: 3rem; border-radius: var(--radius-lg);">
-                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-                        Founded and developed by <strong>Sakshi Joshi</strong>, Universal Studio is a high-performance, privacy-first platform dedicated to providing the world's most comprehensive suite of client-side utilities. Unlike other online tools, we process all your data directly in your browser – meaning your files never leave your computer.
-                    </p>
-                    <p style="font-size: 1.1rem; color: var(--text-muted);">
-                        Whether you're a developer, a content creator, or a document specialist, Universal Studio offers over 75+ professional-grade tools for multimedia, PDF manipulation, AI-assisted writing, and technical utilities, all for free.
-                    </p>
+            </a>
+            <a href="tools/ai-image-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <span class="card-tag">Design & UI</span>
                 </div>
-            </div>
-        </section>
+                <h3>AI Visual Image Generation Studio</h3>
+                <p>Generate stunning AI visual artwork and concept renders from creative text prompts.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/app-icon-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>App Icon Generator</h3>
+                <p>From one to many. Generate an entire set of iOS and Android icons from a single 1024px image.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/audio-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-headphones"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Audio to PDF Transcript</h3>
+                <p>From sound to script. Convert your voice recordings and interviews into professional PDF documents instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/chrome-extension.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fab fa-chrome"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>Chrome Extension Generator</h3>
+                <p>Turn your ideas into browser actions. Instant boilerplate generation for developers.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/code-formatter.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-laptop-code"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>Code Formatter</h3>
+                <p>Clean up messy source code instantly. Prettify HTML, CSS, and JavaScript for better readability.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/color-blindness.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Color Blindness Simulator</h3>
+                <p>Design for everyone. Audit your visuals and ensure high accessibility for users with color vision deficiencies.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/color-palette.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Color Palette Generator</h3>
+                <p>Generate professionally balanced color schemes for your apps and websites.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/compress-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Compress PDF</h3>
+                <p>Drastically reduce your PDF file size while maintaining the best possible quality.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/content-improver.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>Content Improver</h3>
+                <p>Elevate your writing. Transform dull sentences into sophisticated, professional copy.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-3d.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-cube"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>Convert to 3D</h3>
+                <p>Give your designs a new dimension. Transform flat images into 3D models instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-ai.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>File Convert to AI</h3>
+                <p>Transform your designs into editable Adobe Illustrator vector files instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-figma.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>Convert to Figma</h3>
+                <p>Seamlessly transition your static designs into collaborative Figma projects with high fidelity.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-psd.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>File Convert to PSD</h3>
+                <p>Transform your images and graphics into editable Adobe Photoshop documents.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-raw.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>Convert to RAW</h3>
+                <p>Go back to the source. Convert your digital images into uncompressed RAW data for professional grading.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-sketch.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>Convert to Sketch</h3>
+                <p>Export your designs into professional Sketch layers for advanced UI design projects.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/convert-to-xd.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>Convert to Adobe XD</h3>
+                <p>Bridge the gap between design tools. Transform your files into professional Adobe XD projects.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/docs-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Document to PDF</h3>
+                <p>The ultimate converter for all your documents. Transform Word, Text, and Graphics into standard PDF files.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/dwg-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>DWG to PDF Converter</h3>
+                <p>Convert professional CAD blueprints into clean, portable PDF documents for easy sharing.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/ebook-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Ebook to PDF Converter</h3>
+                <p>Universal reading. Transform reflowable ebooks into static, high-fidelity PDF documents.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/elementor.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-code"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>Elementor Style Builder</h3>
+                <p>Assemble beautiful sections and layout prototypes instantly with our visual builder.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/epdf-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>EPDF to PDF Converter</h3>
+                <p>Normalize and repair Encapsulated PDF files for universal viewing and printing.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/essay-writer.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>AI Essay Writer</h3>
+                <p>Generate well-structured, professional essays in seconds using our local AI logic.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/excel-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Excel to PDF Converter</h3>
+                <p>Ready to present. Convert your spreadsheets into clean, professional PDF reports instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/favicon-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Favicon Generator</h3>
+                <p>Your brand on every tab. Create professional browser icons from any image in seconds.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/glassmorphism.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Glassmorphism Generator</h3>
+                <p>Design modern, frosted-glass UI components with deep blur and translucent borders.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/gradient-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Gradient Generator</h3>
+                <p>Design stunning background gradients and get instant CSS code for your projects.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/gradient-map.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Gradient Map Generator</h3>
+                <p>Elevate your imagery. Map colors to luminosity and create stunning cinematic color grades in seconds.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/image-to-vector.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Image to Vector</h3>
+                <p>Turn blurry pixels into sharp, infinitely scalable vector graphics. Perfect for logos and icons.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/logo-designer.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Expert Logo Designer</h3>
+                <p>Define your brand identity in seconds. Professional, vector-ready logos tailored to your vision.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/markdown-previewer.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>Live Markdown Studio & Previewer</h3>
+                <p>Interactive live markdown editor and HTML renderer with table and code block support.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/media-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Audio/Video to PDF</h3>
+                <p>Generate high-quality PDF transcripts and reports from your multimedia files instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/mesh-gradient.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Mesh Gradient Generator</h3>
+                <p>Design complex, organic color blends that bring life and modern energy to your backgrounds.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/neumorphism.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Neumorphism Generator</h3>
+                <p>Create soft, tactile UI elements that appear to emerge from their background.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/noise-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Organic Noise & Film Grain Generator</h3>
+                <p>Generate custom organic grain textures and SVG noise overlays for modern UI design.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/ocr.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-search"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Optical Character Recognition (OCR)</h3>
+                <p>Extract editable text from scanned images, documents, and photos using client-side AI.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/paragraph-completer.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>Paragraph Completer</h3>
+                <p>Don</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/paragraph-humanizer.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>Paragraph Humanizer</h3>
+                <p>Break the bot. Convert robotic AI text into natural, engaging, and human-like prose.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/paragraph-writer.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>AI Paragraph Writer & Humanizer</h3>
+                <p>Generate fresh paragraphs or transform AI-generated text into human-like prose.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pattern-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Seamless SVG Pattern Generator</h3>
+                <p>Generate seamless mathematical SVG patterns and CSS background textures in real-time.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-audio.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-headphones"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to Audio Converter</h3>
+                <p>Turn your static PDF files into immersive audio experiences using advanced Text-to-Speech.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-dst.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to DST Converter</h3>
+                <p>Transform your PDF logos into Tajima-compatible DST embroidery files for industrial production.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-dwg.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to DWG Converter</h3>
+                <p>Transform static PDF blueprints into editable AutoCAD DWG drawings with high precision.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-dxf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to DXF Converter</h3>
+                <p>Exchange vector data seamlessly. Convert PDF drawings to standard DXF format for CNC and design software.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-ebook.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to Ebook Converter</h3>
+                <p>Transform static PDF documents into reflowable Ebooks optimized for any screen size.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-excel.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to Excel Converter</h3>
+                <p>From static tables to dynamic data. Convert your PDF documents into fully editable Excel spreadsheets.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-png.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to PNG Converter</h3>
+                <p>Documents to visuals. Transform your PDF pages into sharp, transparent PNG images instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-rar.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to RAR Archive</h3>
+                <p>Compress and protect. Pack your PDF files into secure, industry-standard RAR archives instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-ttf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to TTF (Font Extractor)</h3>
+                <p>Ever lost a font from an old project? Extract and recover embedded fonts directly from your PDF files.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-word.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to Word Converter</h3>
+                <p>Restore editability. Transform static PDF files back into fully editable Microsoft Word documents.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-xml.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to XML Converter</h3>
+                <p>Transform unstructured PDF documents into highly organized, machine-readable XML format.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-to-zip.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF to ZIP Archive</h3>
+                <p>Bundle and share. Convert multiple PDF files into a single, universally-compatible ZIP archive instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/pdf-translator.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PDF Translator</h3>
+                <p>Bridge the language gap. Translate your PDF documents while keeping the original context.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/png-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PNG to PDF Converter</h3>
+                <p>Visuals to documents. Combine and convert your high-quality PNG images into a professional PDF instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/powerpoint-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>PowerPoint to PDF Converter</h3>
+                <p>Slide to share. Convert your dynamic presentations into universal, high-quality PDF files.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/psd-brushes.html" class="studio-tool-card" data-cat="cad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <span class="card-tag">CAD & 3D</span>
+                </div>
+                <h3>PSD Brush Generator</h3>
+                <p>Design custom brush tips and textures to expand your Photoshop creative library.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/qr-generator.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>High-Resolution QR Code Studio</h3>
+                <p>Generate high-resolution QR codes for websites, WiFi, and contact cards with custom styling.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/rar-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>RAR to PDF Converter</h3>
+                <p>Automatically extract and merge your compressed files into a professional PDF document.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/readme-generator.html" class="studio-tool-card" data-cat="writer">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+                    <span class="card-tag">AI Writing</span>
+                </div>
+                <h3>GitHub Profile README Generator</h3>
+                <p>Elevate your developer presence with a stunning, personalized GitHub README.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/remove-watermark.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Remove Watermark</h3>
+                <p>Clean your photos by removing unwanted watermarks, date stamps, and logos locally.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/seo-auditor.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>Website SEO Auditor</h3>
+                <p>Climb the rankings. Analyze your web pages for technical SEO opportunities and visibility boosts.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/shadow-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Box Shadow Generator</h3>
+                <p>Master the art of depth. Create multi-layered shadows for clean, premium interfaces.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/social-downloader.html" class="studio-tool-card" data-cat="media">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-download"></i></div>
+                    <span class="card-tag">Media & Social</span>
+                </div>
+                <h3>Social Video Downloader</h3>
+                <p>Save your favorite moments. Extract HD videos from major social platforms with zero data tracking.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/social-post-generator.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Social Post Generator</h3>
+                <p>Beat the algorithm. Generate high-engagement posts and captions for any platform instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/style-generator.html" class="studio-tool-card" data-cat="dev">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-code"></i></div>
+                    <span class="card-tag">Developer</span>
+                </div>
+                <h3>Style Design Generator</h3>
+                <p>Create professional layer effects similar to Adobe Photoshop directly in your browser.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/text-design.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Text Design Generator</h3>
+                <p>Design beautiful text effects with gradients, outlines, and shadows instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/thumb-downloader.html" class="studio-tool-card" data-cat="media">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-download"></i></div>
+                    <span class="card-tag">Media & Social</span>
+                </div>
+                <h3>YouTube Thumbnail Downloader</h3>
+                <p>Visual inspiration. Extract the highest resolution thumbnail from any YouTube video instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/unit-converter.html" class="studio-tool-card" data-cat="calc">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                    <span class="card-tag">Calculators</span>
+                </div>
+                <h3>Unit Converter</h3>
+                <p>Switch between metric and imperial units effortlessly. Accurate conversions for length, mass, and more.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/universal-converter.html" class="studio-tool-card" data-cat="calc">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                    <span class="card-tag">Calculators</span>
+                </div>
+                <h3>Universal File Converter</h3>
+                <p>One tool to rule them all. Transform images, documents, and archives between hundreds of formats.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/upscale-image.html" class="studio-tool-card" data-cat="design">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-palette"></i></div>
+                    <span class="card-tag">Design & UI</span>
+                </div>
+                <h3>Upscale Image</h3>
+                <p>Breathe new life into low-resolution photos. Enhance clarity and detail instantly.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/word-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>Word to PDF Converter</h3>
+                <p>Freeze your layout. Convert Microsoft Word documents into universal, high-fidelity PDF files.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/wordpress-generator.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fab fa-wordpress"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>WordPress Theme Generator</h3>
+                <p>Kickstart your next WordPress project with a clean, standards-compliant starter theme.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+            <a href="tools/zip-to-pdf.html" class="studio-tool-card" data-cat="pdf">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                    <span class="card-tag">PDF & Docs</span>
+                </div>
+                <h3>ZIP to PDF Converter</h3>
+                <p>Automatically extract and merge your bundled documents into a consolidated PDF file.</p>
+                <div class="card-footer">
+                    <span>Open Tool</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
 
+            <div class="no-results-box" id="noResultsBox">
+                <div style="font-size: 3rem; margin-bottom: 0.75rem;">🔍</div>
+                <h3 style="font-weight: 800; margin-bottom: 0.35rem;">No tools match your search</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Try searching for "PDF", "CAD", "AI", or click "All Tools" above.</p>
+                <button class="btn-primary" style="width: auto; margin-top: 1rem; padding: 0.5rem 1.25rem;" onclick="resetSearch()">View All Tools</button>
+            </div>
+        </div>
     </main>
 
-    <footer>
+    <footer class="tool-compact-footer">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Universal Studio</h4>
-                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Legals</h4>
-                    <ul class="footer-links">
-                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
-                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
-                        <li><a href="pages/terms.html">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col" id="contact">
-                    <h4>Follow Us</h4>
-                    <div class="footer-social-grid">
-                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
-                            <i class="fas fa-briefcase"></i>
-                        </a>
-                        <a href="#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
-                            <i class="fas fa-tools"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
-            </div>
+            <span>🔒 100% Client-Side Processing • Private & Secure • Zero Server Uploads</span>
         </div>
     </footer>
 
-    <button id="backToTop" class="glass" aria-label="Back to Top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
     <script src="js/main.js"></script>
+    <script>
+        const searchInput = document.getElementById('toolSearch');
+        const cards = document.querySelectorAll('.studio-tool-card');
+        const catButtons = document.querySelectorAll('.cat-btn');
+        const noResults = document.getElementById('noResultsBox');
+
+        let activeCat = 'all';
+
+        function filterTools() {
+            const query = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                const cat = card.getAttribute('data-cat');
+
+                const matchesSearch = !query || title.includes(query) || desc.includes(query);
+                const matchesCat = (activeCat === 'all' || cat === activeCat);
+
+                if (matchesSearch && matchesCat) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        searchInput.addEventListener('input', filterTools);
+
+        catButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                catButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCat = btn.getAttribute('data-cat');
+                filterTools();
+            });
+        });
+
+        function resetSearch() {
+            searchInput.value = '';
+            activeCat = 'all';
+            catButtons.forEach(b => b.classList.remove('active'));
+            catButtons[0].classList.add('active');
+            filterTools();
+        }
+
+        // Global shortcut '/' to focus search
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

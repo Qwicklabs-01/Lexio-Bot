@@ -115,6 +115,30 @@ export const tg = {
     this.app?.close();
   },
 
+  async copyText(text: string): Promise<boolean> {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        this.haptic('success');
+        return true;
+      }
+    } catch {}
+    try {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      this.haptic('success');
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
   showPopup(title: string, message: string) {
     if (this.app?.showPopup) {
       this.app.showPopup({ title, message });
@@ -123,3 +147,4 @@ export const tg = {
     }
   },
 };
+

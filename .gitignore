@@ -4,13 +4,19 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment & Secrets (NEVER COMMIT)
+# Environment & Secrets (STRICTLY PROTECTED - NEVER COMMIT)
 .env
 .env*
 *.env
 *.env.*
 .env.local
 .env.*.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
 !.env.example
 
 # Build outputs

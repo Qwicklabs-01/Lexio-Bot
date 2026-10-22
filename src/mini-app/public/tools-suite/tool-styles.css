@@ -1,104 +1,186 @@
-/* Elite Tool Interface Design System */
+/* Elite Tool Interface Design System - Pure Tool Workspace Edition */
 
-.tool-header {
-    padding: 180px 0 60px;
-    text-align: center;
-    background: radial-gradient(circle at 50% 0%, hsla(230, 85%, 65%, 0.1), transparent 50%);
+/* Top Navigation Bar for standalone tools */
+.tool-nav-bar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    height: 56px;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--border);
-    margin-bottom: 5rem;
+    transition: var(--transition);
+}
+
+.tool-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.tool-nav-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateX(-2px);
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.tool-brand-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.tool-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    display: inline-block;
+    animation: statusPulse 2s infinite ease-in-out;
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Tool Header - Clean & Compact */
+.tool-header {
+    padding: 1.5rem 0 1.25rem;
+    text-align: center;
+    background: radial-gradient(circle at 50% 0%, hsla(230, 85%, 65%, 0.1), transparent 70%);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.75rem;
 }
 
 .tool-header .breadcrumb {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--primary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 1.5rem;
-    display: block;
+    display: none !important;
 }
 
 .tool-header h1 {
-    font-size: 3.5rem;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    margin-bottom: 1rem;
+    font-size: clamp(1.5rem, 3.5vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.25;
 }
 
 .tool-header p {
-    font-size: 1.15rem;
+    font-size: clamp(0.88rem, 1.8vw, 1rem);
     color: var(--text-muted);
     max-width: 650px;
-    margin: 0 auto;
+    margin: 0.35rem auto 0;
+    line-height: 1.45;
 }
 
-/* Proper Tool Layout: Main App + Settings Sidebar */
+/* Tool Layout: Main App + Settings Sidebar */
 .tool-container {
     display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 3rem;
-    margin-bottom: 8rem;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
     align-items: start;
+    width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 960px) {
     .tool-container {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
 }
 
 .tool-app {
-    padding: 4rem;
-    border-radius: var(--radius-xl);
-    min-height: 500px;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    min-height: 420px;
+    width: 100%;
+    overflow: hidden;
 }
 
 .tool-sidebar {
-    padding: 2.5rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
     border-radius: var(--radius-lg);
     position: sticky;
-    top: 100px;
+    top: 72px;
+}
+
+@media (max-width: 960px) {
+    .tool-sidebar {
+        position: static;
+        top: auto;
+    }
 }
 
 .tool-sidebar h4 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.6rem;
+    color: var(--text);
 }
 
 .tool-sidebar h4 i {
     color: var(--primary);
 }
 
-/* Premium Settings Widgets */
+/* Settings Widgets */
 .setting-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
 }
 
 .setting-group label {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .setting-control {
     width: 100%;
-    padding: 0.85rem 1rem;
+    padding: 0.75rem 0.9rem;
     border-radius: var(--radius-sm);
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text);
     font-family: inherit;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: var(--transition);
 }
@@ -106,82 +188,222 @@
 .setting-control:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 15px var(--primary-glow);
+    box-shadow: 0 0 12px var(--primary-glow);
 }
 
 /* Proper Dropzone UI */
-.dropzone, #ocrDropzone, .upload-area {
+.dropzone, #ocrDropzone, .upload-area, #dropArea {
     border: 2px dashed var(--border);
     background: var(--surface-hover);
-    padding: 6rem 2rem;
+    padding: clamp(2rem, 4vw, 3.5rem) 1.5rem;
     text-align: center;
     border-radius: var(--radius-lg);
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.25s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 100%;
 }
 
-.dropzone:hover, #ocrDropzone:hover, .upload-area:hover {
+.dropzone:hover, #ocrDropzone:hover, .upload-area:hover, #dropArea:hover {
     border-color: var(--primary);
     background: var(--surface);
-    transform: scale(1.01);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--primary-glow);
 }
 
-.dropzone i, .upload-area i {
-    font-size: 4rem;
+.dropzone i, .upload-area i, #ocrDropzone i {
+    font-size: 2.75rem;
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .dropzone-text {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
+    color: var(--text);
 }
 
 .dropzone-subtext {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 /* Primary Action Buttons */
 .btn-primary {
     width: 100%;
-    padding: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    min-height: 44px;
     background: var(--primary);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
-    font-weight: 800;
-    font-size: 1.1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: var(--transition);
-    box-shadow: 0 10px 20px -5px var(--primary-glow);
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 16px -4px var(--primary-glow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -10px var(--primary-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px -6px var(--primary-glow);
     background: var(--primary-dark);
 }
 
-/* Results Display Proper */
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-premium {
+    padding: 0.75rem 1.25rem;
+    min-height: 42px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px var(--primary-glow);
+    filter: brightness(1.1);
+}
+
+/* Textareas & Inputs inside Tool Apps */
+textarea, input[type="text"], input[type="number"], select {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+    margin-bottom: 0.75rem;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* Minimalist Tool Footer Bar */
+.tool-compact-footer {
+    padding: 1.25rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Results Display */
 .result-display {
-    margin-top: 3rem;
-    padding: 2.5rem;
-    border-radius: var(--radius-lg);
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
     background: var(--surface);
     border: 1px solid var(--border);
-    min-height: 200px;
+    min-height: 120px;
     display: none;
 }
 
 .result-display.active {
     display: block;
-    animation: fadeInUp 0.6s ease-out;
+    animation: fadeInUp 0.4s ease-out;
 }
+
+/* Markdown previewer grid */
+.md-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .md-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.markdown-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    min-height: 300px;
+    overflow-y: auto;
+}
+
+/* Hide legacy website bloat if ever rendered */
+article.tool-content, footer.container, .footer-grid, .footer-bottom {
+    display: none !important;
+}
+
+/* Mobile & Iframe Responsive Rules */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem !important;
+    }
+    .tool-header {
+        padding: 1rem 0 0.85rem;
+        margin-bottom: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 0.65rem !important;
+    }
+    .tool-app, .tool-sidebar {
+        padding: 1rem 0.75rem !important;
+        border-radius: var(--radius-md) !important;
+    }
+    .tool-nav-bar {
+        padding: 0 0.75rem;
+        height: 48px;
+    }
+    .tool-nav-btn {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.78rem;
+    }
+    .tool-brand-tag {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+

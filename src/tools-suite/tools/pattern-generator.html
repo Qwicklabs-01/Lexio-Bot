@@ -1,210 +1,264 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pattern Generator - Universal Studio</title>
-    <meta name="description" content="Infinite textures. Create seamless, mathematical patterns for your digital products instantly.">
+    <title>SVG Pattern Generator - Lexio Tools</title>
+    <meta name="description" content="Generate seamless mathematical SVG patterns and CSS background textures in real-time.">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/tool-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .pattern-canvas-box {
+            width: 100%;
+            height: 280px;
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .pattern-badge-center {
+            position: relative;
+            z-index: 2;
+            padding: 0.8rem 1.5rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.05em;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .range-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .code-output-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            word-break: break-all;
+            margin-top: 1rem;
+            max-height: 90px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container nav-wrapper">
-            <a href="../index.html" class="logo">UNIVERSAL STUDIO</a>
-            <div class="nav-container">
-                <button class="mobile-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <nav class="main-nav">
-                <a href="../index.html" class="nav-link">Home</a>
-                
-                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Catalog <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass">
-                        <a href="#featured" class="dropdown-item">
-                            <i class="fas fa-star"></i> Featured Favorites
-                        </a>
-                        <a href="#multimedia" class="dropdown-item">
-                            <i class="fas fa-palette"></i> Multimedia & Creative
-                        </a>
-                        <a href="#ai-writing" class="dropdown-item">
-                            <i class="fas fa-pen-nib"></i> AI Writing & Content
-                        </a>
-                        <a href="#pdf-suite" class="dropdown-item">
-                            <i class="fas fa-file-pdf"></i> PDF & Document
-                        </a>
-                        <a href="#professional" class="dropdown-item">
-                            <i class="fas fa-drafting-compass"></i> Professional & CAD
-                        </a>
-                        <a href="#developer" class="dropdown-item">
-                            <i class="fas fa-code"></i> Developer Utilities
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                
-                                <div class="dropdown">
-                    <button class="dropdown-trigger">
-                        Trending <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu glass"> 
-                        <a href="ocr.html" class="dropdown-item">
-                            <i class="fa-solid fa-magnifying-glass-chart"></i> Optical Character Recognition
-                        </a> 
-                        <a href="ai-image-generator.html" class="dropdown-item">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Image Generation Studio
-                        </a> 
-                        <a href="compress-pdf.html" class="dropdown-item">
-                            <i class="fa-solid fa-file-contract"></i> PDF Optimization Engine
-                        </a> 
-                        <a href="essay-writer.html" class="dropdown-item">
-                            <i class="fa-solid fa-pen-nib"></i> AI Academic Essayist
-                        </a>
-                    </div>
-                </div>
-            </nav>
-            <div class="nav-actions">
-                
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
+    <header class="tool-nav-bar">
+        <a href="../index.html" class="tool-nav-btn"><i class="fas fa-arrow-left"></i> <span>All Tools</span></a>
+        <div class="tool-brand-tag">
+            <span class="tool-status-dot"></span>
+            <span>Vector SVG Matrix</span>
         </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme" title="Toggle Theme">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
-
-    <div class="tool-header"><div class="container"><span class="breadcrumb">Home / Catalog / Specialized Tool</span><h1>Pattern Generator</h1>
-            <p>Infinite textures. Create seamless, mathematical patterns for your digital products instantly.</p>
+    <div class="tool-header">
+        <div class="container">
+            <h1>Seamless SVG Pattern Generator</h1>
+            <p>Design modern repeating geometric textures and export high-performance CSS and SVG code instantly.</p>
         </div>
     </div>
 
     <main class="container">
         <div class="tool-container">
-            <div class="tool-app glass" style="padding: 2.5rem;">
-                <div id="patternPreview"></div>
+            <div class="tool-app glass">
+                <div class="pattern-canvas-box" id="patternPreview">
+                    <div class="pattern-badge-center">SEAMLESS PATTERN PREVIEW</div>
+                </div>
 
-                <div class="controls" style="display: grid; gap: 1.5rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <label>Pattern Type</label>
-                        <select id="pType" style="padding: 0.75rem; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 0.5rem;">
-                            <option value="polka">Polka Dots</option>
-                            <option value="grid">Grid Lines</option>
-                            <option value="chevron">Chevrons</option>
+                <div class="controls-grid">
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Pattern Type</label>
+                        </div>
+                        <select id="pType" class="setting-control">
+                            <option value="dots">Modern Polka Dots</option>
+                            <option value="grid">Technical Grid</option>
+                            <option value="chevron">Chevrons / Herringbone</option>
+                            <option value="stripes">Diagonal Stripes</option>
+                            <option value="cubes">Isometric 3D Cubes</option>
+                            <option value="crosses">Minimalist Crosses</option>
                         </select>
                     </div>
-                </div>
-                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
-                    <button class="btn-premium">Export CSS Color</button>
-                    <button class="btn-premium" style="background: var(--surface); color: var(--text);">Export SVG</button>
-                </div>
-            </div>
 
-            <aside class="tool-sidebar glass"><h4><i class="fas fa-cog"></i> Tool Settings</h4><div class="setting-group"><label>Priority Mode</label><select class="setting-control"><option>Balanced Performance</option><option>High Speed</option><option>Maximum Quality</option></select></div><div class="setting-group"><label>Export Format</label><select class="setting-control"><option>Default (.txt / .png)</option><option>Structured JSON</option><option>Rich Text (PDF)</option></select></div><button class="btn-primary">Execute Operation</button><p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: center;"><i class="fas fa-shield-alt"></i> 100% Secure & Local</p></aside>
-        </div>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Scale / Size</label>
+                            <span id="scaleVal">24px</span>
+                        </div>
+                        <input type="range" id="pScale" min="12" max="64" value="24" class="setting-control">
+                    </div>
 
-        <article class="tool-content">
-            <section>
-                <h2>The Power of Rhythm in Design</h2>
-                <p>Patterns are the visual heartbeat of a user interface. They provide texture and interest without the heavy file weight of traditional image backgrounds. Our **Pattern Generator** allows you to manipulate mathematical constants to create infinitely repeating backgrounds for your apps and websites. By using SVG-based logic, we ensure that your patterns remain sharp on high-definition screens while keeping your page load times light.</p>
-            </section>
-        </article>
-    </main>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Foreground Color</label>
+                        </div>
+                        <input type="color" id="fgColor" value="#6366f1" class="setting-control" style="height: 42px; padding: 2px; cursor: pointer;">
+                    </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>Universal Studio</h4>
-                    <p>The ultimate suite of online tools for digital enthusiasts.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Legals</h4>
-                    <ul class="footer-links">
-                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
-                        <li><a href="pages/disclaimer.html">Disclaimer</a></li>
-                        <li><a href="pages/terms.html">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="../index.html#about">About Us</a></li>
-                        
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <div class="footer-social-grid">
-                        <a href="mailto:support@toolforge.test" class="social-card small glass" style="--brand-color: #6366f1;" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                        <a href="https://github.com" target="_blank" class="social-card small glass" style="--brand-color: #333;" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" class="social-card small glass" style="--brand-color: #0077b5;" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" class="social-card small glass" style="--brand-color: #e4405f;" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="social-card small glass" style="--brand-color: #1877f2;" title="Facebook">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a href="https://twitter.com" target="_blank" class="social-card small glass" style="--brand-color: #1da1f2;" title="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="social-card small glass" style="--brand-color: var(--accent);" title="Portfolio">
-                            <i class="fas fa-briefcase"></i>
-                        </a>
-                        <a href="../index.html#featured" class="social-card small glass" style="--brand-color: gold;" title="Other Tools">
-                            <i class="fas fa-tools"></i>
-                        </a>
+                    <div class="range-wrapper">
+                        <div class="range-header">
+                            <label>Background Color</label>
+                        </div>
+                        <input type="color" id="bgColor" value="#0f172a" class="setting-control" style="height: 42px; padding: 2px; cursor: pointer;">
                     </div>
                 </div>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    <button class="btn-primary" id="copyCssBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-code"></i> Copy CSS Rule
+                    </button>
+                    <button class="btn-premium" id="copySvgBtn" style="flex: 1; min-width: 180px;">
+                        <i class="fas fa-copy"></i> Copy Raw SVG
+                    </button>
+                    <button class="btn-primary" id="downloadSvgBtn" style="background: var(--surface); color: var(--text); border: 1px solid var(--border); flex: 1; min-width: 180px;">
+                        <i class="fas fa-download"></i> Download .SVG
+                    </button>
+                </div>
+
+                <div class="code-output-box" id="codeOutput">
+                    background-image: ...
+                </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Universal Studio. All rights reserved. | Made by <strong>Sakshi Developer</strong> • 📞 6290873841 • 📧 qwicklabs2@gmail.com <i class="fas fa-heart" style="color: #ff4d4d;"></i></p>
-            </div>
+
+            <aside class="tool-sidebar glass">
+                <h4><i class="fas fa-palette"></i> Palette Presets</h4>
+                <div style="display: grid; gap: 0.6rem; margin-bottom: 1.5rem;">
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPalette('#6366f1', '#0f172a', 'dots')">
+                        🔮 Cyber Indigo Dots
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPalette('#38bdf8', '#0284c7', 'grid')">
+                        📐 Blueprint Grid
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPalette('#ec4899', '#18181b', 'stripes')">
+                        ⚡ Neon Pink Stripes
+                    </button>
+                    <button class="tool-nav-btn" style="width: 100%; justify-content: flex-start;" onclick="setPalette('#10b981', '#064e3b', 'cubes')">
+                        🧊 Emerald Isometric
+                    </button>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+                    <i class="fas fa-shield-alt"></i> 100% Vector & Resolution Independent
+                </p>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="tool-compact-footer">
+        <div class="container">
+            <span>🔒 100% Private & Local Processing • No Cloud Uploads</span>
         </div>
     </footer>
 
     <script src="../js/main.js"></script>
+    <script>
+        const pType = document.getElementById('pType');
+        const pScale = document.getElementById('pScale');
+        const fgColor = document.getElementById('fgColor');
+        const bgColor = document.getElementById('bgColor');
+        const preview = document.getElementById('patternPreview');
+        const codeOutput = document.getElementById('codeOutput');
+
+        function generateSvg(type, size, fg, bg) {
+            let svg = '';
+            if (type === 'dots') {
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><circle cx='${size/2}' cy='${size/2}' r='${Math.max(1, size/8)}' fill='${fg}'/></svg>`;
+            } else if (type === 'grid') {
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><path d='M ${size} 0 L 0 0 0 ${size}' fill='none' stroke='${fg}' stroke-width='1.5'/></svg>`;
+            } else if (type === 'stripes') {
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><path d='M 0 ${size} L ${size} 0 M 0 0 L ${size} ${size}' stroke='${fg}' stroke-width='2'/></svg>`;
+            } else if (type === 'chevron') {
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><path d='M 0 0 L ${size/2} ${size/2} L ${size} 0' fill='none' stroke='${fg}' stroke-width='2'/></svg>`;
+            } else if (type === 'cubes') {
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><polygon points='0,0 ${size/2},0 ${size/2},${size/2} 0,${size/2}' fill='${fg}' opacity='0.3'/><polygon points='${size/2},${size/2} ${size},${size/2} ${size},${size} ${size/2},${size}' fill='${fg}' opacity='0.6'/></svg>`;
+            } else {
+                // Crosses
+                const s = size / 2;
+                svg = `<svg width='${size}' height='${size}' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='${bg}'/><path d='M ${s-3} ${s} L ${s+3} ${s} M ${s} ${s-3} L ${s} ${s+3}' stroke='${fg}' stroke-width='2'/></svg>`;
+            }
+            return svg;
+        }
+
+        function updatePattern() {
+            const type = pType.value;
+            const size = parseInt(pScale.value, 10);
+            const fg = fgColor.value;
+            const bg = bgColor.value;
+
+            document.getElementById('scaleVal').textContent = size + 'px';
+
+            const rawSvg = generateSvg(type, size, fg, bg);
+            const encoded = encodeURIComponent(rawSvg);
+            const cssRule = `background-color: ${bg};\nbackground-image: url("data:image/svg+xml,${encoded}");\nbackground-size: ${size}px ${size}px;`;
+
+            preview.style.backgroundColor = bg;
+            preview.style.backgroundImage = `url("data:image/svg+xml,${encoded}")`;
+            preview.style.backgroundSize = `${size}px ${size}px`;
+
+            codeOutput.textContent = cssRule;
+        }
+
+        pType.onchange = updatePattern;
+        pScale.oninput = updatePattern;
+        fgColor.oninput = updatePattern;
+        bgColor.oninput = updatePattern;
+
+        function setPalette(fg, bg, t) {
+            fgColor.value = fg;
+            bgColor.value = bg;
+            pType.value = t;
+            updatePattern();
+        }
+
+        document.getElementById('copyCssBtn').onclick = () => {
+            navigator.clipboard.writeText(codeOutput.textContent).then(() => alert('CSS background code copied!'));
+        };
+
+        document.getElementById('copySvgBtn').onclick = () => {
+            const rawSvg = generateSvg(pType.value, parseInt(pScale.value, 10), fgColor.value, bgColor.value);
+            navigator.clipboard.writeText(rawSvg).then(() => alert('SVG code copied!'));
+        };
+
+        document.getElementById('downloadSvgBtn').onclick = () => {
+            const rawSvg = generateSvg(pType.value, parseInt(pScale.value, 10), fgColor.value, bgColor.value);
+            const blob = new Blob([rawSvg], { type: 'image/svg+xml' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `pattern-${pType.value}.svg`;
+            link.click();
+        };
+
+        updatePattern();
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
