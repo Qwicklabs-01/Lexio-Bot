@@ -4,10 +4,10 @@ import { getMainMenuKeyboard } from '../keyboards/main.menu.js';
 export async function handleMenu(ctx: BotContext): Promise<void> {
   const isAdmin = ctx.state?.isAdmin || false;
   const menuText =
-    `🧭 *CHOOSE YOUR TASK / TOOL TYPE*\n` +
+    `🧭 *LEXIO COMMAND CENTER*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `What type of task do you need to complete?\n\n` +
-    `Select a suite below to use any tool instantly inside this chat:`;
+    `Select a task suite below to run any tool directly in this chat,\n` +
+    `or launch the full-screen *Lexio Studio* web app:`;
 
   if (ctx.callbackQuery) {
     try {
@@ -17,7 +17,12 @@ export async function handleMenu(ctx: BotContext): Promise<void> {
       });
       await ctx.answerCallbackQuery();
       return;
-    } catch {}
+    } catch (err: any) {
+      await ctx.answerCallbackQuery().catch(() => {});
+      if (err?.description?.includes('message is not modified')) {
+        return;
+      }
+    }
   }
   await ctx.reply(menuText, {
     parse_mode: 'Markdown',

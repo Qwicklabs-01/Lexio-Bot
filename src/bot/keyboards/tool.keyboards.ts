@@ -3,66 +3,64 @@ import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 
 export function getMediaDownloadKeyboard(downloadId: string): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Downloader in Bot Page', getValidHttpsMiniAppUrl('?tab=media'))
+    .webApp('⚡ Open Downloader in Studio', getValidHttpsMiniAppUrl('?tab=media'))
     .row()
     .text('🎬 1080p HD Video', `dl_${downloadId}_1080p`)
     .text('📹 720p Video', `dl_${downloadId}_720p`)
     .row()
-    .text('🎵 High-Quality MP3', `dl_${downloadId}_mp3`)
+    .text('🎵 320kbps MP3', `dl_${downloadId}_mp3`)
     .text('ℹ️ Inspect Info', `dl_${downloadId}_info`)
     .row()
-    .text('🔙 Back to Downloader', 'menu_nexus')
+    .text('« Back to Downloader', 'menu_nexus')
     .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getFeediggerActionsKeyboard(handle: string): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Creator Suite in Bot Page', getValidHttpsMiniAppUrl('?tab=social'))
+    .webApp('⚡ Open Creator Suite in Studio', getValidHttpsMiniAppUrl('?tab=social'))
     .row()
-    .text('👁️ Top Views', `fd_sort_${handle}_views`)
-    .text('❤️ Top Likes', `fd_sort_${handle}_likes`)
-    .row()
-    .text('💬 Top Comments', `fd_sort_${handle}_comments`)
-    .text('🔥 Highest ER %', `fd_sort_${handle}_er`)
+    .text('👁️ Views', `fd_sort_${handle}_views`)
+    .text('❤️ Likes', `fd_sort_${handle}_likes`)
+    .text('💬 Comments', `fd_sort_${handle}_comments`)
+    .text('🔥 ER%', `fd_sort_${handle}_er`)
     .row()
     .text('🏷️ Viral Hashtags', `fd_tags_${handle}`)
     .text('🎣 Viral Hooks', `fd_hook_${handle}`)
     .row()
-    .text('📥 Export Full CSV', `fd_export_${handle}`)
+    .text('📥 Export Full CSV Document', `fd_export_${handle}`)
     .row()
-    .text('🔙 Back to Analytics', 'menu_feedigger')
+    .text('« Back to Analytics', 'menu_feedigger')
     .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxCategoriesKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', getValidHttpsMiniAppUrl('?tab=toolbox'))
-    .row()
-    .text('💻 Code & Dev Tasks', 'tb_cat_dev')
-    .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
-    .row()
-    .text('📄 PDF & Document Master', 'tb_cat_pdf')
-    .text('✍️ AI Writing & Content', 'tb_cat_writer')
-    .row()
-    .text('📐 CAD & 3D Engineering', 'tb_cat_cad')
-    .text('🎨 Color & Design Tasks', 'tb_cat_design')
-    .row()
-    .text('📝 Text & Writing Tasks', 'tb_cat_text')
-    .text('⚡ Productivity Tasks', 'tb_cat_prod')
-    .row()
-    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
-    .text('🎲 Fun & Games', 'tb_cat_fun')
+    .webApp('⚡ Launch Lexio Studio (126+ Web Tools)', getValidHttpsMiniAppUrl('?tab=toolbox'))
     .row()
     .text('🎬 Media Downloader', 'menu_nexus')
-    .text('📊 Creator Analytics', 'menu_feedigger')
+    .text('📊 Creator Intel', 'menu_feedigger')
     .row()
-    .text('📖 Task Directory', 'menu_help')
-    .text('🏠 Back to Task Menu', 'menu_main');
+    .text('💻 Developer Suite', 'tb_cat_dev')
+    .text('🧮 Math & Finance', 'tb_cat_calc')
+    .row()
+    .text('📄 PDF & Docs', 'tb_cat_pdf')
+    .text('✍️ AI & Writing', 'tb_cat_writer')
+    .row()
+    .text('🎨 Design & CSS', 'tb_cat_design')
+    .text('⚡ Productivity', 'tb_cat_prod')
+    .row()
+    .text('🔍 SEO & Web', 'tb_cat_seo')
+    .text('🎲 Fun & Games', 'tb_cat_fun')
+    .row()
+    .text('📐 CAD & 3D', 'tb_cat_cad')
+    .text('📖 Directory', 'menu_help')
+    .row()
+    .text('🏠 Back to Main Menu', 'menu_main');
 }
 
 export function getToolBoxDevKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Dev Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=dev'))
+    .webApp('⚡ Open Dev Tools in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=dev'))
     .row()
     .text('🔤 JSON Formatter', 'tb_tool_json')
     .text('📱 QR Generator', 'tb_tool_qr')
@@ -90,12 +88,13 @@ export function getToolBoxDevKeyboard(): InlineKeyboard {
     .row()
     .text('🛡️ STIX 2.1 Threat Intel', 'tb_tool_stix')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxPdfKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open PDF Suite in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=pdf'))
+    .webApp('⚡ Open PDF Suite in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=pdf'))
     .row()
     .text('🔍 Optical OCR', 'tb_tool_ocr')
     .text('🗜️ Compress PDF', 'tb_tool_compresspdf')
@@ -112,12 +111,13 @@ export function getToolBoxPdfKeyboard(): InlineKeyboard {
     .text('🌐 Translate PDF', 'tb_tool_pdftranslate')
     .text('📦 PDF to ZIP', 'tb_tool_pdf2zip')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxWriterKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open AI Writer in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=writer'))
+    .webApp('⚡ Open AI Writer in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=writer'))
     .row()
     .text('✍️ Academic Essayist', 'tb_tool_essay')
     .text('🧠 Anti-AI Humanizer', 'tb_tool_humanizer')
@@ -131,12 +131,13 @@ export function getToolBoxWriterKeyboard(): InlineKeyboard {
     .text('💼 LinkedIn Drafter', 'tb_tool_linkedin')
     .text('📝 Live Markdown Preview', 'tb_tool_mdpreview')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxCadKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open CAD & 3D in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=cad'))
+    .webApp('⚡ Open CAD & 3D in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=cad'))
     .row()
     .text('📐 DWG to PDF', 'tb_tool_dwg2pdf')
     .text('📏 PDF to DWG', 'tb_tool_pdf2dwg')
@@ -150,12 +151,13 @@ export function getToolBoxCadKeyboard(): InlineKeyboard {
     .text('💎 Export to Sketch', 'tb_tool_tosketch')
     .text('🖼️ Export to Layered PSD', 'tb_tool_topsd')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxCalcKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Calculators in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=calc'))
+    .webApp('⚡ Open Calculators in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=calc'))
     .row()
     .text('💰 Loan EMI Calc', 'tb_tool_emi')
     .text('⚖️ BMI Calculator', 'tb_tool_bmi')
@@ -177,12 +179,13 @@ export function getToolBoxCalcKeyboard(): InlineKeyboard {
     .row()
     .text('✨ Numerology Master', 'tb_tool_numerology')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxTextKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Text Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=text'))
+    .webApp('⚡ Open Text Tools in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=text'))
     .row()
     .text('🔠 Case Converter', 'tb_tool_case')
     .text('📊 Word & Char Count', 'tb_tool_count')
@@ -195,12 +198,13 @@ export function getToolBoxTextKeyboard(): InlineKeyboard {
     .row()
     .text('✂️ Character Remover', 'tb_tool_removechar')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxSeoKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open SEO Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=seo'))
+    .webApp('⚡ Open SEO Tools in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=seo'))
     .row()
     .text('🏷️ Meta Tag Gen', 'tb_tool_meta')
     .text('🤖 Robots.txt Gen', 'tb_tool_robots')
@@ -211,12 +215,13 @@ export function getToolBoxSeoKeyboard(): InlineKeyboard {
     .text('📊 Keyword Density', 'tb_tool_keywords')
     .text('📈 Outlier Detector', 'tb_tool_outlier')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxDesignKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Design Tools in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=design'))
+    .webApp('⚡ Open Design Tools in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=design'))
     .row()
     .text('🔘 Neumorphism Soft UI', 'tb_tool_neumorphism')
     .text('🌀 Fluid Mesh Gradient', 'tb_tool_meshgrad')
@@ -232,12 +237,13 @@ export function getToolBoxDesignKeyboard(): InlineKeyboard {
     .row()
     .text('🎨 Design System Lib', 'tb_tool_designlib')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxProductivityKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Productivity in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=prod'))
+    .webApp('⚡ Open Productivity in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=prod'))
     .row()
     .text('🔐 Password Gen', 'tb_tool_password')
     .text('⏱️ Pomodoro Timer', 'tb_tool_pomodoro')
@@ -247,12 +253,13 @@ export function getToolBoxProductivityKeyboard(): InlineKeyboard {
     .row()
     .text('📜 Lorem Ipsum', 'tb_tool_lorem')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getToolBoxFunKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open Games in Bot Page', getValidHttpsMiniAppUrl('?tab=toolbox&cat=fun'))
+    .webApp('⚡ Open Games in Studio', getValidHttpsMiniAppUrl('?tab=toolbox&cat=fun'))
     .row()
     .text('🪙 3D Coin Flip', 'tb_tool_coin')
     .text('🎲 Roll Dice', 'tb_tool_dice')
@@ -263,7 +270,8 @@ export function getToolBoxFunKeyboard(): InlineKeyboard {
     .text('🎯 Choice Picker', 'tb_tool_pick')
     .text('🎮 Rock Paper Scissors', 'tb_tool_rps')
     .row()
-    .text('🔙 Back to Task Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }
 
 export function getBackToCategoryKeyboard(
@@ -282,32 +290,33 @@ export function getBackToCategoryKeyboard(
   }
 
   const catNames: Record<string, string> = {
-    dev: '💻 Dev Tasks',
-    calc: '🧮 Math Tasks',
+    dev: '💻 Dev Suite',
+    calc: '🧮 Math Suite',
     pdf: '📄 PDF Suite',
-    writer: '✍️ AI Writing',
+    writer: '✍️ AI Suite',
     cad: '📐 CAD & 3D',
-    text: '📝 Text Tasks',
-    seo: '🔍 SEO Tasks',
-    design: '🎨 Design Tasks',
+    text: '📝 Text Suite',
+    seo: '🔍 SEO Suite',
+    design: '🎨 Design Suite',
     prod: '⚡ Productivity',
     fun: '🎲 Fun & Games',
   };
 
-  const backLabel = catNames[category] ? `🔙 ${catNames[category]}` : '🔙 Tasks';
+  const backLabel = catNames[category] ? `« ${catNames[category]}` : '« Suites';
 
   keyboard
-    .webApp('🚀 Open in Bot Page', getValidHttpsMiniAppUrl(`?tab=toolbox&cat=${category}`))
+    .webApp('⚡ Open in Studio WebApp', getValidHttpsMiniAppUrl(`?tab=toolbox&cat=${category}`))
     .row()
     .text(backLabel, `tb_cat_${category}`)
-    .text('🏠 Task Menu', 'menu_main');
+    .text('🏠 Main Menu', 'menu_main');
 
   return keyboard;
 }
 
 export function getBackToMenuKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', getValidHttpsMiniAppUrl('?tab=toolbox'))
+    .webApp('⚡ Launch Lexio Studio (126+ Web Tools)', getValidHttpsMiniAppUrl('?tab=toolbox'))
     .row()
-    .text('🏠 Back to Main Menu', 'menu_main');
+    .text('« Back to Suites', 'menu_toolbox')
+    .text('🏠 Main Menu', 'menu_main');
 }

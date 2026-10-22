@@ -2,6 +2,7 @@ import { BotContext } from '../types.js';
 import { getFeediggerActionsKeyboard, getBackToMenuKeyboard } from '../keyboards/tool.keyboards.js';
 import { InputFile, InlineKeyboard } from 'grammy';
 import { prisma } from '../../database/client.js';
+import { getValidHttpsMiniAppUrl } from '../../config/env.js';
 
 interface MockReel {
   id: string;
@@ -71,25 +72,30 @@ function getMockProfileData(handle: string): {
 
 export async function handleFeediggerMenu(ctx: BotContext): Promise<void> {
   const text =
-    `📊 *CREATOR & SOCIAL ANALYTICS*\n` +
+    `📊 *LEXIO CREATOR & SOCIAL INTEL*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Analyze Instagram creators, discover viral hooks, and calculate true Engagement Rates (ER%).\n\n` +
-    `• 👁️ *Viral Reels Ranking:* Discover breakout topics\n` +
-    `• 🔥 *True ER% Benchmark:* Views vs likes vs comments\n` +
-    `• 🏷️ *Viral Hashtags:* High-growth hashtag sets\n` +
-    `• 🎣 *Hook Formulas:* 3-second viewer retention\n` +
-    `• 📥 *CSV Export:* Download full spreadsheet in chat\n\n` +
-    `👉 *To analyze:* Type \`/excavate @username\`\n\n` +
-    `Or tap a demo action below to run immediately:`;
+    `Deep profile audit, engagement rate computation & viral outlier analysis.\n\n` +
+    `🔍 *Key Analytics Capabilities:*\n` +
+    `• 📈 *Engagement Rate %:* Benchmark against top 5% in category\n` +
+    `• 👁️ *Reel Performance:* Filter by views, likes, comments & ER%\n` +
+    `• 📥 *CSV Data Export:* Download full tabular reel reports\n` +
+    `• 🏷️ *Viral Hashtags:* 1-click copy high-reach tag batches\n` +
+    `• 🎣 *Viral Hook Generator:* High-retention video openers\n\n` +
+    `💡 *How to analyze:*\n` +
+    `Type \`/excavate @username\` (e.g. \`/excavate @mrbeast\`)\n\n` +
+    `👇 *Tap a demo below or open Studio WebApp:*`;
 
+  const miniAppUrl = getValidHttpsMiniAppUrl('?tab=social');
   const keyboard = new InlineKeyboard()
-    .text('🔍 Demo @mrbeast', 'fd_demo_mrbeast')
-    .text('🔍 Demo @instagram', 'fd_demo_instagram')
+    .webApp('⚡ Open Creator Suite in Studio', miniAppUrl)
+    .row()
+    .text('👤 Demo @mrbeast', 'fd_demo_mrbeast')
+    .text('📸 Demo @instagram', 'fd_demo_instagram')
     .row()
     .text('🏷️ Viral Hashtags', 'fd_tags_creator')
     .text('🎣 Viral Hooks', 'fd_hook_creator')
     .row()
-    .text('🏠 Back to Task Menu', 'menu_main');
+    .text('🏠 Back to Main Menu', 'menu_main');
 
   if (ctx.callbackQuery) {
     try {
@@ -99,7 +105,12 @@ export async function handleFeediggerMenu(ctx: BotContext): Promise<void> {
       });
       await ctx.answerCallbackQuery();
       return;
-    } catch {}
+    } catch (err: any) {
+      await ctx.answerCallbackQuery().catch(() => {});
+      if (err?.description?.includes('message is not modified')) {
+        return;
+      }
+    }
   }
   await ctx.reply(text, {
     parse_mode: 'Markdown',

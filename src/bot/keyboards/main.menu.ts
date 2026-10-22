@@ -5,32 +5,33 @@ export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
   const keyboard = new InlineKeyboard();
   const miniAppUrl = getValidHttpsMiniAppUrl('?tab=toolbox');
 
-  // Launch 100,000+ tools directly inside Telegram bot page
+  // Hero: Launch full WebApp studio directly inside Telegram
   keyboard
-    .webApp('🚀 Open 100,000+ Tools Page (In-Bot)', miniAppUrl)
+    .webApp('⚡ Launch Lexio Studio (126+ Web Tools)', miniAppUrl)
     .row();
 
-  // Task-Driven Selector directly in Telegram (Zero website names)
+  // Flagship Actions: Media Capture & Social Intel
   keyboard
-    .text('💻 Code & Dev Tasks', 'tb_cat_dev')
-    .text('🧮 Math & Finance Tasks', 'tb_cat_calc')
+    .text('🎬 Media Downloader', 'menu_nexus')
+    .text('📊 Creator Intel', 'menu_feedigger')
+    .row();
+
+  // Tool Suites in clean 2-column balanced grid
+  keyboard
+    .text('💻 Developer Suite', 'tb_cat_dev')
+    .text('🧮 Math & Finance', 'tb_cat_calc')
     .row()
-    .text('📄 PDF & Document Master', 'tb_cat_pdf')
-    .text('✍️ AI Writing & Content', 'tb_cat_writer')
+    .text('📄 PDF & Docs', 'tb_cat_pdf')
+    .text('✍️ AI & Writing', 'tb_cat_writer')
     .row()
-    .text('📐 CAD & 3D Engineering', 'tb_cat_cad')
-    .text('🎨 Color & Design Tasks', 'tb_cat_design')
+    .text('🎨 Design & CSS', 'tb_cat_design')
+    .text('⚡ Productivity', 'tb_cat_prod')
     .row()
-    .text('📝 Text & Writing Tasks', 'tb_cat_text')
-    .text('⚡ Productivity Tasks', 'tb_cat_prod')
-    .row()
-    .text('🔍 SEO & Web Tasks', 'tb_cat_seo')
+    .text('🔍 SEO & Web', 'tb_cat_seo')
     .text('🎲 Fun & Games', 'tb_cat_fun')
     .row()
-    .text('🎬 Media Downloader', 'menu_nexus')
-    .text('📊 Creator Analytics', 'menu_feedigger')
-    .row()
-    .text('📖 Task Directory', 'menu_help');
+    .text('📐 CAD & 3D', 'tb_cat_cad')
+    .text('📖 Directory', 'menu_help');
 
   if (isAdmin) {
     keyboard.row().text('👑 Admin Dashboard', 'admin_panel');
@@ -42,13 +43,12 @@ export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
 export function getPersistentReplyKeyboard(): Keyboard {
   const miniAppUrl = getValidHttpsMiniAppUrl('?tab=toolbox');
   return new Keyboard()
-    .webApp('🚀 Open Tools Page', miniAppUrl)
-    .text('🧰 Choose Task / Tool')
+    .webApp('⚡ Open Lexio Studio', miniAppUrl)
+    .text('🧰 All Tools')
     .row()
     .text('🎬 Media Downloader')
-    .text('📊 Creator Analytics')
-    .row()
-    .text('📖 Task Directory')
+    .text('📊 Creator Intel')
+    .text('📖 Directory')
     .resized()
     .persistent();
 }

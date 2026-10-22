@@ -6,29 +6,29 @@ export async function handleStart(ctx: BotContext): Promise<void> {
   const isAdmin = ctx.state?.isAdmin || false;
 
   const welcomeMessage =
-    `⚡ *LEXIO MULTI-TOOL ASSISTANT*\n` +
+    `⚡ *LEXIO UNIVERSAL ASSISTANT*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Welcome, *${firstName}*! All tools run directly inside this chat.\n\n` +
-    `What type of task do you need to complete today?\n\n` +
-    `• 💻 *Code & Dev:* Format JSON/SQL, QR code, UUID, Hashes, Base64, Binary\n` +
-    `• 🧮 *Math & Finance:* Loan EMI, BMI, Age, Percent, Discount, Unit Converter, Stats\n` +
-    `• 📝 *Text & Copy:* Word count, Case converter, Reverser, Sorter, Morse, Lorem\n` +
-    `• 🔍 *SEO & Web:* Meta tags, Robots.txt, Sitemap, HTTP codes, Keyword density\n` +
-    `• 🎨 *Color & Design:* HEX to RGB, CSS Gradients, Box Shadows, Material Palette\n` +
-    `• ⚡ *Productivity:* 256-Bit Passwords, Pomodoro focus timer, Quick Task Keeper\n` +
-    `• 🎲 *Fun & Games:* 3D Coin flip, Dice, Magic 8-Ball, Daily Quotes, RPS Game\n` +
-    `• 🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
-    `• 📊 *Creator Analytics:* Analyze Instagram profiles, ER% & CSV export\n\n` +
-    `👇 *Select your task category below to run any tool:*`;
+    `👋 Welcome, *${firstName}*! All tools run directly inside Telegram with zero external redirects.\n\n` +
+    `🌟 *Featured Capabilities:*\n` +
+    `• 🎬 *Media Grabber:* 1080p Video & 320kbps MP3 (YouTube, Reels, TikTok)\n` +
+    `• 📊 *Creator Intel:* Instagram analytics, viral ER% audit & CSV export\n` +
+    `• 💻 *Developer Suite:* JSON, QR, UUID, Hashes, Base64, SQL, STIX\n` +
+    `• 🧮 *Math & Finance:* Loan EMI, BMI, Currency, Unit conversions & Stats\n` +
+    `• 📄 *PDF Master:* OCR extraction, document conversion & compression\n` +
+    `• ✍️ *AI Writing & Polish:* Anti-AI humanizer, Essay outlines, LinkedIn hooks\n` +
+    `• 🎨 *Design & CSS:* Modern gradients, box-shadows, palettes\n` +
+    `• ⚡ *Productivity:* 256-bit passwords, Pomodoro timer, Task keeper\n\n` +
+    `👇 *Tap 'Launch Lexio Studio' for full WebApp, or choose a category below:*`;
 
   await ctx.reply(welcomeMessage, {
     parse_mode: 'Markdown',
     reply_markup: getMainMenuKeyboard(isAdmin),
   });
 
-  // Activate Telegram's persistent bottom slide bar / reply keyboard
-  await ctx.reply('💡 *Tip:* You can also tap the quick menu options on your keyboard below at any time.', {
+  // Activate Telegram's persistent bottom reply keyboard silently (no audio interruption)
+  await ctx.reply('⚡ *Quick-access dock active.* You can also tap the keyboard buttons below at any time.', {
     parse_mode: 'Markdown',
+    disable_notification: true,
     reply_markup: getPersistentReplyKeyboard(),
   });
 }

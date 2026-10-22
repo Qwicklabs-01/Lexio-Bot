@@ -27,7 +27,12 @@ async function sendInteractiveToolMessage(ctx: BotContext, text: string, reply_m
       });
       await ctx.answerCallbackQuery();
       return;
-    } catch {}
+    } catch (err: any) {
+      await ctx.answerCallbackQuery().catch(() => {});
+      if (err?.description?.includes('message is not modified')) {
+        return;
+      }
+    }
   }
   await ctx.reply(text, {
     parse_mode: 'Markdown',
@@ -37,19 +42,10 @@ async function sendInteractiveToolMessage(ctx: BotContext, text: string, reply_m
 
 export async function handleToolBoxMenu(ctx: BotContext): Promise<void> {
   const text =
-    `🧰 *CHOOSE YOUR TASK / TOOL TYPE*\n` +
+    `🧰 *LEXIO UNIVERSAL SUITES*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `What type of task do you need to complete?\n\n` +
-    `• 💻 *Code & Dev:* Format JSON/SQL, QR code, UUID, Hashes, Base64, Binary\n` +
-    `• 🧮 *Math & Finance:* Loan EMI, BMI, Age, Percent, Discount, Unit Converter, Stats\n` +
-    `• 📝 *Text & Copy:* Word count, Case converter, Reverser, Sorter, Morse, Lorem\n` +
-    `• 🔍 *SEO & Web:* Meta tags, Robots.txt, Sitemap, HTTP codes, Keyword density\n` +
-    `• 🎨 *Color & Design:* HEX to RGB, CSS Gradients, Box Shadows, Material Palette\n` +
-    `• ⚡ *Productivity:* 256-Bit Passwords, Pomodoro focus timer, Quick Task Keeper\n` +
-    `• 🎲 *Fun & Games:* 3D Coin flip, Dice, Magic 8-Ball, Daily Quotes, RPS Game\n` +
-    `• 🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
-    `• 📊 *Creator Analytics:* Analyze Instagram profiles, ER% & CSV export\n\n` +
-    `👇 *Select a task suite below to run any tool:*`;
+    `Select a tool suite below to run any tool directly in this chat,\n` +
+    `or launch the full-screen *Lexio Studio* web app:`;
 
   if (ctx.callbackQuery) {
     try {
@@ -59,7 +55,12 @@ export async function handleToolBoxMenu(ctx: BotContext): Promise<void> {
       });
       await ctx.answerCallbackQuery();
       return;
-    } catch {}
+    } catch (err: any) {
+      await ctx.answerCallbackQuery().catch(() => {});
+      if (err?.description?.includes('message is not modified')) {
+        return;
+      }
+    }
   }
   await ctx.reply(text, {
     parse_mode: 'Markdown',

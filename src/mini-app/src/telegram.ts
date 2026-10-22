@@ -59,6 +59,8 @@ declare global {
         expand: () => void;
         close: () => void;
         enableClosingConfirmation: () => void;
+        setHeaderColor?: (color: string) => void;
+        setBackgroundColor?: (color: string) => void;
         showPopup: (params: { title?: string; message: string; buttons?: { id: string; type: string; text: string }[] }, callback?: (buttonId: string) => void) => void;
         openLink: (url: string) => void;
         openTelegramLink: (url: string) => void;
@@ -78,6 +80,14 @@ export const tg = {
     this.app.expand();
     try {
       this.app.enableClosingConfirmation();
+    } catch {}
+    try {
+      if (typeof this.app.setHeaderColor === 'function') {
+        this.app.setHeaderColor('#0a0d14');
+      }
+      if (typeof this.app.setBackgroundColor === 'function') {
+        this.app.setBackgroundColor('#0a0d14');
+      }
     } catch {}
   },
 

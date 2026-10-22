@@ -722,13 +722,24 @@ export function createBot(): Bot<BotContext> {
     ) {
       return handleMenu(ctx);
     }
-    if (text === '🎬 Media Downloader' || lower === 'download') {
+    if (text === '🎬 Media Downloader' || text === '🎬 Media Grabber' || lower === 'download') {
       return handleNexusMenu(ctx);
     }
-    if (text === '📊 Creator Analytics' || text === '📊 Social Analytics' || lower === 'social' || lower === 'analytics') {
+    if (
+      text === '📊 Creator Analytics' ||
+      text === '📊 Creator Intel' ||
+      text === '📊 Social Analytics' ||
+      lower === 'social' ||
+      lower === 'analytics'
+    ) {
       return handleFeediggerMenu(ctx);
     }
-    if (text === '📖 Task Directory' || text === '❓ Help & Commands' || lower === 'help') {
+    if (
+      text === '📖 Task Directory' ||
+      text === '📖 Directory' ||
+      text === '❓ Help & Commands' ||
+      lower === 'help'
+    ) {
       return handleHelp(ctx);
     }
 
@@ -736,10 +747,10 @@ export function createBot(): Bot<BotContext> {
     if (['hi', 'hello', 'hey', 'start', 'yo', 'hola'].includes(lower)) {
       const firstName = ctx.from?.first_name || 'Friend';
       return ctx.reply(
-        `⚡ *LEXIO MULTI-TOOL ASSISTANT*\n` +
+        `⚡ *LEXIO UNIVERSAL ASSISTANT*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `👋 Hello, *${firstName}*! What task do you need to complete today?\n\n` +
-        `Select your task category below to run any tool inside this chat:`,
+        `Tap below to launch *Lexio Studio* or select a category:`,
         {
           parse_mode: 'Markdown',
           reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
@@ -848,13 +859,13 @@ export function createBot(): Bot<BotContext> {
       await handleIncomingMediaUrl(ctx, text);
     } else {
       await ctx.reply(
-        `💡 *WHAT TASK DO YOU WANT TO COMPLETE?*\n` +
+        `⚡ *LEXIO COMMAND CENTER*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `• 💻 *Code & Dev:* Format JSON/SQL, QR generator, UUID, Hashes\n` +
-        `• 🧮 *Math & Finance:* Calculate Loan EMI, BMI, Age, Units, Stats\n` +
         `• 🎬 *Media Downloads:* Paste any YouTube, Reel, or TikTok video link\n` +
-        `• 📊 *Creator Analytics:* Type \`/excavate @username\`\n\n` +
-        `👇 Select a task suite below to proceed:`,
+        `• 📊 *Creator Analytics:* Type \`/excavate @username\`\n` +
+        `• 💻 *Developer Suite:* Format JSON/SQL, QR code, UUID, Hashes\n` +
+        `• 🧮 *Math & Finance:* Calculate Loan EMI, BMI, Age, Units, Stats\n\n` +
+        `👇 *Tap below to launch Lexio Studio or select a suite:*`,
         {
           parse_mode: 'Markdown',
           reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),

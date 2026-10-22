@@ -211,6 +211,24 @@ export function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const backBtn = tg.app?.BackButton;
+    if (!backBtn) return;
+    if (isSlideBarOpen) {
+      backBtn.show();
+      const onBackClick = () => {
+        setIsSlideBarOpen(false);
+      };
+      backBtn.onClick(onBackClick);
+      return () => {
+        backBtn.offClick(onBackClick);
+        backBtn.hide();
+      };
+    } else {
+      backBtn.hide();
+    }
+  }, [isSlideBarOpen]);
+
   const switchTab = (tab: Tab) => {
     tg.haptic('selectionChanged');
     setActiveTab(tab);

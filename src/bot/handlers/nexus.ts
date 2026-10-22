@@ -42,21 +42,21 @@ export async function handleNexusMenu(ctx: BotContext): Promise<void> {
   const text =
     `🎬 *UNIVERSAL MEDIA DOWNLOADER & CAPTURE ENGINE*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Capture and extract high-definition video and audio directly inside this Telegram bot.\n\n` +
+    `Capture and extract high-definition video and audio directly inside this chat.\n\n` +
+    `🌐 *Supported Platforms:*\n` +
     `• 🔴 *YouTube:* 1080p Full HD, 720p HD, 320kbps MP3 Audio\n` +
     `• 📸 *Instagram:* Reels, Carousels, Stories & Audio tracks\n` +
     `• 🎵 *TikTok:* Watermark-free HD Video & original sound\n` +
-    `• 🐦 *Twitter / X & Facebook:* Direct MP4 high-speed downloads\n` +
-    `• 📌 *Reddit & Pinterest:* Full resolution media clips\n\n` +
-    `👉 *To download:* Paste any video URL directly into this chat or type:\n` +
-    `• \`/download <url>\` — Queue capture & select resolution\n` +
-    `• \`/audio <url>\` — Extract 320kbps MP3 audio track directly\n` +
-    `• \`/info <url>\` — Inspect streams, duration & technical codecs\n\n` +
-    `👇 Or tap a demo trigger below to test immediately:`;
+    `• 🐦 *Twitter / X:* Direct MP4 high-speed downloads\n` +
+    `• 📌 *Reddit, Pinterest & FB:* Full resolution media clips\n\n` +
+    `💡 *How to download:*\n` +
+    `Paste any video URL directly into this chat anytime,\n` +
+    `or type \`/download <url>\` or \`/audio <url>\`.\n\n` +
+    `👇 *Tap a test preset below or open Studio WebApp:*`;
 
   const miniAppUrl = getValidHttpsMiniAppUrl('?tab=media');
   const keyboard = new InlineKeyboard()
-    .webApp('🚀 Open Downloader in Bot Page', miniAppUrl)
+    .webApp('⚡ Open Downloader in Studio', miniAppUrl)
     .row()
     .text('🔴 Test YouTube 1080p', 'dl_sample_yt')
     .text('📸 Test Instagram Reel', 'dl_sample_ig')
@@ -64,7 +64,7 @@ export async function handleNexusMenu(ctx: BotContext): Promise<void> {
     .text('🎵 Test TikTok HD', 'dl_sample_tt')
     .text('🐦 Test Twitter/X Clip', 'dl_sample_tw')
     .row()
-    .text('🏠 Back to Task Menu', 'menu_main');
+    .text('🏠 Back to Main Menu', 'menu_main');
 
   if (ctx.callbackQuery) {
     try {
@@ -74,7 +74,12 @@ export async function handleNexusMenu(ctx: BotContext): Promise<void> {
       });
       await ctx.answerCallbackQuery();
       return;
-    } catch {}
+    } catch (err: any) {
+      await ctx.answerCallbackQuery().catch(() => {});
+      if (err?.description?.includes('message is not modified')) {
+        return;
+      }
+    }
   }
   await ctx.reply(text, {
     parse_mode: 'Markdown',

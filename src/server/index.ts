@@ -99,30 +99,30 @@ async function startServer(): Promise<void> {
         await bot.api.setChatMenuButton({
           menu_button: {
             type: 'web_app',
-            text: '⚡ Tools Page',
+            text: '⚡ Studio',
             web_app: { url: getValidHttpsMiniAppUrl('?tab=toolbox') },
           },
         });
-        console.log('✅ Telegram Bot Menu Button set to in-app WebApp page');
+        console.log('✅ Telegram Bot Menu Button set to Lexio Studio WebApp');
       } catch (e) {
         console.warn('⚠️ Menu button note:', (e as Error).message);
       }
 
       try {
         await bot.api.setMyCommands([
-          { command: 'start', description: '🚀 Start Lexio & Choose Task Type' },
-          { command: 'tools', description: '🧰 100,000+ Tools & Options' },
-          { command: 'menu', description: '🧭 Choose Task Category' },
-          { command: 'download', description: '🎬 Universal Media Downloader' },
-          { command: 'excavate', description: '📊 Creator & Social Analytics' },
-          { command: 'calc', description: '🧮 Instant Math & Calculators' },
-          { command: 'json', description: '💻 Format & Minify JSON' },
-          { command: 'qr', description: '📱 High-Res QR Generator' },
-          { command: 'unit', description: '📐 Universal Unit Converter' },
-          { command: 'stats', description: '📈 Statistics Calculator' },
+          { command: 'start', description: '⚡ Launch Lexio Assistant' },
+          { command: 'tools', description: '🧰 Open 126+ Web Tools' },
+          { command: 'menu', description: '🧭 Choose Task Suite' },
+          { command: 'download', description: '🎬 Media Downloader (YT/IG/TT)' },
+          { command: 'excavate', description: '📊 Creator & Social Intel' },
+          { command: 'calc', description: '🧮 Fast Math & Calculators' },
+          { command: 'json', description: '💻 Format, Minify & Inspect JSON' },
+          { command: 'qr', description: '📱 High-Res QR Code Generator' },
+          { command: 'unit', description: '📐 Unit & Measurement Converter' },
+          { command: 'stats', description: '📈 Statistical Mean/Median/Mode' },
           { command: 'password', description: '🛡️ 256-Bit Password Generator' },
-          { command: 'pomodoro', description: '⏳ Focus Sprint Timer' },
-          { command: 'help', description: '📖 Complete Task Directory' },
+          { command: 'pomodoro', description: '⏳ Focus Sprint & Break Timer' },
+          { command: 'help', description: '📖 Full Command Directory' },
         ]);
         console.log('✅ Bot commands registered with Telegram API');
       } catch (e) {
