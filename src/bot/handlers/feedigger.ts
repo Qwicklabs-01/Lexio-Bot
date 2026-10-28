@@ -3,6 +3,7 @@ import { getFeediggerActionsKeyboard, getBackToMenuKeyboard } from '../keyboards
 import { InputFile, InlineKeyboard } from 'grammy';
 import { prisma } from '../../database/client.js';
 import { getValidHttpsMiniAppUrl } from '../../config/env.js';
+import { escapeMarkdown } from '../utils/markdown.js';
 
 interface MockReel {
   id: string;
@@ -128,12 +129,20 @@ export async function handleExcavateCommand(ctx: BotContext, handle: string): Pr
     return;
   }
 
+  const safeHandle = escapeMarkdown(cleanHandle);
   const telegramId = ctx.from?.id.toString() || 'anonymous';
 
-  const analyzingMsg = await ctx.reply(
-    `⛏️ *Lexio analyzing @${cleanHandle}...*\nScraping posts, parsing views, calculating Engagement Rate %...`,
-    { parse_mode: 'Markdown' }
-  );
+  let analyzingMsgId: number | undefined;
+  try {
+    const analyzingMsg = await ctx.reply(
+      `⛏️ *Lexio analyzing @${safeHandle}...*\nScraping posts, parsing views, calculating Engagement Rate %...`,
+      { parse_mode: 'Markdown' }
+    );
+    analyzingMsgId = analyzingMsg.message_id;
+  } catch {
+    const analyzingMsg = await ctx.reply(`⛏️ Lexio analyzing @${cleanHandle}...\nScraping posts, parsing views, calculating Engagement Rate %...`);
+    analyzingMsgId = analyzingMsg.message_id;
+  }
 
   const profile = getMockProfileData(cleanHandle);
 
@@ -148,31 +157,40 @@ export async function handleExcavateCommand(ctx: BotContext, handle: string): Pr
       },
     });
 
-    await prisma.user.update({
+    await prisma.user.upsert({
       where: { telegramId },
-      data: { scrapesCount: { increment: 1 } },
+      update: { scrapesCount: { increment: 1 } },
+      create: { telegramId, scrapesCount: 1 },
     });
   } catch {}
 
-  try {
-    await ctx.api.deleteMessage(ctx.chat!.id, analyzingMsg.message_id);
-  } catch {}
+  if (analyzingMsgId && ctx.chat) {
+    try {
+      await ctx.api.deleteMessage(ctx.chat.id, analyzingMsgId);
+    } catch {}
+  }
 
   const responseText =
-    `🎯 *Lexio Creator Intel: @${cleanHandle}*\n\n` +
-    `👤 *Account:* ${profile.name}\n` +
+    `🎯 *Lexio Creator Intel: @${safeHandle}*\n\n` +
+    `👤 *Account:* ${escapeMarkdown(profile.name)}\n` +
     `👥 *Followers:* ${(profile.followers / 1000).toFixed(1)}k | 📸 *Posts:* ${profile.postsCount}\n` +
     `🔥 *Average ER%:* 8.8% (Top 5% in category)\n\n` +
     `🏆 *Top Viral Reels (Ranked by Views):*\n` +
-    `1. 👁️ *1.45M views* (122k likes, 8.6% ER)\n   "${profile.reels[0].caption}"\n` +
-    `2. 👁️ *890K views* (74k likes, 8.5% ER)\n   "${profile.reels[1].caption}"\n` +
-    `3. 👁️ *650K views* (58k likes, 9.1% ER)\n   "${profile.reels[2].caption}"\n\n` +
+    `1. 👁️ *1.45M views* (122k likes, 8.6% ER)\n   "${escapeMarkdown(profile.reels[0].caption)}"\n` +
+    `2. 👁️ *890K views* (74k likes, 8.5% ER)\n   "${escapeMarkdown(profile.reels[1].caption)}"\n` +
+    `3. 👁️ *650K views* (58k likes, 9.1% ER)\n   "${escapeMarkdown(profile.reels[2].caption)}"\n\n` +
     `Select a ranking metric or export CSV below:`;
 
-  await ctx.reply(responseText, {
-    parse_mode: 'Markdown',
-    reply_markup: getFeediggerActionsKeyboard(cleanHandle),
-  });
+  try {
+    await ctx.reply(responseText, {
+      parse_mode: 'Markdown',
+      reply_markup: getFeediggerActionsKeyboard(cleanHandle),
+    });
+  } catch {
+    await ctx.reply(responseText.replace(/[*_`]/g, ''), {
+      reply_markup: getFeediggerActionsKeyboard(cleanHandle),
+    });
+  }
 }
 
 export async function handleFeediggerSort(
@@ -195,20 +213,27 @@ export async function handleFeediggerSort(
     er: '🔥 Highest Engagement %',
   }[metric];
 
-  let text = `📊 *Top Reels for @${handle} by ${metricLabel}:*\n\n`;
+  const safeHandle = escapeMarkdown(handle);
+  let text = `📊 *Top Reels for @${safeHandle} by ${metricLabel}:*\n\n`;
   sorted.forEach((r, idx) => {
     text += `${idx + 1}. *${r.views.toLocaleString()} views* | ❤️ ${r.likes.toLocaleString()} | 💬 ${r.comments.toLocaleString()} | *${r.er}% ER*\n   🔗 [View Reel](${r.url})\n\n`;
   });
 
-  await ctx.answerCallbackQuery();
-  await ctx.reply(text, {
-    parse_mode: 'Markdown',
-    reply_markup: getFeediggerActionsKeyboard(handle),
-  });
+  await ctx.answerCallbackQuery().catch(() => {});
+  try {
+    await ctx.reply(text, {
+      parse_mode: 'Markdown',
+      reply_markup: getFeediggerActionsKeyboard(handle),
+    });
+  } catch {
+    await ctx.reply(text.replace(/[*_`]/g, ''), {
+      reply_markup: getFeediggerActionsKeyboard(handle),
+    });
+  }
 }
 
 export async function handleFeediggerCsvExport(ctx: BotContext, handle: string): Promise<void> {
-  await ctx.answerCallbackQuery({ text: 'Generating CSV...' });
+  await ctx.answerCallbackQuery({ text: 'Generating CSV...' }).catch(() => {});
   const profile = getMockProfileData(handle);
 
   const headers = 'Rank,Post_URL,Views,Likes,Comments,Engagement_Rate_Percent,Caption\n';
@@ -222,10 +247,17 @@ export async function handleFeediggerCsvExport(ctx: BotContext, handle: string):
   const csvContent = headers + rows;
   const buffer = Buffer.from(csvContent, 'utf-8');
 
-  await ctx.replyWithDocument(new InputFile(buffer, `lexio_${handle}_analytics.csv`), {
-    caption: `📥 *Lexio CSV Export for @${handle}*\nReady for import into Excel, Google Sheets, or Notion!`,
-    parse_mode: 'Markdown',
-  });
+  const safeHandle = escapeMarkdown(handle);
+  try {
+    await ctx.replyWithDocument(new InputFile(buffer, `lexio_${handle}_analytics.csv`), {
+      caption: `📥 *Lexio CSV Export for @${safeHandle}*\nReady for import into Excel, Google Sheets, or Notion!`,
+      parse_mode: 'Markdown',
+    });
+  } catch {
+    await ctx.replyWithDocument(new InputFile(buffer, `lexio_${handle}_analytics.csv`), {
+      caption: `📥 Lexio CSV Export for @${handle}\nReady for import into Excel, Google Sheets, or Notion!`,
+    });
+  }
 }
 
 export async function handleHashtagsCommand(ctx: BotContext, niche: string): Promise<void> {
@@ -239,30 +271,44 @@ export async function handleHashtagsCommand(ctx: BotContext, niche: string): Pro
 
   const key = Object.keys(tagLibrary).find((k) => query.includes(k)) || 'creator';
   const tags = tagLibrary[key];
+  const safeQuery = escapeMarkdown(query.toUpperCase());
 
   await ctx.reply(
-    `🏷️ *High-Growth Hashtags for [${query.toUpperCase()}]:*\n\n` +
+    `🏷️ *High-Growth Hashtags for [${safeQuery}]:*\n\n` +
     `\`${tags.join(' ')}\`\n\n` +
     `Tap to copy and paste into your Reel or TikTok caption!`,
     { parse_mode: 'Markdown', reply_markup: getBackToMenuKeyboard() }
-  );
+  ).catch(async () => {
+    await ctx.reply(
+      `🏷️ High-Growth Hashtags for [${query.toUpperCase()}]:\n\n${tags.join(' ')}\n\nTap to copy and paste!`,
+      { reply_markup: getBackToMenuKeyboard() }
+    );
+  });
 }
 
 export async function handleHookCommand(ctx: BotContext, topic: string): Promise<void> {
   const t = topic.trim() || 'this topic';
+  const safeT = escapeMarkdown(t);
   const hooks = [
-    `"Stop scrolling if you want to master ${t} in 2026..."`,
-    `"3 secrets about ${t} that 99% of people don't know:"`,
-    `"If I had to start learning ${t} from zero, here is exactly what I would do:"`,
-    `"This one trick completely changed the way I look at ${t}..."`,
-    `"Why nobody is talking about this massive breakthrough in ${t}:"`
+    `"Stop scrolling if you want to master ${safeT} in 2026..."`,
+    `"3 secrets about ${safeT} that 99% of people don't know:"`,
+    `"If I had to start learning ${safeT} from zero, here is exactly what I would do:"`,
+    `"This one trick completely changed the way I look at ${safeT}..."`,
+    `"Why nobody is talking about this massive breakthrough in ${safeT}:"`
   ];
 
   await ctx.reply(
-    `🎣 *Viral Hooks for [${t}]:*\n\n` +
+    `🎣 *Viral Hooks for [${safeT}]:*\n\n` +
     hooks.map((h, i) => `${i + 1}. *${h}*`).join('\n\n') +
     `\n\nUse one of these in the first 3 seconds of your video to maximize retention!`,
     { parse_mode: 'Markdown', reply_markup: getBackToMenuKeyboard() }
-  );
+  ).catch(async () => {
+    await ctx.reply(
+      `🎣 Viral Hooks for [${t}]:\n\n` +
+      hooks.map((h, i) => `${i + 1}. ${h.replace(/[*_]/g, '')}`).join('\n\n') +
+      `\n\nUse one of these in the first 3 seconds of your video!`,
+      { reply_markup: getBackToMenuKeyboard() }
+    );
+  });
 }
 

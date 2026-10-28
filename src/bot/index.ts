@@ -102,6 +102,7 @@ import {
   handleBroadcastCommand,
   handleBroadcastConfirm,
 } from './handlers/admin.js';
+import { escapeMarkdown } from './utils/markdown.js';
 
 export function createBot(): Bot<BotContext> {
   const bot = new Bot<BotContext>(config.botToken);
@@ -319,8 +320,16 @@ export function createBot(): Bot<BotContext> {
     await handleSlugCommand(ctx, '10 Best Features in Lexio Bot');
   });
   bot.callbackQuery('tb_tool_sql', async (ctx) => {
-    await ctx.answerCallbackQuery();
+    await ctx.answerCallbackQuery().catch(() => {});
     await handleSqlFormatCommand(ctx, 'select id, name, created_at from tools where active = 1 order by id desc limit 5');
+  });
+  bot.callbackQuery('tb_tool_jwt', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleJwtCommand(ctx, '');
+  });
+  bot.callbackQuery('tb_tool_timestamp', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleTimestampCommand(ctx, '');
   });
 
   bot.callbackQuery('tb_tool_bmi', async (ctx) => {
@@ -485,9 +494,88 @@ export function createBot(): Bot<BotContext> {
     await handleNumerologyCommand(ctx);
   });
 
+  bot.callbackQuery('tb_tool_coin', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleCoinCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_dice', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleDiceCommand(ctx, '6');
+  });
+  bot.callbackQuery('tb_tool_8ball', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handle8BallCommand(ctx, 'Will Lexio assist millions of users worldwide?');
+  });
+  bot.callbackQuery('tb_tool_quote', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleQuoteCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_pick', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handlePickCommand(ctx, 'Build an app, Learn TypeScript, Deploy to Cloud');
+  });
+  bot.callbackQuery('tb_tool_password', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handlePasswordCommand(ctx, '16');
+  });
+  bot.callbackQuery('tb_tool_rps', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleRpsCommand(ctx, 'rock');
+  });
+
+  // Additional Task Callbacks
+  bot.callbackQuery('tb_tool_binary', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleBinaryCommand(ctx, 'Lexio');
+  });
+  bot.callbackQuery('tb_tool_md2html', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleMarkdownToHtmlCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_minhtml', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleMinifyHtmlCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_unit', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleUnitCommand(ctx, '5', 'mi', 'km');
+  });
+  bot.callbackQuery('tb_tool_stats', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleStatsCommand(ctx, '12, 15, 23, 45, 12, 30, 18');
+  });
+  bot.callbackQuery('tb_tool_gpa', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleGpaCommand(ctx, 'A, A-, B+, A, B');
+  });
+  bot.callbackQuery('tb_tool_sci', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleScientificCommand(ctx, 'sqrt(144) + pow(2, 6)');
+  });
+  bot.callbackQuery('tb_tool_keywords', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleKeywordDensityCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_palette', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleMaterialPaletteCommand(ctx, 'blue');
+  });
+  bot.callbackQuery('tb_tool_pomodoro', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handlePomodoroCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_todo', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleTodoCommand(ctx);
+  });
+  bot.callbackQuery('tb_tool_removechar', async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
+    await handleRemoveCharCommand(ctx);
+  });
+
   // Dynamic fallback for any other tb_tool_*
   bot.callbackQuery(/^tb_tool_(.+)$/, async (ctx) => {
-    await ctx.answerCallbackQuery();
+    await ctx.answerCallbackQuery().catch(() => {});
     const toolId = ctx.match[1];
     const { getValidHttpsMiniAppUrl } = await import('../config/env.js');
     const { InlineKeyboard } = await import('grammy');
@@ -498,109 +586,45 @@ export function createBot(): Bot<BotContext> {
         parse_mode: 'Markdown',
         reply_markup: new InlineKeyboard().webApp('🚀 Open Tool in Bot Page', url)
       }
-    );
+    ).catch(async () => {
+      await ctx.reply(
+        '⚡ Tool Ready: ' + toolId.toUpperCase() + '\nExecute this tool directly inside your in-bot Telegram page:',
+        {
+          reply_markup: new InlineKeyboard().webApp('🚀 Open Tool in Bot Page', url)
+        }
+      );
+    });
   });
 
-  bot.callbackQuery('tb_tool_coin', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleCoinCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_dice', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleDiceCommand(ctx, '6');
-  });
-  bot.callbackQuery('tb_tool_8ball', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handle8BallCommand(ctx, 'Will Lexio assist millions of users worldwide?');
-  });
-  bot.callbackQuery('tb_tool_quote', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleQuoteCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_pick', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handlePickCommand(ctx, 'Build an app, Learn TypeScript, Deploy to Cloud');
-  });
-  bot.callbackQuery('tb_tool_password', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handlePasswordCommand(ctx, '16');
-  });
-  bot.callbackQuery('tb_tool_rps', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleRpsCommand(ctx, 'rock');
-  });
-
-  // Additional Task Callbacks
-  bot.callbackQuery('tb_tool_binary', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleBinaryCommand(ctx, 'Lexio');
-  });
-  bot.callbackQuery('tb_tool_md2html', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleMarkdownToHtmlCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_minhtml', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleMinifyHtmlCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_unit', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleUnitCommand(ctx, '5', 'mi', 'km');
-  });
-  bot.callbackQuery('tb_tool_stats', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleStatsCommand(ctx, '12, 15, 23, 45, 12, 30, 18');
-  });
-  bot.callbackQuery('tb_tool_gpa', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleGpaCommand(ctx, 'A, A-, B+, A, B');
-  });
-  bot.callbackQuery('tb_tool_sci', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleScientificCommand(ctx, 'sqrt(144) + pow(2, 6)');
-  });
-  bot.callbackQuery('tb_tool_keywords', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleKeywordDensityCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_palette', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleMaterialPaletteCommand(ctx, 'blue');
-  });
-  bot.callbackQuery('tb_tool_pomodoro', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handlePomodoroCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_todo', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleTodoCommand(ctx);
-  });
-  bot.callbackQuery('tb_tool_removechar', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleRemoveCharCommand(ctx);
-  });
-
-  // Media & Social Demo Callbacks
-  bot.callbackQuery('dl_sample_yt', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleIncomingMediaUrl(ctx, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
-  });
-  bot.callbackQuery('dl_sample_ig', async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await handleIncomingMediaUrl(ctx, 'https://www.instagram.com/reel/C7x90ABc1/');
-  });
   bot.callbackQuery('fd_demo_mrbeast', async (ctx) => {
-    await ctx.answerCallbackQuery();
+    await ctx.answerCallbackQuery().catch(() => {});
     await handleExcavateCommand(ctx, 'mrbeast');
   });
   bot.callbackQuery('fd_demo_instagram', async (ctx) => {
-    await ctx.answerCallbackQuery();
+    await ctx.answerCallbackQuery().catch(() => {});
     await handleExcavateCommand(ctx, 'instagram');
   });
 
   // Dynamic Rerun & Preset Tool Actions (Instant in-chat execution)
   bot.callbackQuery(/^tb_run_(.+)$/, async (ctx) => {
+    await ctx.answerCallbackQuery().catch(() => {});
     const action = ctx.match[1];
+    if (action === 'ocr_page') {
+      const { getValidHttpsMiniAppUrl } = await import('../config/env.js');
+      const { InlineKeyboard } = await import('grammy');
+      const url = getValidHttpsMiniAppUrl('?tab=toolbox&tool=ocr');
+      return ctx.reply(
+        '🔍 *Optical Character Recognition (OCR) Engine*\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nExtract printed or handwritten text from images & documents:',
+        {
+          parse_mode: 'Markdown',
+          reply_markup: new InlineKeyboard().webApp('🚀 Open OCR in Bot Page', url),
+        }
+      ).catch(async () => {
+        await ctx.reply('🔍 Optical Character Recognition (OCR)\nOpen in Bot Page:', {
+          reply_markup: new InlineKeyboard().webApp('🚀 Open OCR in Bot Page', url),
+        });
+      });
+    }
     if (action === 'coin') return handleCoinCommand(ctx);
     if (action.startsWith('dice_')) return handleDiceCommand(ctx, action.replace('dice_', ''));
     if (action.startsWith('pw_')) return handlePasswordCommand(ctx, action.replace('pw_', ''));
@@ -652,6 +676,10 @@ export function createBot(): Bot<BotContext> {
     if (action.startsWith('hex_')) return handleHexToRgbCommand(ctx, '#' + action.replace('hex_', ''));
     if (action === 'hash_lexio') return handleHashCommand(ctx, 'Lexio');
     if (action === 'hash_pass') return handleHashCommand(ctx, 'Password123');
+    if (action === 'li_prof') return handleLinkedInCommand(ctx, 'Professional leadership & composable engineering');
+    if (action === 'li_insp') return handleLinkedInCommand(ctx, 'Overcoming obstacles and building with grit');
+    if (action === 'li_edu') return handleLinkedInCommand(ctx, '5 technical architectural lessons from production');
+    if (action === 'li_hum') return handleLinkedInCommand(ctx, 'Debugging distributed systems on a Friday afternoon');
     if (action.startsWith('li_')) return handleLinkedInCommand(ctx);
     if (action === 'outlier_refresh') return handleOutlierCommand(ctx);
     if (action === 'scraper_csv' || action === 'scraper_refresh') return handleScraperCommand(ctx);
@@ -745,7 +773,7 @@ export function createBot(): Bot<BotContext> {
 
     // Natural conversation greetings
     if (['hi', 'hello', 'hey', 'start', 'yo', 'hola'].includes(lower)) {
-      const firstName = ctx.from?.first_name || 'Friend';
+      const firstName = escapeMarkdown(ctx.from?.first_name || 'Friend');
       return ctx.reply(
         `⚡ *LEXIO UNIVERSAL ASSISTANT*\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -755,7 +783,14 @@ export function createBot(): Bot<BotContext> {
           parse_mode: 'Markdown',
           reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
         }
-      );
+      ).catch(async () => {
+        await ctx.reply(
+          `⚡ LEXIO UNIVERSAL ASSISTANT\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n👋 Hello, ${ctx.from?.first_name || 'Friend'}! What task do you need to complete today?\n\nTap below to launch Lexio Studio or select a category:`,
+          {
+            reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
+          }
+        );
+      });
     }
 
     // Auto-detect math expressions (e.g. 150 * 20 or 25 + 40 / 2)
@@ -870,18 +905,26 @@ export function createBot(): Bot<BotContext> {
           parse_mode: 'Markdown',
           reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
         }
-      );
+      ).catch(async () => {
+        await ctx.reply(
+          `⚡ LEXIO COMMAND CENTER\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n• 🎬 Media Downloads: Paste any YouTube, Reel, or TikTok video link\n• 📊 Creator Analytics: Type /excavate @username\n• 💻 Developer Suite: Format JSON/SQL, QR code, UUID, Hashes\n• 🧮 Math & Finance: Calculate Loan EMI, BMI, Age, Units, Stats\n\n👇 Tap below to launch Lexio Studio or select a suite:`,
+          {
+            reply_markup: getMainMenuKeyboard(ctx.state?.isAdmin || false),
+          }
+        );
+      });
     }
   });
 
 
   // 7. Resilient Global Error Handler
-  bot.catch((err) => {
+  bot.catch(async (err) => {
     const ctx = err.ctx;
     console.error(`❌ Error while handling update ${ctx.update.update_id}:`, err.error);
-    try {
-      ctx.reply('⚠️ An unexpected error occurred while processing your request. Please try again or use /menu.');
-    } catch {}
+    if (ctx.callbackQuery) {
+      await ctx.answerCallbackQuery({ text: '⚠️ An error occurred. Please try again.' }).catch(() => {});
+    }
+    await ctx.reply('⚠️ An unexpected error occurred while processing your request. Please try again or use /menu.').catch(() => {});
   });
 
   return bot;

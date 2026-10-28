@@ -1,11 +1,14 @@
 import { BotContext } from '../types.js';
 import { InlineKeyboard } from 'grammy';
 import { prisma } from '../../database/client.js';
+import { escapeMarkdown } from '../utils/markdown.js';
 
 export async function handleAdminPanel(ctx: BotContext): Promise<void> {
   if (!ctx.state?.isAdmin) {
     await ctx.reply('🚫 *Access Denied.* You do not have administrator permissions.', {
       parse_mode: 'Markdown',
+    }).catch(async () => {
+      await ctx.reply('🚫 Access Denied. You do not have administrator permissions.');
     });
     return;
   }
@@ -51,24 +54,28 @@ export async function handleAdminPanel(ctx: BotContext): Promise<void> {
         parse_mode: 'Markdown',
         reply_markup: keyboard,
       });
-      await ctx.answerCallbackQuery();
+      await ctx.answerCallbackQuery().catch(() => {});
     } catch {
       await ctx.reply(text, {
         parse_mode: 'Markdown',
         reply_markup: keyboard,
+      }).catch(async () => {
+        await ctx.reply(text.replace(/[*_`]/g, ''), { reply_markup: keyboard });
       });
     }
   } else {
     await ctx.reply(text, {
       parse_mode: 'Markdown',
       reply_markup: keyboard,
+    }).catch(async () => {
+      await ctx.reply(text.replace(/[*_`]/g, ''), { reply_markup: keyboard });
     });
   }
 }
 
 export async function handleBroadcastPrompt(ctx: BotContext): Promise<void> {
   if (!ctx.state?.isAdmin) return;
-  await ctx.answerCallbackQuery();
+  await ctx.answerCallbackQuery().catch(() => {});
 
   await ctx.reply(
     `📢 *Draft Broadcast Announcement:*\n\n` +
@@ -76,7 +83,11 @@ export async function handleBroadcastPrompt(ctx: BotContext): Promise<void> {
     `\`/broadcast Your message text here...\`\n\n` +
     `A confirmation preview will be generated before sending.`,
     { parse_mode: 'Markdown' }
-  );
+  ).catch(async () => {
+    await ctx.reply(
+      `📢 Draft Broadcast Announcement:\n\nTo dispatch a global notification to all registered users, send the message using this format:\n\n/broadcast Your message text here...\n\nA confirmation preview will be generated before sending.`
+    );
+  });
 }
 
 export async function handleBroadcastCommand(ctx: BotContext, text: string): Promise<void> {
@@ -99,20 +110,26 @@ export async function handleBroadcastCommand(ctx: BotContext, text: string): Pro
     .text('✅ Confirm & Send to All', 'admin_broadcast_confirm')
     .text('❌ Cancel', 'admin_panel');
 
+  const safeContent = escapeMarkdown(broadcastContent);
   await ctx.reply(
     `⚠️ *Broadcast Confirmation Preview:*\n\n` +
-    `"${broadcastContent}"\n\n` +
+    `"${safeContent}"\n\n` +
     `Are you sure you want to broadcast this message to all registered users?`,
     {
       parse_mode: 'Markdown',
       reply_markup: keyboard,
     }
-  );
+  ).catch(async () => {
+    await ctx.reply(
+      `⚠️ Broadcast Confirmation Preview:\n\n"${broadcastContent}"\n\nAre you sure you want to broadcast this message to all registered users?`,
+      { reply_markup: keyboard }
+    );
+  });
 }
 
 export async function handleBroadcastConfirm(ctx: BotContext): Promise<void> {
   if (!ctx.state?.isAdmin) return;
-  await ctx.answerCallbackQuery({ text: 'Dispatching...' });
+  await ctx.answerCallbackQuery({ text: 'Dispatching...' }).catch(() => {});
 
   const draft = ctx.session.broadcastDraft?.text;
   if (!draft) {
@@ -130,9 +147,14 @@ export async function handleBroadcastConfirm(ctx: BotContext): Promise<void> {
 
   for (const u of users) {
     try {
-      await ctx.api.sendMessage(u.telegramId, `📢 *Announcement:*\n\n${draft}`, {
-        parse_mode: 'Markdown',
-      });
+      try {
+        await ctx.api.sendMessage(u.telegramId, `📢 *Announcement:*\n\n${draft}`, {
+          parse_mode: 'Markdown',
+        });
+      } catch {
+        // Fallback to sending without Markdown if formatting error occurs
+        await ctx.api.sendMessage(u.telegramId, `📢 Announcement:\n\n${draft}`);
+      }
       sent++;
     } catch {
       failed++;
@@ -146,5 +168,9 @@ export async function handleBroadcastConfirm(ctx: BotContext): Promise<void> {
     `• *Successfully Delivered:* ${sent}\n` +
     `• *Failed / Blocked:* ${failed}`,
     { parse_mode: 'Markdown' }
-  );
+  ).catch(async () => {
+    await ctx.reply(
+      `✅ Broadcast Complete!\n\n• Successfully Delivered: ${sent}\n• Failed / Blocked: ${failed}`
+    );
+  });
 }

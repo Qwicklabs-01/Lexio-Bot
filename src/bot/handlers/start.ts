@@ -1,8 +1,9 @@
 import { BotContext } from '../types.js';
 import { getMainMenuKeyboard, getPersistentReplyKeyboard } from '../keyboards/main.menu.js';
+import { escapeMarkdown } from '../utils/markdown.js';
 
 export async function handleStart(ctx: BotContext): Promise<void> {
-  const firstName = ctx.from?.first_name || 'Friend';
+  const firstName = escapeMarkdown(ctx.from?.first_name || 'Friend');
   const isAdmin = ctx.state?.isAdmin || false;
 
   const welcomeMessage =

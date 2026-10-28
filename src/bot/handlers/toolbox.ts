@@ -25,7 +25,7 @@ async function sendInteractiveToolMessage(ctx: BotContext, text: string, reply_m
         parse_mode: 'Markdown',
         reply_markup,
       });
-      await ctx.answerCallbackQuery();
+      await ctx.answerCallbackQuery().catch(() => {});
       return;
     } catch (err: any) {
       await ctx.answerCallbackQuery().catch(() => {});
@@ -34,10 +34,16 @@ async function sendInteractiveToolMessage(ctx: BotContext, text: string, reply_m
       }
     }
   }
-  await ctx.reply(text, {
-    parse_mode: 'Markdown',
-    reply_markup,
-  });
+  try {
+    await ctx.reply(text, {
+      parse_mode: 'Markdown',
+      reply_markup,
+    });
+  } catch {
+    await ctx.reply(text.replace(/[*_`]/g, ''), {
+      reply_markup,
+    }).catch(() => {});
+  }
 }
 
 export async function handleToolBoxMenu(ctx: BotContext): Promise<void> {
@@ -400,9 +406,10 @@ export async function handleCalcCommand(ctx: BotContext, expression?: string): P
 
 export async function handleBmiCommand(ctx: BotContext, weightKgStr = '72', heightCmStr = '178'): Promise<void> {
   const weight = parseFloat(weightKgStr) || 72;
-  const heightCm = parseFloat(heightCmStr) || 178;
-  const heightM = heightCm / 100;
-  const bmi = weight / (heightM * heightM);
+  const rawHeight = parseFloat(heightCmStr) || 178;
+  const heightM = rawHeight < 3 ? rawHeight : rawHeight / 100;
+  const displayCm = rawHeight < 3 ? Math.round(rawHeight * 100) : rawHeight;
+  const bmi = heightM > 0 ? weight / (heightM * heightM) : 22.5;
 
   let category = 'Normal weight 🟢';
   if (bmi < 18.5) category = 'Underweight 🟡';
@@ -411,7 +418,7 @@ export async function handleBmiCommand(ctx: BotContext, weightKgStr = '72', heig
 
   const msg =
     `⚖️ *Body Mass Index (BMI) Calculator:*\n\n` +
-    `• *Weight:* ${weight} kg | *Height:* ${heightCm} cm\n` +
+    `• *Weight:* ${weight} kg | *Height:* ${displayCm} cm\n` +
     `• *BMI Score:* *${bmi.toFixed(1)}*\n` +
     `• *Health Category:* ${category}\n\n` +
     `_Standard WHO reference: 18.5 – 24.9 is healthy._\n\n` +
@@ -473,14 +480,14 @@ export async function handleAgeCommand(ctx: BotContext, dobStr = '2000-01-01'): 
 
 export async function handleEmiCommand(ctx: BotContext, amountStr = '50000', rateStr = '8.5', yearsStr = '5'): Promise<void> {
   const p = parseFloat(amountStr) || 50000;
-  const annualRate = parseFloat(rateStr) || 8.5;
+  const annualRate = parseFloat(rateStr) >= 0 ? parseFloat(rateStr) : 8.5;
   const years = parseFloat(yearsStr) || 5;
 
   const r = annualRate / 12 / 100;
-  const n = years * 12;
-  const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  const n = Math.max(1, years * 12);
+  const emi = r === 0 ? p / n : (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   const totalPayment = emi * n;
-  const totalInterest = totalPayment - p;
+  const totalInterest = Math.max(0, totalPayment - p);
 
   const msg =
     `💰 *Loan EMI Calculation:*\n\n` +
@@ -1383,9 +1390,10 @@ async function logToolUsage(userId: string | undefined, toolName: string, meta?:
         inputMeta: meta?.substring(0, 100),
       },
     });
-    await prisma.user.update({
+    await prisma.user.upsert({
       where: { telegramId: userId },
-      data: { toolsUsedCount: { increment: 1 } },
+      update: { toolsUsedCount: { increment: 1 } },
+      create: { telegramId: userId, toolsUsedCount: 1 },
     });
   } catch {}
 }
@@ -1742,12 +1750,23 @@ export async function handleNumerologyCommand(
     cleanDob = '1998-05-15';
   }
 
-  const [y, m, d] = cleanDob.replace(/\//g, '-').split('-');
+  const rawParts = cleanDob.replace(/\//g, '-').split('-');
+  let y = '1998', m = '05', d = '15';
+  if (rawParts.length === 3) {
+    if (rawParts[0].length === 4) {
+      [y, m, d] = rawParts;
+    } else if (rawParts[2].length === 4) {
+      [d, m, y] = rawParts;
+    } else {
+      [y, m, d] = rawParts;
+    }
+  }
+
   const fullStr = (d || '') + (m || '') + (y || '');
-  const mulank = reduceNum(d || '1');
-  const bhagyank = reduceNum(fullStr, true);
+  const mulank = Math.max(1, reduceNum(d || '1'));
+  const bhagyank = Math.max(1, reduceNum(fullStr, true));
   const yearSum = reduceNum(y || '1998');
-  const kua = cleanGender === 'male' ? reduceNum(11 - yearSum) : reduceNum(4 + yearSum);
+  const kua = cleanGender === 'male' ? Math.max(1, reduceNum(11 - yearSum)) : Math.max(1, reduceNum(4 + yearSum));
 
   let nameTotal = 0;
   (cleanName || 'Sakshi').toUpperCase().split('').forEach((char) => {

@@ -114,9 +114,10 @@ export async function handleIncomingMediaUrl(ctx: BotContext, url: string): Prom
     });
     downloadId = record.id;
 
-    await prisma.user.update({
+    await prisma.user.upsert({
       where: { telegramId },
-      data: { downloadsCount: { increment: 1 } },
+      update: { downloadsCount: { increment: 1 } },
+      create: { telegramId, downloadsCount: 1 },
     });
   } catch {}
 
@@ -130,13 +131,19 @@ export async function handleIncomingMediaUrl(ctx: BotContext, url: string): Prom
     `📦 *Audio Bitrate:* 320 kbps High Fidelity\n\n` +
     `Select your download format to process directly in chat:`;
 
-  try {
-    await ctx.api.deleteMessage(ctx.chat!.id, analyzingMsg.message_id);
-  } catch {}
+  if (ctx.chat) {
+    try {
+      await ctx.api.deleteMessage(ctx.chat.id, analyzingMsg.message_id);
+    } catch {}
+  }
 
   await ctx.reply(resultText, {
     parse_mode: 'Markdown',
     reply_markup: getMediaDownloadKeyboard(downloadId),
+  }).catch(async () => {
+    await ctx.reply(resultText.replace(/[*_`]/g, ''), {
+      reply_markup: getMediaDownloadKeyboard(downloadId),
+    });
   });
 }
 
@@ -162,6 +169,10 @@ export async function handleInfoCommand(ctx: BotContext, url: string): Promise<v
   await ctx.reply(infoText, {
     parse_mode: 'Markdown',
     reply_markup: getMediaDownloadKeyboard(downloadId),
+  }).catch(async () => {
+    await ctx.reply(infoText.replace(/[*_`]/g, ''), {
+      reply_markup: getMediaDownloadKeyboard(downloadId),
+    });
   });
 }
 
@@ -179,24 +190,30 @@ export async function handleAudioCommand(ctx: BotContext, url: string): Promise<
 
   const downloadId = `dl_audio_${Date.now().toString(36)}`;
 
-  setTimeout(async () => {
-    try {
-      await ctx.api.deleteMessage(ctx.chat!.id, statusMsg.message_id);
-    } catch {}
-
-    await ctx.reply(
-      `✅ *MP3 Audio Track Ready!* 🎵\n` +
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `📌 *Track:* \`${platform} Audio Extraction — 320kbps\`\n` +
-      `📦 *Size:* ~4.8 MB\n` +
-      `⚡ *Encoding:* Stereo MP3 @ 320kbps CBR / 48kHz\n` +
-      `💾 *Identifier:* \`${downloadId}\`\n\n` +
-      `_Captured and processed directly inside your Telegram chat._`,
-      {
-        parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
+  setTimeout(() => {
+    (async () => {
+      if (ctx.chat) {
+        try {
+          await ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id);
+        } catch {}
       }
-    );
+
+      await ctx.reply(
+        `✅ *MP3 Audio Track Ready!* 🎵\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `📌 *Track:* \`${platform} Audio Extraction — 320kbps\`\n` +
+        `📦 *Size:* ~4.8 MB\n` +
+        `⚡ *Encoding:* Stereo MP3 @ 320kbps CBR / 48kHz\n` +
+        `💾 *Identifier:* \`${downloadId}\`\n\n` +
+        `_Captured and processed directly inside your Telegram chat._`,
+        {
+          parse_mode: 'Markdown',
+          reply_markup: getBackToMenuKeyboard(),
+        }
+      );
+    })().catch((err) => {
+      console.warn('⚠️ Audio delivery warning:', (err as Error)?.message || err);
+    });
   }, 1000);
 }
 
@@ -205,7 +222,7 @@ export async function handleMediaDownloadAction(
   downloadId: string,
   format: '1080p' | '720p' | 'mp3' | 'info'
 ): Promise<void> {
-  await ctx.answerCallbackQuery({ text: `Preparing ${format.toUpperCase()}...` });
+  await ctx.answerCallbackQuery({ text: `Preparing ${format.toUpperCase()}...` }).catch(() => {});
 
   if (format === 'info') {
     await ctx.reply(
@@ -215,7 +232,11 @@ export async function handleMediaDownloadAction(
       `• *Audio:* 320 kbps High Definition\n` +
       `• *Processing Protocol:* Direct high-speed capture engine`,
       { parse_mode: 'Markdown' }
-    );
+    ).catch(async () => {
+      await ctx.reply(
+        `📊 Media Technical Specs:\n\n• ID: ${downloadId}\n• Video Codec: H.264 / AAC High Profile\n• Audio: 320 kbps High Definition`
+      );
+    });
     return;
   }
 
@@ -227,22 +248,28 @@ export async function handleMediaDownloadAction(
     { parse_mode: 'Markdown' }
   );
 
-  setTimeout(async () => {
-    try {
-      await ctx.api.deleteMessage(ctx.chat!.id, statusMsg.message_id);
-    } catch {}
-
-    await ctx.reply(
-      `✅ *Your ${label} is ready!* 🚀\n` +
-      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-      `📦 *File Size:* ~${isAudio ? '4.8 MB' : '32.4 MB'}\n` +
-      `⚡ *Capture Status:* Completed (100% Watermark-Free)\n` +
-      `💾 *Media Identifier:* \`${downloadId}\`\n\n` +
-      `_Processed and delivered directly inside your Telegram chat._`,
-      {
-        parse_mode: 'Markdown',
-        reply_markup: getBackToMenuKeyboard(),
+  setTimeout(() => {
+    (async () => {
+      if (ctx.chat) {
+        try {
+          await ctx.api.deleteMessage(ctx.chat.id, statusMsg.message_id);
+        } catch {}
       }
-    );
+
+      await ctx.reply(
+        `✅ *Your ${label} is ready!* 🚀\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `📦 *File Size:* ~${isAudio ? '4.8 MB' : '32.4 MB'}\n` +
+        `⚡ *Capture Status:* Completed (100% Watermark-Free)\n` +
+        `💾 *Media Identifier:* \`${downloadId}\`\n\n` +
+        `_Processed and delivered directly inside your Telegram chat._`,
+        {
+          parse_mode: 'Markdown',
+          reply_markup: getBackToMenuKeyboard(),
+        }
+      );
+    })().catch((err) => {
+      console.warn('⚠️ Media rendering delivery warning:', (err as Error)?.message || err);
+    });
   }, 1200);
 }

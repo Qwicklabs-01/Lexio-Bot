@@ -28,11 +28,14 @@ export const rateLimitMiddleware: MiddlewareFn<BotContext> = async (ctx, next) =
 
   if (entry.count > MAX_REQUESTS) {
     console.warn(`⚠️ Rate limit exceeded for Telegram user ${userId} (${entry.count} requests)`);
+    if (ctx.callbackQuery) {
+      await ctx.answerCallbackQuery({ text: '⚠️ Rate limit reached. Please wait a moment.', show_alert: true }).catch(() => {});
+    }
     if (entry.count === MAX_REQUESTS + 1) {
       await ctx.reply(
         '⚠️ *Rate limit reached*\n\nYou are sending requests too quickly. Please pause for a few seconds before trying again.',
         { parse_mode: 'Markdown' }
-      );
+      ).catch(() => {});
     }
     return; // Drop update
   }
