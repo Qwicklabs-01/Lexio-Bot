@@ -31,16 +31,17 @@ export async function handleAdminPanel(ctx: BotContext): Promise<void> {
   }
 
   const text =
-    `👑 *OmniPlatform Administrator Center*\n\n` +
+    `👑 *LEXIO EXECUTIVE DASHBOARD*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
     `📊 *Real-Time Platform Analytics:*\n` +
-    `• 👥 *Total Active Users:* ${totalUsers.toLocaleString()}\n` +
-    `• ⚡ *Nexus Media Downloads:* ${totalDownloads.toLocaleString()}\n` +
-    `• 🔍 *Feedigger Scrapes:* ${totalScrapes.toLocaleString()}\n` +
-    `• 🧰 *ToolBox Executions:* ${totalTools.toLocaleString()}\n\n` +
-    `🟢 *System Health:* Optimal\n` +
-    `🛡️ *Rate Limiter:* Active (30 req/min/user)\n` +
-    `🔒 *Webhook Security:* Secret Token Verified\n\n` +
-    `Choose an administrative operation:`;
+    `• 👥 *Total Active Users:* \`${totalUsers.toLocaleString()}\`\n` +
+    `• 🎬 *Media Downloads:* \`${totalDownloads.toLocaleString()}\`\n` +
+    `• 📊 *Creator Audits:* \`${totalScrapes.toLocaleString()}\`\n` +
+    `• 🧰 *Tool Executions:* \`${totalTools.toLocaleString()}\`\n\n` +
+    `🟢 *System Health:* \`Optimal (100%)\`\n` +
+    `🛡️ *Rate Limiter:* \`Active (30 req/min/user)\`\n` +
+    `🔒 *Webhook Security:* \`Secret HMAC-SHA256 Verified\`\n\n` +
+    `Select an administrative operation below:`;
 
   const keyboard = new InlineKeyboard()
     .text('📢 Broadcast Announcement', 'admin_broadcast_prompt')

@@ -12,7 +12,7 @@ export function getMainMenuKeyboard(isAdmin = false): InlineKeyboard {
 
   // Flagship Actions: Media Capture & Social Intel
   keyboard
-    .text('🎬 Media Downloader', 'menu_nexus')
+    .text('🎬 Media Grabber', 'menu_nexus')
     .text('📊 Creator Intel', 'menu_feedigger')
     .row();
 
@@ -48,7 +48,10 @@ export function getPersistentReplyKeyboard(): Keyboard {
     .row()
     .text('🎬 Media Downloader')
     .text('📊 Creator Intel')
+    .row()
+    .text('🧭 Menu')
     .text('📖 Directory')
     .resized()
     .persistent();
 }
+

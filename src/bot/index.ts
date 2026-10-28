@@ -744,6 +744,8 @@ export function createBot(): Bot<BotContext> {
       text === '🧰 All Tools' ||
       text === '🧰 All Tool Categories' ||
       text === '🧰 100+ Multi-Tools' ||
+      text === '🧭 Menu' ||
+      text === '🧭 Command Center' ||
       lower === 'tools' ||
       lower === 'tasks' ||
       lower === 'menu'

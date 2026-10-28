@@ -6,8 +6,9 @@ export async function handleMenu(ctx: BotContext): Promise<void> {
   const menuText =
     `🧭 *LEXIO COMMAND CENTER*\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Select a task suite below to run any tool directly in this chat,\n` +
-    `or launch the full-screen *Lexio Studio* web app:`;
+    `⚡ *126+ Instant Tools & Web Utilities*\n` +
+    `Tap any suite below to run tools directly in this chat,\n` +
+    `or launch *Lexio Studio* for the interactive visual workspace:`;
 
   if (ctx.callbackQuery) {
     try {
@@ -22,11 +23,25 @@ export async function handleMenu(ctx: BotContext): Promise<void> {
       if (err?.description?.includes('message is not modified')) {
         return;
       }
+      try {
+        await ctx.editMessageText(menuText.replace(/[*_`]/g, ''), {
+          reply_markup: getMainMenuKeyboard(isAdmin),
+        });
+        return;
+      } catch {}
     }
   }
-  await ctx.reply(menuText, {
-    parse_mode: 'Markdown',
-    reply_markup: getMainMenuKeyboard(isAdmin),
-  });
+
+  try {
+    await ctx.reply(menuText, {
+      parse_mode: 'Markdown',
+      reply_markup: getMainMenuKeyboard(isAdmin),
+    });
+  } catch {
+    await ctx.reply(menuText.replace(/[*_`]/g, ''), {
+      reply_markup: getMainMenuKeyboard(isAdmin),
+    });
+  }
 }
+
 
