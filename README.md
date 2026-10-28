@@ -31,35 +31,6 @@
 
 ---
 
-## ⚙️ Quick Start
-
-```bash
-git clone https://github.com/Qwicklabs-01/Lexio-Bot.git
-cd Lexio-Bot
-npm install
-cp .env.example .env   # fill in BOT_TOKEN, ADMIN_IDS, etc.
-npm run dev
-```
-
-### Environment Variables (`.env`)
-```env
-BOT_TOKEN=your_telegram_bot_token
-ADMIN_IDS=your_telegram_user_id
-PORT=3000
-NODE_ENV=development
-MINI_APP_URL=http://localhost:5173
-JWT_SECRET=your_jwt_secret
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/lexio
-```
-
-### Docker
-```bash
-docker compose up -d --build
-docker compose exec bot-server npx prisma db push
-```
-
----
-
 ## 📁 Structure
 
 ```
