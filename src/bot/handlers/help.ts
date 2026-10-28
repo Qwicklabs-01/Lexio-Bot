@@ -76,11 +76,21 @@ export async function handleHelp(ctx: BotContext): Promise<void> {
       if (err?.description?.includes('message is not modified')) {
         return;
       }
+      try {
+        await ctx.editMessageText(helpText.replace(/[*_`]/g, ''), {
+          reply_markup: keyboard,
+        });
+        return;
+      } catch {}
     }
   }
   await ctx.reply(helpText, {
     parse_mode: 'Markdown',
     reply_markup: keyboard,
+  }).catch(async () => {
+    await ctx.reply(helpText.replace(/[*_`]/g, ''), {
+      reply_markup: keyboard,
+    });
   });
 }
 
